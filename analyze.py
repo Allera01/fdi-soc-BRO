@@ -28,23 +28,24 @@ for i in soup.findAll("div", {"class": "thing"}):
     else: 
         autor = "Autor desconocido"
     fecha = i.find("time")["title"]
+    #saca el texto de la descripcion de un post
     aux2 = i.find("div", {"class" : "expando"})
-    if aux2:
-        data_content = aux2.get('data-cachehtml')
+    if aux2:        
+        data_content = aux2.get("data-cachedhtml")
             
         if data_content:
-            content_soup = BeautifulSoup(data_content, 'html.parser')
-            aux3 = content_soup.find('div', class_='md')
+            cached_soup = BeautifulSoup(data_content, 'html.parser')
+            aux3 = cached_soup.find('div', class_='md')
                                                                     
             if aux3:
-                descripcion = aux3.get_text()
+                descripcion = aux3.get_text().strip()
             else:
                 descripcion = "No hay descripcion"
         else:
             descripcion = "No hay descripcion"
     else:
         descripcion = "No hay descripcion"
-    #descripcion = (i.find("div", {"class": "md"}))
+    
     datos_post.append({
         'id_post' : id_post,
         'titulo': titulo,
