@@ -6,6 +6,7 @@ import requests
 f = Path("cache") / "index.html"
 t = f.read_text()
 p = "https://old.reddit.com/r/spain/comments/"
+d = "https://old.reddit.com/user/"
 
 soup = BeautifulSoup(t, 'html.parser')
 
@@ -22,6 +23,17 @@ for i in soup.findAll("div", {"class": "thing"}):
     else: 
         autor = "Autor desconocido"
     fecha = i.find("time")["title"]
+    j = requests.get(d + autor)
+    soup3 = BeautifulSoup(j.content, 'html.parser')
+    for m in soup3.findAll("div", {"class": "thing"}):
+        nombre_usuario = aux;
+        karma = soup3.find("span", {"class": "karma"}).get_text()
+        post_usuario = "https://old.reddit.com/" + m["data-permalink"]
+        datos_usuarios.append({
+            'nombre usuario': nombre_usuario,
+            'karma': karma,
+            'post': post_usuario
+        })
     #saca el texto de la descripcion de un post
     aux2 = i.find("div", {"class" : "expando"})
     if aux2:        
@@ -87,7 +99,7 @@ with open('comentarios.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(datos_comentario)
 
-#with open('usuarios.csv', 'w', newline='') as csvfile:
-#    writer = csv.DictWriter(csvfile, fieldnames=[])
-#    writer.writeheader() 
-#    writer.writerow(datos_usuarios)
+with open('usuarios.csv', 'w', newline='') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=['nombre usuario','karma  usuario','post'])
+    writer.writeheader() 
+    writer.writerow(datos_usuarios)
