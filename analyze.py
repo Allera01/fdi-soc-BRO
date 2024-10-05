@@ -84,10 +84,10 @@ with open('posts.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(datos_post)
 
-#with open('comentarios.csv', 'w', newline='') as csvfile:
-#    writer = csv.DictWriter(csvfile, fieldnames=['comentario','fecha','post al que responde','autor'])
-#    writer.writeheader()
-#    writer.writerows(datos_comentario)
+with open('comentarios.csv', 'w', newline='') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=['comentario','fecha','post al que responde','autor'])
+    writer.writeheader()
+    writer.writerows(datos_comentario)
 
 #with open('usuarios.csv', 'w', newline='') as csvfile:
 #    writer = csv.DictWriter(csvfile, fieldnames=[])
