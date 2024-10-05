@@ -100,6 +100,6 @@ with open('comentarios.csv', 'w', newline='') as csvfile:
     writer.writerows(datos_comentario)
 
 with open('usuarios.csv', 'w', newline='') as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=['nombre usuario','karma  usuario','post'])
+    writer = csv.DictWriter(csvfile, fieldnames=['nombre usuario','karma','post'])
     writer.writeheader() 
     writer.writerow(datos_usuarios)
