@@ -8,11 +8,6 @@ t = f.read_text()
 p = "https://old.reddit.com/r/spain/comments/"
 
 soup = BeautifulSoup(t, 'html.parser')
-#print(soup.title)
-#print(soup.get_text())
-#for string in soup.strings:
-# print(repr(string))
-#print(soup.prettify())
 
 datos_post = []
 datos_usuarios = []
@@ -20,7 +15,6 @@ datos_comentario = []
 
 for i in soup.findAll("div", {"class": "thing"}):
     id_post = i["data-fullname"]
-    id_pag = p + id_post[3:]
     titulo = (i.find("a", {"class": "title"})).text 
     aux = i.find("a", {"class": "author"})
     if aux:
@@ -54,30 +48,34 @@ for i in soup.findAll("div", {"class": "thing"}):
         'descripcion': descripcion
     })
 
-r = requests.get(id_pag)
-soup2 = BeautifulSoup(r.content, 'html.parser')
-
-for i in soup.findAll("div", {"class": "thing"}):
-    id_post = i["data-fullname"]
-    titulo_post = (i.find("a", {"class": "title"})).text
-    aux = i.find("a", {"class": "author"})
-    if aux:
-        autor_post = aux.text
-    else:
-        autor_post = "Autor desconocido"
-    fecha_comment = i.find("time")["title"]
-    comentario = i.find("div", {"class": "md"})
-    datos_comentario.append({
-        'comentario' : comentario,
-        'fecha' : fecha_comment,
-        'post al que responde': titulo_post,
-        'autor': autor_post
-    })
-
-#print(id_pag)
-#print(datos_post)
-#print("-------------------------------------------")
-#print(datos_comentario)
+l = 0
+for z in range(0,len(datos_post)):
+    #print(l)
+    b = datos_post[l]['id_post']
+    dir = b.lstrip('t3_')
+    r = requests.get(p+dir)
+    l = l +1
+    soup2 = BeautifulSoup(r.content, 'html.parser')
+    cuenta = 0
+    for i in soup2.findAll("div", {"class": "thing"}):
+        if cuenta>0:
+            id_post = i["data-fullname"]
+            aux = i.find("a", {"class": "author"})
+            if aux:
+                autor_post = aux.text
+            else:
+                autor_post = "Autor desconocido"
+            fecha_comment = i.find("time")["title"]
+            x = i.find("div", {"class": "md"})
+            comentario = x.find('p').text
+            datos_comentario.append({
+                'comentario' : comentario,
+                'fecha' : fecha_comment,
+                'post al que responde': "t3_" + dir,
+                'autor': autor_post
+            })
+        else:
+            cuenta = cuenta +1
 
 with open('posts.csv', 'w', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=['id_post', 'titulo', 'autor' ,'fecha','descripcion'])
