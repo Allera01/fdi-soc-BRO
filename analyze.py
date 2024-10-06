@@ -15,6 +15,7 @@ datos_usuarios = []
 datos_comentario = []
 
 for i in soup.findAll("div", {"class": "thing"}):
+    #print("a")
     id_post = i["data-fullname"]
     titulo = (i.find("a", {"class": "title"})).text 
     aux = i.find("a", {"class": "author"})
@@ -23,17 +24,39 @@ for i in soup.findAll("div", {"class": "thing"}):
     else: 
         autor = "Autor desconocido"
     fecha = i.find("time")["title"]
-    j = requests.get(d + autor)
-    soup3 = BeautifulSoup(j.content, 'html.parser')
-    for m in soup3.findAll("div", {"class": "thing"}):
-        nombre_usuario = aux;
-        karma = soup3.find("span", {"class": "karma"}).get_text()
-        post_usuario = "https://old.reddit.com/" + m["data-permalink"]
+    #print(aux.text)
+    #print(autor)
+    if aux:
+        #print("h")
+        j = requests.get(d + autor)
+        soup3 = BeautifulSoup(j.content, 'html.parser') 
+        
+        post_usuario = []
+        comentario_usuario = []
+        
+        karma = soup3.find("span", {"class": "karma"})
+        #print(karma)
+        for m in soup3.findAll("div", {"class": "thing"}):
+            #print("u")
+            #nombre_usuario = autor;
+            #karma = soup3.find("span", {"class": "karma"}).get_text()
+            #print(karma)
+            post_usuario.append({
+                'link': "https://old.reddit.com/" + m["data-permalink"]
+            })
+            
         datos_usuarios.append({
-            'nombre usuario': nombre_usuario,
+            'nombre': autor,
             'karma': karma,
             'post': post_usuario
         })
+        '''datos_usuarios.append({
+            'nombre': nombre_usuario,
+            'karma': karma.get_text(),
+            'posts': post_usuario,
+            'comentarios': comentario_usuario
+        })'''
+            
     #saca el texto de la descripcion de un post
     aux2 = i.find("div", {"class" : "expando"})
     if aux2:        
@@ -100,6 +123,6 @@ with open('comentarios.csv', 'w', newline='') as csvfile:
     writer.writerows(datos_comentario)
 
 with open('usuarios.csv', 'w', newline='') as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=['nombre usuario','karma','post'])
+    writer = csv.DictWriter(csvfile, fieldnames=['nombre', 'karma', 'post'])
     writer.writeheader() 
-    writer.writerow(datos_usuarios)
+    writer.writerows(datos_usuarios)
