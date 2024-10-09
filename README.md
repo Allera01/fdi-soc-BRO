@@ -10,7 +10,7 @@
 
 # Informacion
 
-ES un programa en Python que realiza el web scraping del subreddit r/spain para crear un conjunto de datos que contenga información sobree sta red social.
+Es un programa en Python que realiza el web scraping del subreddit r/spain para crear un conjunto de datos que contenga información sobree sta red social.
 
 La informacion que vamos a obtener es la de la paguina principal de este subreddit: los posts, los comentarios de esos posts y los usuarios que han creado eso posts
 
