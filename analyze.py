@@ -7,7 +7,7 @@ import requests
 
 dir_cache = Path("cache")
 f = dir_cache / "index.html"
-t = f.read_text(encoding='utf-8', errors='ignore')
+t = f.read_text(encoding="utf-8", errors="ignore")
 p = "https://old.reddit.com/r/spain/comments/"
 d = "https://old.reddit.com/user/"
 
@@ -47,10 +47,10 @@ for i in soup.findAll("div", {"class": "thing"}):
             # se buca el autor en el html, si no esta lo descarga de reddit
             if not Path.exists(cache_file):
                 j = llamada_reddit(d + autor)
-                cache_file.write_text(j.text, encoding='utf-8', errors='ignore')
+                cache_file.write_text(j.text, encoding="utf-8", errors="ignore")
                 soup3 = BeautifulSoup(j.content, "html.parser")
             else:
-                lol = cache_file.read_text(encoding='utf-8', errors='ignore')
+                lol = cache_file.read_text(encoding="utf-8", errors="ignore")
                 soup3 = BeautifulSoup(lol, "html.parser")
             # se descartan los autores que tengan la cuenta en privado
             h = soup3.find("meta", {"name": "robots"})
@@ -126,10 +126,10 @@ for z in range(0, len(datos_post)):
     # se buca el post en el html, si no esta lo descarga de reddit
     if not Path.exists(cache_file):
         r = llamada_reddit(p + dir)
-        cache_file.write_text(r.text, encoding='utf-8', errors='ignore')
+        cache_file.write_text(r.text, encoding="utf-8", errors="ignore")
         soup2 = BeautifulSoup(r.content, "html.parser")
     else:
-        lol = cache_file.read_text(encoding='utf-8', errors='ignore')
+        lol = cache_file.read_text(encoding="utf-8", errors="ignore")
         soup2 = BeautifulSoup(lol, "html.parser")
     l = l + 1
     # cuenta sirve para saltarse el primer thing del post, que es el propio post
@@ -146,58 +146,61 @@ for z in range(0, len(datos_post)):
                         autor_post = aux.text
                     else:
                         autor_post = "Autor desconocido"
-                    if (autor_post not in autores_guardados) and (usernuevo < 50):
-                      cache_file = dir_cache / (autor_post + ".html")
-                      # se buca el autor en el html, si no esta lo descarga de reddit
-                      if not Path.exists(cache_file):
-                        j = llamada_reddit(d + autor_post)
-                        cache_file.write_text(j.text, encoding='utf-8', errors='ignore')
-                        soup3 = BeautifulSoup(j.content, "html.parser")
-                      else:
-                         lol = cache_file.read_text(encoding='utf-8', errors='ignore')
-                         soup3 = BeautifulSoup(lol, "html.parser")
-                      # se descartan los autores que tengan la cuenta en privado
-                      h = soup3.find("meta", {"name": "robots"})
-                      if not h:
-                         post_usuario = []
-                         comentario_usuario = []
+                    if (autor_post not in autores_guardados) and (usernuevo < 30):
+                        cache_file = dir_cache / (autor_post + ".html")
+                        # se buca el autor en el html, si no esta lo descarga de reddit
+                        if not Path.exists(cache_file):
+                            j = llamada_reddit(d + autor_post)
+                            cache_file.write_text(
+                                j.text, encoding="utf-8", errors="ignore"
+                            )
+                            soup3 = BeautifulSoup(j.content, "html.parser")
+                        else:
+                            lol = cache_file.read_text(
+                                encoding="utf-8", errors="ignore"
+                            )
+                            soup3 = BeautifulSoup(lol, "html.parser")
+                        # se descartan los autores que tengan la cuenta en privado
+                        h = soup3.find("meta", {"name": "robots"})
+                        if not h:
+                            post_usuario = []
+                            comentario_usuario = []
 
-                         karma = soup3.find("span", {"class": "karma"})
-                         for m in soup3.findAll("div", {"class": "thing"}):
-                             if "link" in m.get("class", []):
-                                 post_usuario.append(
-                                 {
-                                  "link al post": "https://old.reddit.com/"
-                                  + m["data-permalink"]
-                                 }
-                               )
-                             elif "comment" in m.get("class", []):
-                                 comentario_usuario.append(
-                                 {
-                                  "link al comentario": "https://old.reddit.com/"
-                                  + m["data-permalink"]
-                                 }
-                              )
-                        
-                         # guarda la informacion del usuario
-                         usernuevo = usernuevo  + 1
-                         print(usernuevo)
-                         datos_usuarios.append(
-                         {
-                            "nombre": autor_post,
-                            "karma": karma.get_text(),
-                            "posts": post_usuario,
-                            "comentarios": comentario_usuario,
-                          }
-                        )
+                            karma = soup3.find("span", {"class": "karma"})
+                            for m in soup3.findAll("div", {"class": "thing"}):
+                                if "link" in m.get("class", []):
+                                    post_usuario.append(
+                                        {
+                                            "link al post": "https://old.reddit.com/"
+                                            + m["data-permalink"]
+                                        }
+                                    )
+                                elif "comment" in m.get("class", []):
+                                    comentario_usuario.append(
+                                        {
+                                            "link al comentario": "https://old.reddit.com/"
+                                            + m["data-permalink"]
+                                        }
+                                    )
 
-                      autores_guardados.add(autor_post)
+                            # guarda la informacion del usuario
+                            usernuevo = usernuevo + 1
+                            datos_usuarios.append(
+                                {
+                                    "nombre": autor_post,
+                                    "karma": karma.get_text(),
+                                    "posts": post_usuario,
+                                    "comentarios": comentario_usuario,
+                                }
+                            )
 
-                      fecha_comment = i.find("time")["title"]
-                      x = i.find("div", {"class": "md"})
-                      comentario = x.find("p").text
-                      # guarda la informacion del comentario
-                      datos_comentario.append(
+                        autores_guardados.add(autor_post)
+
+                    fecha_comment = i.find("time")["title"]
+                    x = i.find("div", {"class": "md"})
+                    comentario = x.find("p").text
+                    # guarda la informacion del comentario
+                    datos_comentario.append(
                         {
                             "comentario": comentario,
                             "fecha": fecha_comment,
@@ -206,12 +209,13 @@ for z in range(0, len(datos_post)):
                             "autor": autor_post,
                         }
                     )
-
         else:
             cuenta = cuenta + 1
 
 # Crea y escribe el .csv de los comentarios
-with open("comentarios.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
+with open(
+    "comentarios.csv", "w", newline="", encoding="utf-8", errors="ignore"
+) as csvfile:
     writer = csv.DictWriter(
         csvfile,
         fieldnames=["comentario", "fecha", "link al post al que responde", "autor"],
@@ -220,7 +224,9 @@ with open("comentarios.csv", "w", newline="", encoding='utf-8', errors='ignore')
     writer.writerows(datos_comentario)
 
 # Crea y escribe el .csv de los usuarios
-with open("usuarios.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
+with open(
+    "usuarios.csv", "w", newline="", encoding="utf-8", errors="ignore"
+) as csvfile:
     writer = csv.DictWriter(
         csvfile, fieldnames=["nombre", "karma", "posts", "comentarios"]
     )
@@ -228,7 +234,7 @@ with open("usuarios.csv", "w", newline="", encoding='utf-8', errors='ignore') as
     writer.writerows(datos_usuarios)
 
 # Crea y escribe el .csv de los posts
-with open("posts.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
+with open("posts.csv", "w", newline="", encoding="utf-8", errors="ignore") as csvfile:
     writer = csv.DictWriter(
         csvfile, fieldnames=["id_post", "titulo", "autor", "fecha", "descripcion"]
     )
