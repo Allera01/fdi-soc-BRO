@@ -22,7 +22,15 @@ La informacion de los usuarios que vamos a guardar es: el nombre, el karma, los 
 
 # Cómo instalar
 
-TODO (poner como instalar las dependencias del pyproject y el uv)
+hay que tener un entorno de ejecucion de python
+
+descargar y almacenar en una carpeta los archivos: main.py, analyze.py y requerimientos.txt 
+
+abrir el terminal direccionada a esa carpeta y ejecutar el comando:
+
+  ~~~
+  pip install -r requerimientos.txt
+  ~~~
 
 # Cómo ejecutar
 
@@ -31,10 +39,17 @@ Una vez instalados ya se puede ejecutar el programa
 Ejecuta en la linea de comandos de python:
 
   ~~~
-  uv run main.py
+  python main.py
   ~~~
   ~~~
-  uv run analyze.py
+  python analyze.py
+  ~~~
+o si tienes instalado python3
+  ~~~
+  python3 main.py
+  ~~~
+  ~~~
+  python3 analyze.py
   ~~~
 
 Una vez ejecutado deberian aparecer en la carpeta 3 csv (usuarios.csv, posts.csv, comentarios.csv) con la informacion de la pagina principal de [reddit españa](https://old.reddit.com/r/spain/)
