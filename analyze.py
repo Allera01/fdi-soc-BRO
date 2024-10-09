@@ -7,7 +7,8 @@ import requests
 
 dir_cache = Path("cache")
 f = dir_cache / "index.html"
-t = f.read_text()
+
+t = f.read_text(encoding='utf-8', errors='ignore')
 p = "https://old.reddit.com/r/spain/comments/"
 d = "https://old.reddit.com/user/"
 
@@ -47,10 +48,10 @@ for i in soup.findAll("div", {"class": "thing"}):
             # se buca el autor en el html, si no esta lo descarga de reddit
             if not Path.exists(cache_file):
                 j = llamada_reddit(d + autor)
-                cache_file.write_text(j.text)
+                cache_file.write_text(j.text, encoding='utf-8', errors='ignore')
                 soup3 = BeautifulSoup(j.content, "html.parser")
             else:
-                lol = cache_file.read_text()
+                lol = cache_file.read_text(encoding='utf-8', errors='ignore')
                 soup3 = BeautifulSoup(lol, "html.parser")
             # se descartan los autores que tengan la cuenta en privado
             h = soup3.find("meta", {"name": "robots"})
@@ -115,6 +116,22 @@ for i in soup.findAll("div", {"class": "thing"}):
         }
     )
 
+# Crea y escribe el .csv de los posts
+with open("posts.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
+    writer = csv.DictWriter(
+        csvfile, fieldnames=["id_post", "titulo", "autor", "fecha", "descripcion"]
+    )
+    writer.writeheader()
+    writer.writerows(datos_post)
+
+# Crea y escribe el .csv de los usuarios que haya en la paguina principal de /r/spain
+with open("usuarios.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
+    writer = csv.DictWriter(
+        csvfile, fieldnames=["nombre", "karma", "posts", "comentarios"]
+    )
+    writer.writeheader()
+    writer.writerows(datos_usuarios)
+
 # l sirve para recorrer todos los post que tengamos guardados y sacamos sus comentarios
 l = 0
 for z in range(0, len(datos_post)):
@@ -125,10 +142,10 @@ for z in range(0, len(datos_post)):
     # se buca el post en el html, si no esta lo descarga de reddit
     if not Path.exists(cache_file):
         r = llamada_reddit(p + dir)
-        cache_file.write_text(r.text)
+        cache_file.write_text(r.text, encoding='utf-8', errors='ignore')
         soup2 = BeautifulSoup(r.content, "html.parser")
     else:
-        lol = cache_file.read_text()
+        lol = cache_file.read_text(encoding='utf-8', errors='ignore')
         soup2 = BeautifulSoup(lol, "html.parser")
     l = l + 1
     # cuenta sirve para saltarse el primer thing del post, que es el propio post
@@ -162,26 +179,10 @@ for z in range(0, len(datos_post)):
             cuenta = cuenta + 1
 
 # Crea y escribe el .csv de los comentarios
-with open("comentarios.csv", "w", newline="") as csvfile:
+with open("comentarios.csv", "w", newline="", encoding='utf-8', errors='ignore') as csvfile:
     writer = csv.DictWriter(
         csvfile,
         fieldnames=["comentario", "fecha", "link al post al que responde", "autor"],
     )
     writer.writeheader()
     writer.writerows(datos_comentario)
-
-# Crea y escribe el .csv de los usuarios que haya en la paguina principal de /r/spain
-with open("usuarios.csv", "w", newline="") as csvfile:
-    writer = csv.DictWriter(
-        csvfile, fieldnames=["nombre", "karma", "posts", "comentarios"]
-    )
-    writer.writeheader()
-    writer.writerows(datos_usuarios)
-
-# Crea y escribe el .csv de los posts
-with open("posts.csv", "w", newline="") as csvfile:
-    writer = csv.DictWriter(
-        csvfile, fieldnames=["id_post", "titulo", "autor", "fecha", "descripcion"]
-    )
-    writer.writeheader()
-    writer.writerows(datos_post)

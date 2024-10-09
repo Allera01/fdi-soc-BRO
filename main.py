@@ -11,5 +11,5 @@ dir_cache = Path("cache")
 dir_cache.mkdir(exist_ok=True)
 
 cache_file = dir_cache / "index.html"
-cache_file.write_text(r.text)
-print(r.text)
+cache_file.write_text(r.text, encoding='utf-8', errors='ignore')
+print("done")
