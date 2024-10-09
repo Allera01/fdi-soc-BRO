@@ -24,7 +24,7 @@ La informacion de los usuarios que vamos a guardar es: el nombre, el karma, los 
 
 hay que tener un entorno de ejecucion de python
 
-descargar y almacenar en una carpeta los archivos: **main.py**, **analyze.py** y **requerimientos.txt**. 
+descargar y almacenar en una carpeta los archivos: **main.py**, **configuracion_p1.toml**, **analyze.py** y **requerimientos.txt**. 
 
 abrir el terminal direccionada a esa carpeta y ejecutar el comando:
 
