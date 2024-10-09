@@ -8,7 +8,7 @@
 
 ## P1 informacion de la pagina principal de [reddit españa](https://old.reddit.com/r/spain/)
 
-#Informacion
+# Informacion
 
 ES un programa en Python que realiza el web scraping del subreddit r/spain para crear un conjunto de datos que contenga información sobree sta red social.
 
