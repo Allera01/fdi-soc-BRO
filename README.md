@@ -22,11 +22,11 @@ La informacion de los usuarios que vamos a guardar es: el nombre, el karma, los 
 
 # Cómo instalar
 
-hay que tener un entorno de ejecucion de python
+Hay que tener un entorno de ejecucion de python
 
-descargar y almacenar en una carpeta los archivos: **main.py**, **configuracion_p1.toml**, **analyze.py** y **requerimientos.txt**. 
+Descargar y almacenar en una carpeta los archivos: **main.py**, **configuracion_p1.toml**, **analyze.py** y **requerimientos.txt**. 
 
-abrir el terminal direccionada a esa carpeta y ejecutar el comando:
+Abrir el terminal direccionada a esa carpeta y ejecutar el comando:
 
   ~~~
   pip install -r requerimientos.txt
