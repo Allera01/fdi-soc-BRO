@@ -29,8 +29,10 @@ Descargar y almacenar en una carpeta los archivos: **main.py**, **configuracion_
 Abrir el terminal direccionada a esa carpeta y ejecutar el comando:
 
   ~~~
-  pip install -r requerimientos.txt
+Para empezar hay que descargarse uv: pip install --user --break-system-packages uv
   ~~~
+
+uv add bs4 bachoff requests pathlib networkx
 
 # Cómo ejecutar
 
@@ -51,5 +53,6 @@ o si tienes instalado python3
   ~~~
   python3 analyze.py
   ~~~
+Para ejecutar el programa en uv: uv run main.py seguido de uv run analyze.py
 
 Una vez ejecutado deberian aparecer en la carpeta 3 csv (usuarios.csv, posts.csv, comentarios.csv) con la informacion de la pagina principal de [reddit españa](https://old.reddit.com/r/spain/)
