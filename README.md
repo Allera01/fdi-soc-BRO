@@ -47,7 +47,9 @@ Una vez instalados ya se puede ejecutar el programa
 Ejecutar el programa en uv:
 
 ~~~
-uv run main.py 
+uv run main.py
+~~~
+~~~ 
 uv run analyze.py
 ~~~
 
