@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import networkx as nx
 import backoff
 import time
 import csv
@@ -30,6 +31,55 @@ def llamada_reddit(url):
     return response
 
 
+def comprobacion_cache(url, dir_cache):
+    if not Path.exists(dir_cache):
+        r = llamada_reddit(url)
+        dir_cache.write_text(r.text, encoding="utf-8", errors="ignore")
+        soup = BeautifulSoup(r.content, "html.parser")
+    else:
+        lol = dir_cache.read_text(encoding="utf-8", errors="ignore")
+        soup = BeautifulSoup(lol, "html.parser")
+
+    return soup
+
+
+def busqueda_usuario(autor):
+    cache_file = dir_cache / (autor + ".html")
+    # se buca el autor en el html, si no esta lo descarga de reddit
+    soup3 = comprobacion_cache(d + autor, cache_file)
+    # se descartan los autores que tengan la cuenta en privado
+    h = soup3.find("meta", {"name": "robots"})
+    if not h:
+        post_usuario = []
+        comentario_usuario = []
+
+        karma = soup3.find("span", {"class": "karma"})
+        for m in soup3.findAll("div", {"class": "thing"}):
+            if "link" in m.get("class", []):
+                post_usuario.append(
+                    {"link al post": "https://old.reddit.com/" + m["data-permalink"]}
+                )
+            elif "comment" in m.get("class", []):
+                comentario_usuario.append(
+                    {
+                        "link al comentario": "https://old.reddit.com/"
+                        + m["data-permalink"]
+                    }
+                )
+
+        # guarda la informacion del usuario
+        datos_usuarios.append(
+            {
+                "nombre": autor,
+                "karma": karma.get_text(),
+                "posts": post_usuario,
+                "comentarios": comentario_usuario,
+            }
+        )
+
+    autores_guardados.add(autor)
+
+
 for i in soup.findAll("div", {"class": "thing"}):
     id_post = i["data-fullname"]
     titulo = (i.find("a", {"class": "title"})).text
@@ -40,52 +90,9 @@ for i in soup.findAll("div", {"class": "thing"}):
         autor = "Autor desconocido"
     fecha = i.find("time")["title"]
     # si se conoce el autor del post se busca y se saca un link a sus post y comentarios mas recientes
-    if aux:
-        # se excluye los autores que ya estan guardados
-        if autor not in autores_guardados:
-            cache_file = dir_cache / (autor + ".html")
-            # se buca el autor en el html, si no esta lo descarga de reddit
-            if not Path.exists(cache_file):
-                j = llamada_reddit(d + autor)
-                cache_file.write_text(j.text, encoding="utf-8", errors="ignore")
-                soup3 = BeautifulSoup(j.content, "html.parser")
-            else:
-                lol = cache_file.read_text(encoding="utf-8", errors="ignore")
-                soup3 = BeautifulSoup(lol, "html.parser")
-            # se descartan los autores que tengan la cuenta en privado
-            h = soup3.find("meta", {"name": "robots"})
-            if not h:
-                post_usuario = []
-                comentario_usuario = []
-
-                karma = soup3.find("span", {"class": "karma"})
-                for m in soup3.findAll("div", {"class": "thing"}):
-                    if "link" in m.get("class", []):
-                        post_usuario.append(
-                            {
-                                "link al post": "https://old.reddit.com/"
-                                + m["data-permalink"]
-                            }
-                        )
-                    elif "comment" in m.get("class", []):
-                        comentario_usuario.append(
-                            {
-                                "link al comentario": "https://old.reddit.com/"
-                                + m["data-permalink"]
-                            }
-                        )
-
-                # guarda la informacion del usuario
-                datos_usuarios.append(
-                    {
-                        "nombre": autor,
-                        "karma": karma.get_text(),
-                        "posts": post_usuario,
-                        "comentarios": comentario_usuario,
-                    }
-                )
-
-            autores_guardados.add(autor)
+    # se excluye los autores que ya estan guardados
+    if aux and (autor not in autores_guardados):
+        busqueda_usuario(autor)
 
     # saca el texto de la descripcion de un post
     aux2 = i.find("div", {"class": "expando"})
@@ -124,91 +131,41 @@ for z in range(0, len(datos_post)):
     dir = b.lstrip("t3_")
     cache_file = dir_cache / (b + ".html")
     # se buca el post en el html, si no esta lo descarga de reddit
-    if not Path.exists(cache_file):
-        r = llamada_reddit(p + dir)
-        cache_file.write_text(r.text, encoding="utf-8", errors="ignore")
-        soup2 = BeautifulSoup(r.content, "html.parser")
-    else:
-        lol = cache_file.read_text(encoding="utf-8", errors="ignore")
-        soup2 = BeautifulSoup(lol, "html.parser")
+    soup2 = comprobacion_cache(p + dir, cache_file)
     l = l + 1
     # cuenta sirve para saltarse el primer thing del post, que es el propio post
     cuenta = 0
     for i in soup2.findAll("div", {"class": "thing"}):
         if cuenta > 0:
             # se descarta los que no sean comentarios
-            if "comment" in i.get("class", []):
-                # se descarta los que estan eliminados
-                if not "deleted" in i.get("class", []):
-                    id_post = i["data-fullname"]
-                    aux = i.find("a", {"class": "author"})
-                    if aux:
-                        autor_post = aux.text
-                    else:
-                        autor_post = "Autor desconocido"
-                    if (autor_post not in autores_guardados) and (usernuevo < 30):
-                        cache_file = dir_cache / (autor_post + ".html")
-                        # se buca el autor en el html, si no esta lo descarga de reddit
-                        if not Path.exists(cache_file):
-                            j = llamada_reddit(d + autor_post)
-                            cache_file.write_text(
-                                j.text, encoding="utf-8", errors="ignore"
-                            )
-                            soup3 = BeautifulSoup(j.content, "html.parser")
-                        else:
-                            lol = cache_file.read_text(
-                                encoding="utf-8", errors="ignore"
-                            )
-                            soup3 = BeautifulSoup(lol, "html.parser")
-                        # se descartan los autores que tengan la cuenta en privado
-                        h = soup3.find("meta", {"name": "robots"})
-                        if not h:
-                            post_usuario = []
-                            comentario_usuario = []
+            # se descarta los que estan eliminados
+            if ("comment" in i.get("class", [])) and (
+                not "deleted" in i.get("class", [])
+            ):
+                id_post = i["data-fullname"]
+                aux = i.find("a", {"class": "author"})
+                if aux:
+                    autor_post = aux.text
+                else:
+                    autor_post = "Autor desconocido"
 
-                            karma = soup3.find("span", {"class": "karma"})
-                            for m in soup3.findAll("div", {"class": "thing"}):
-                                if "link" in m.get("class", []):
-                                    post_usuario.append(
-                                        {
-                                            "link al post": "https://old.reddit.com/"
-                                            + m["data-permalink"]
-                                        }
-                                    )
-                                elif "comment" in m.get("class", []):
-                                    comentario_usuario.append(
-                                        {
-                                            "link al comentario": "https://old.reddit.com/"
-                                            + m["data-permalink"]
-                                        }
-                                    )
+                if (autor_post not in autores_guardados) and (usernuevo < 30) and aux:
+                    busqueda_usuario(autor_post)
+                    usernuevo += 1
 
-                            # guarda la informacion del usuario
-                            usernuevo = usernuevo + 1
-                            datos_usuarios.append(
-                                {
-                                    "nombre": autor_post,
-                                    "karma": karma.get_text(),
-                                    "posts": post_usuario,
-                                    "comentarios": comentario_usuario,
-                                }
-                            )
-
-                        autores_guardados.add(autor_post)
-
-                    fecha_comment = i.find("time")["title"]
-                    x = i.find("div", {"class": "md"})
-                    comentario = x.find("p").text
-                    # guarda la informacion del comentario
-                    datos_comentario.append(
-                        {
-                            "comentario": comentario,
-                            "fecha": fecha_comment,
-                            "link al post al que responde": "https://old.reddit.com/"
-                            + i["data-permalink"],
-                            "autor": autor_post,
-                        }
-                    )
+                fecha_comment = i.find("time")["title"]
+                x = i.find("div", {"class": "md"})
+                comentario = x.find("p").text
+                # guarda la informacion del comentario
+                datos_comentario.append(
+                    {
+                        "comentario": comentario,
+                        "fecha": fecha_comment,
+                        "link al post al que responde": "https://old.reddit.com/"
+                        + i["data-permalink"],
+                        "autor": autor_post,
+                    }
+                )
         else:
             cuenta = cuenta + 1
 
