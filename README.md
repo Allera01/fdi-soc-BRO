@@ -1,4 +1,4 @@
-### ANÁLISIS DE REDES SOCIALES
+# ANÁLISIS DE REDES SOCIALES
 
 ## Estudiantes:
 - Mario Carrilero Sánchez
@@ -8,7 +8,7 @@
 
 ## P1 información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
-# Información
+### Información
 
 Es un programa en Python que realiza el web scraping del subreddit r/spain para crear un conjunto de datos que contenga información sobre esta red social.
 
@@ -20,7 +20,7 @@ La información de los comentarios que vamos a guardar es: el texto, la fecha, e
 
 La información de los usuarios que vamos a guardar es: el nombre, el karma, los posts creados y los comentarios hechos.
 
-# Cómo instalar
+### Cómo instalar
 
 Es necesario contar con un entorno de ejecución de Python.
 
@@ -40,7 +40,7 @@ Para descargarse las librerías:
 uv add bs4 bachoff requests pathlib networkx
 ~~~
 
-# Cómo ejecutar
+### Cómo ejecutar
 
 Una vez instalados ya se puede ejecutar el programa.
 
@@ -55,3 +55,5 @@ uv run analyze.py
 
 
 Una vez ejecutado deberían aparecer en la carpeta tres ficheros en formato csv (usuarios.csv, posts.csv, comentarios.csv) con la información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
+
+## P2 investigación en conjuntos de datos extraídos de [Twitter/X](https://x.com/)
