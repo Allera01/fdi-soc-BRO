@@ -20,7 +20,7 @@ La información de los comentarios que vamos a guardar es: el texto, la fecha, e
 
 La información de los usuarios que vamos a guardar es: el nombre, el karma, los posts creados y los comentarios hechos.
 
-# Cómo instalar
+### Cómo instalar
 
 Es necesario contar con un entorno de ejecución de Python.
 
@@ -40,7 +40,7 @@ Para descargarse las librerías:
 uv add bs4 bachoff requests pathlib networkx
 ~~~
 
-# Cómo ejecutar
+### Cómo ejecutar
 
 Una vez instalados ya se puede ejecutar el programa.
 
