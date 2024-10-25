@@ -11,10 +11,12 @@ tknzr = nltk.tokenize.TweetTokenizer()
 
 nltk.download('punkt_tab')
 
+#Separar las palabras
 def preprocess(text):
     tokens = [t.lower() for t in tknzr.tokenize(text)]
     return tokens
 
+#Quitar las URL y los signos de puntuación
 def remove_punctuation(text):
     url_pattern = r'http[s]?://\S+|www\.\S+'
     # Eliminar URLs del texto
@@ -23,49 +25,54 @@ def remove_punctuation(text):
     # Tokenizar el texto
     tokens = word_tokenize(text_without_urls)
     # Filtrar tokens para eliminar signos de puntuación
-    tokens = [token for token in tokens if token not in string.punctuation]
+    tokens = [token.lower() for token in tokens if token not in string.punctuation]
     return tokens
 
 df = pd.read_csv("cyberpunk.csv")
 #df["tokens"] = df["text"].apply(preprocess)
 df['tokens'] = df['text'].apply(remove_punctuation)
 
-""" all_tokens = [token for tokens_list in df['tokens'] for token in tokens_list]
+#Añadir a all_tokens todos los tokens sin repetición
+all_tokens = [token for tokens_list in df['tokens'] for token in tokens_list]
+#Contar la cantidad de veces que aparece cada token
 token_counts = pd.Series(all_tokens).value_counts()
 
 with open('token_counts.txt', 'w') as f:
     f.write(token_counts.to_string())
-
+"""
 print(token_counts) """
 
 
 
 df['polarity'] = df['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
 
-# Filtrar la frecuencia de las palabras "good" y "bad"
-df['good_count'] = df['tokens'].apply(lambda tokens: tokens.count('good'))
-df['bad_count'] = df['tokens'].apply(lambda tokens: tokens.count('bad'))
+# Calcular la longitud del tweet
+df['tweet_length'] = df['text'].apply(len)
 
-# Filtrar solo las filas con presencia de "good" o "bad"
-df_filtered = df[(df['good_count'] > 0) | (df['bad_count'] > 0)]
+# Filtrar los tweets que contienen las palabras "good" o "bad"
+df['contains_good'] = df['tokens'].apply(lambda tokens: 'good' in tokens)
+df['contains_bad'] = df['tokens'].apply(lambda tokens: 'bad' in tokens)
 
-# Crear gráfico de polaridad
+# Filtrar solo las filas con "good" o "bad"
+df_good_bad = df[(df['contains_good']) | (df['contains_bad'])]
+
+# Crear gráfico de polaridad vs longitud del tweet, diferenciando "good" y "bad"
 plt.figure(figsize=(10, 6))
 
-# Graficar la frecuencia de "good" en relación con la polaridad
-plt.scatter(df_filtered[df_filtered['good_count'] > 0]['polarity'],
-            df_filtered[df_filtered['good_count'] > 0]['good_count'],
-            color='green', label='Good')
+# Graficar tweets con "good"
+plt.scatter(df_good_bad[df_good_bad['contains_good']]['tweet_length'],
+            df_good_bad[df_good_bad['contains_good']]['polarity'],
+            color='green', label='Good', alpha=0.5)
 
-# Graficar la frecuencia de "bad" en relación con la polaridad
-plt.scatter(df_filtered[df_filtered['bad_count'] > 0]['polarity'],
-            df_filtered[df_filtered['bad_count'] > 0]['bad_count'],
-            color='red', label='Bad')
+# Graficar tweets con "bad"
+plt.scatter(df_good_bad[df_good_bad['contains_bad']]['tweet_length'],
+            df_good_bad[df_good_bad['contains_bad']]['polarity'],
+            color='red', label='Bad', alpha=0.5)
 
 # Personalización del gráfico
-plt.xlabel('Polaridad')
-plt.ylabel('Frecuencia')
-plt.title('Relación de Polaridad con las Palabras "Good" y "Bad"')
+plt.xlabel('Longitud del Tweet')
+plt.ylabel('Polaridad')
+plt.title('Relación entre Polaridad y Longitud del Tweet para "Good" y "Bad"')
 plt.legend()
 plt.grid(True)
 plt.savefig("grafico_polaridad.png")
