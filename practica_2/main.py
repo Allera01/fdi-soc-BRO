@@ -50,11 +50,12 @@ df['polarity'] = df['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
 df['tweet_length'] = df['text'].apply(len)
 
 # Filtrar los tweets que contienen las palabras "good" o "bad"
-df['contains_good'] = df['tokens'].apply(lambda tokens: 'good' in tokens)
-df['contains_bad'] = df['tokens'].apply(lambda tokens: 'bad' in tokens)
+df['contains_good'] = df['tokens'].apply(lambda tokens: 'cyberpunk' in tokens)
+#df['contains_bad'] = df['tokens'].apply(lambda tokens: 'character' in tokens)
 
 # Filtrar solo las filas con "good" o "bad"
-df_good_bad = df[(df['contains_good']) | (df['contains_bad'])]
+#df_good_bad = df[(df['contains_good']) | (df['contains_bad'])]
+df_good_bad = df[(df['contains_good'])]
 
 # Crear gráfico de polaridad vs longitud del tweet, diferenciando "good" y "bad"
 plt.figure(figsize=(10, 6))
@@ -62,12 +63,12 @@ plt.figure(figsize=(10, 6))
 # Graficar tweets con "good"
 plt.scatter(df_good_bad[df_good_bad['contains_good']]['tweet_length'],
             df_good_bad[df_good_bad['contains_good']]['polarity'],
-            color='green', label='Good', alpha=0.5)
+            color='green', label='cyberpunk', alpha=0.5)
 
 # Graficar tweets con "bad"
-plt.scatter(df_good_bad[df_good_bad['contains_bad']]['tweet_length'],
-            df_good_bad[df_good_bad['contains_bad']]['polarity'],
-            color='red', label='Bad', alpha=0.5)
+#plt.scatter(df_good_bad[df_good_bad['contains_bad']]['tweet_length'],
+            #df_good_bad[df_good_bad['contains_bad']]['polarity'],
+            #color='red', label='character', alpha=0.5)
 
 # Personalización del gráfico
 plt.xlabel('Longitud del Tweet')
