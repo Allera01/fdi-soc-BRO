@@ -9,10 +9,9 @@ from collections import Counter
 import string
 import matplotlib.pyplot as plt
 
+nltk.download('punkt_tab')
 """ 
 tknzr = nltk.tokenize.TweetTokenizer()
-
-nltk.download('punkt_tab')
 
 #Separar las palabras
 def preprocess(text):
@@ -28,7 +27,6 @@ def remove_punctuation(text):
     tokens = word_tokenize(text_without_urls)
     # Filtrar tokens para eliminar signos de puntuación
     tokens = [token.lower() for token in tokens if token not in string.punctuation]
-    #tokens = [word for word in words if word.lower() not in stop_words]
     return tokens
 
 def grafico_polaridad_2p(palabra1, palabra2, datos):
@@ -95,35 +93,79 @@ def grafico_polaridad_1p(palabra, datos):
     plt.grid(True)
     plt.savefig("grafico_polaridad_" + palabra +".png")
     
+def sacar_bi_tri_gramas(df):
+    bigramas = []
+    trigramas = []
+
+    for tokens in df['tokens']:
+        bigramas.extend(ngrams(tokens, 2))  # Generar bigramas
+        trigramas.extend(ngrams(tokens, 3))  # Generar trigramas
+
+    # Contar frecuencias de bigramas y trigramas
+    bigramas_frecuentes = Counter(bigramas)
+    trigramas_frecuentes = Counter(trigramas)
+
+    # Mostrar los 10 bigramas y trigramas más comunes
+    print("Bigramas más comunes:", bigramas_frecuentes.most_common(20))
+    print("Trigramas más comunes:", trigramas_frecuentes.most_common(20))  
+    
+def diagrama_circular_dispositivos(df):
+    device_counts = df['source'].value_counts()
+
+    # Calcular el umbral del 1% sobre el total de tuits
+    total_tweets = device_counts.sum()
+    threshold = total_tweets * 0.015
+
+    # Crear una nueva serie para almacenar los dispositivos agrupados
+    device_counts_grouped = device_counts[device_counts >= threshold]
+    device_counts_grouped['Otros'] = device_counts[device_counts < threshold].sum()
+
+    # Crear el gráfico circular
+    plt.figure(figsize=(8, 8))
+    device_counts_grouped.plot(kind='pie', autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
+    plt.title("Distribución de tuits por dispositivo (agrupados los menores al 1.5%)")
+    plt.ylabel("")  # Ocultar la etiqueta del eje y  
+    plt.savefig("dispositivos.png")   
+    
+def sacar_tuits_horas(bf):
+    # Convierte la columna 'created_at' a tipo datetime
+    df['created_at'] = pd.to_datetime(bf['created_at'])
+
+    # Extrae la hora
+    df['hora'] = df['created_at'].dt.hour
+
+    # Cuenta la cantidad de tweets por hora
+    tweets_por_hora = df['hora'].value_counts().sort_index()
+
+    # Encuentra la hora con más tweets
+    hora_max_tweets = tweets_por_hora.idxmax()
+    max_tweets = tweets_por_hora.max()
+
+    #print(f"La hora con más tweets es: {hora_max_tweets}:00 con {max_tweets} tweets.")
+
+    plt.figure(figsize=(10, 5))
+    plt.bar(tweets_por_hora.index, tweets_por_hora.values, color='skyblue')
+    plt.xlabel('Hora del día')
+    plt.ylabel('Cantidad de tweets')
+    plt.title('Cantidad de tweets por hora')
+    plt.xticks(tweets_por_hora.index)  # Asegúrate de que todas las horas se muestren
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.savefig("horas.png") 
+    
 df = pd.read_csv("cyberpunk.csv")
 #df["tokens"] = df["text"].apply(preprocess)
 df['tokens'] = df['text'].apply(remove_punctuation)
 
 #descomentar para tener la lista de palabras junto a su numero de apariciones
-"""#Añadir a all_tokens todos los tokens sin repetición
+""" #Añadir a all_tokens todos los tokens sin repetición
 all_tokens = [token for tokens_list in df['tokens'] for token in tokens_list]
 #Contar la cantidad de veces que aparece cada token
 token_counts = pd.Series(all_tokens).value_counts()
 
 with open('token_counts.txt', 'w') as f:
     f.write(token_counts.to_string())
-"""
+ """
 #print(token_counts) 
-
-bigramas = []
-trigramas = []
-
-for tokens in df['tokens']:
-    bigramas.extend(ngrams(tokens, 2))  # Generar bigramas
-    trigramas.extend(ngrams(tokens, 3))  # Generar trigramas
-
-# Contar frecuencias de bigramas y trigramas
-bigramas_frecuentes = Counter(bigramas)
-trigramas_frecuentes = Counter(trigramas)
-
-# Mostrar los 10 bigramas y trigramas más comunes
-print("Bigramas más comunes:", bigramas_frecuentes.most_common(10))
-print("Trigramas más comunes:", trigramas_frecuentes.most_common(10))
 
 #descomentar dependiendo de que imagenes quieras ver
 #grafico_polaridad_1p('cyberpunk', df)
@@ -132,3 +174,29 @@ print("Trigramas más comunes:", trigramas_frecuentes.most_common(10))
 #grafico_polaridad_2p('patch','bugs',df)
 #grafico_polaridad_2p('graphics','performance',df)
 #grafico_polaridad_2p('story', 'gameplay', df)
+#sacar_bi_tri_gramas(df)
+#diagrama_circular_dispositivos(df)
+#sacar_tuits_horas(df)
+
+""" #datos varios 
+# Encontrar el tweet con más retweets
+tweet_max_rt = df.loc[df['retweet_count'].idxmax()]
+
+# Mostrar el tweet
+print(tweet_max_rt)
+
+#Filtrar tweets que contienen la palabra "V"
+tweets_con_v = df[df['text'].str.contains(r'\bV\b', na=False)]
+cantidad_tweets_con_v = len(tweets_con_v)
+# Mostrar los tweets filtrados
+print(f'Cantidad de tweets que contienen la palabra "V": {cantidad_tweets_con_v}')
+
+tweets_con_jackie = df[df['text'].str.contains('jackie', na=False, case=False)]
+cantidad_tweets_con_jackie = len(tweets_con_jackie)
+# Mostrar los tweets filtrados
+print(f'Cantidad de tweets que contienen la palabra "jackie": {cantidad_tweets_con_jackie}')
+# Filtrar tweets donde la columna 'location' no es None
+tweets_con_location = df[df['location'].notna()]
+
+# Mostrar los tweets filtrados
+print(tweets_con_location) """
