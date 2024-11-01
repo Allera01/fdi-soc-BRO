@@ -200,3 +200,57 @@ tweets_con_location = df[df['location'].notna()]
 
 # Mostrar los tweets filtrados
 print(tweets_con_location) """
+
+def detectar_tema(texto):
+    if re.search(r'\b(#?genshinimpact)\b', texto, re.IGNORECASE):
+        return 'Genshin'
+    elif re.search(r'\b(cyberpunk\s*2077)\b', texto, re.IGNORECASE):
+        return 'Cyberpunk'
+    return None
+
+# Aplicar la función a la columna 'text'
+df['tema'] = df['text'].apply(detectar_tema)
+
+# Contar la frecuencia de cada tema
+temas_count = df['tema'].value_counts()
+
+plt.figure(figsize=(8, 5))
+temas_count.plot(kind='bar', color=['blue', 'orange'])
+plt.title('Menciones de Temas en Twitter')
+plt.xlabel('Tema')
+plt.ylabel('Cantidad de Menciones')
+plt.xticks(rotation=0)  # Para mantener los nombres en horizontal
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.savefig("cyberpunkvsgenshin.png")
+
+"""
+# Filtrar las filas donde 'location' no sea None
+filtered_locations = df[df['location'] != 'None']['location']
+
+# Mostrar las ubicaciones únicas
+unique_locations = filtered_locations.unique()
+print(f"Mostrar todos los tweets cuya dirección sea visible:",unique_locations)
+
+
+# Contar la cantidad de tweets por usuario
+filtered_df = df[df['user'] != df['source']]
+user_tweet_counts = filtered_df['user'].value_counts()
+
+# Obtener los 100 usuarios con más tweets
+top_users = user_tweet_counts.head(10)
+
+plt.figure(figsize=(10, 8))
+plt.pie(top_users, labels=top_users.index, autopct=lambda p: f'{int(p * sum(top_users) / 100)}', startangle=140)
+plt.title('Top 10 Usuarios por Cantidad de Tweets (Excluyendo bots)')
+plt.savefig('UsersSinBots.png')
+
+
+user_tweet_count = df['user'].value_counts()
+
+# Obtener los 100 usuarios con más tweets
+top_user = user_tweet_count.head(10)
+plt.figure(figsize=(10, 8))
+plt.pie(top_user, labels=top_user.index, autopct=lambda p: f'{int(p * sum(top_user) / 100)}', startangle=140)
+plt.title('Top 10 Usuarios por Cantidad de Tweets (Con bots)')
+plt.savefig('UsersBots.png')
+"""
