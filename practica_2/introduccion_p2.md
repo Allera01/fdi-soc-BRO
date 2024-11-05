@@ -2,7 +2,7 @@
 title: Informe practica 2
 author:
     - Álvaro Llera <allera01@ucm.es>
-    - Mario Gallego<margal15@ucm.es>
+    - Mario Gallego <margal15@ucm.es>
     - Mario Carrilero <mcarri17@ucm.es>
     - Diego Linares <dielinar@ucm.es>
 
