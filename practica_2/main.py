@@ -169,22 +169,6 @@ if not os.path.isfile("./token_counts.txt"):
     with open('token_counts.txt', 'w') as f:
         f.write(token_counts.to_string())
 
-''' #datos varios 
-# Encontrar el tweet con más retweets
-tweet_max_rt = df.loc[df['retweet_count'].idxmax()]
-# Mostrar el tweet
-print(tweet_max_rt)
-
-#Filtrar tweets que contienen la palabra "V"
-tweets_con_v = df[df['text'].str.contains(r'\bV\b', na=False)]
-cantidad_tweets_con_v = len(tweets_con_v)
-# Mostrar los tweets filtrados
-print(f'Cantidad de tweets que contienen la palabra "V": {cantidad_tweets_con_v}')
-tweets_con_jackie = df[df['text'].str.contains('jackie', na=False, case=False)]
-cantidad_tweets_con_jackie = len(tweets_con_jackie)
-# Mostrar los tweets filtrados
-print(f'Cantidad de tweets que contienen la palabra "jackie": {cantidad_tweets_con_jackie}')'''
-
 #tuits que tienen la localizacion activa
 if not os.path.isfile("./tweets_con_location.txt"):
     # Filtrar tweets donde la columna 'location' no es None
