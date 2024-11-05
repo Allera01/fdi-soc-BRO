@@ -38,7 +38,7 @@ def grafico_polaridad_1p(palabra, datos):
 
 ## Resultado:
 
-![](grafico_polaridad_cyberpunk.png){height=8cm}
+![](grafico_polaridad_cyberpunk.png){height=10cm}
 
 **2.** Analizamos cyberpunk frente al juego genshin impact, viendo que los jugadores de este último lo utilizaban para mencionar su juego.
 
@@ -72,7 +72,7 @@ if not os.path.isfile("./cyberpunkvsgenshin.png"):
 
 ## Resultado:
 
-![](cyberpunkvsgenshin.png){height=8cm}
+![](cyberpunkvsgenshin.png){height=10cm}
 
 **3.** Analizamos otro aspecto no tan relevante en relación al juego en si, pero si relevante para nosotros como es los dispositivos en los que más se twiteó sobre el tema, habiendo un gran reparto entre la propia aplicación de Twiter, iPhone y Android, siendo la que más en la aplicación de twiter, pero sin sacar gran ventaja a las otras dos. Cabe destacar que este análisis los hicimos con un gráfico circular.
 
@@ -101,31 +101,31 @@ def diagrama_circular_dispositivos(df):
 
 ## Resultado:
 
-![](dispositivos.png){height=8cm}
+![](dispositivos.png){height=10cm}
 
 **4.** Con un gráfico de polaridad analizamos los gráficos juntos con la performance del juego, viendo que por parte de ambas hay más sensaciones buenas que malas, llegando a la conclusión de que estos dos aspectos del juego gustaron a los jugadores.
 
 ## Resultado:
 
-![](grafico_polaridad_graphics_performance.png){height=8cm}
+![](grafico_polaridad_graphics_performance.png){height=10cm}
 
 **5.** Analizamos también los bugs junto con los parches del juego para arreglar esos bugs, estando en un gráfico de polaridad bastante igualado, tentando un poco más hacia el positivo, aún así habiendo muchos negativos.
 
 ## Resultado:
 
-![](grafico_polaridad_patch_bugs.png){height=8cm}
+![](grafico_polaridad_patch_bugs.png){height=10cm}
 
 **6.** El juego salió para diferentes plataformas y nos planteamos comparar en un gráfico de polaridad los sentimientos que tuvieron los jugadores de steam frente a los jugadores de playstation y lo primero que llama la atención es que opinaron muchos más jugadores de steam que de playstation, sin embargo para ambos la opinión se mantiene por lo general neutra tirando hacia el lado positivos.
 
 ## Resultado:
 
-![](grafico_polaridad_steam_playstation.png){height=8cm}
+![](grafico_polaridad_steam_playstation.png){height=10cm}
 
 **7.** Sacamos otro gráfico de polaridad en relación a la historia y el gameplay, llegando a la conclusión que fueon dos aspectos que también gustaron de salida.
 
 ## Resultado:
 
-![](grafico_polaridad_story_gameplay.png){height=8cm}
+![](grafico_polaridad_story_gameplay.png){height=10cm}
 
 ## Código del 4, 5, 6 y 7
 
@@ -189,7 +189,7 @@ def sacar_tuits_horas(bf):
 
 ## Resultado:
 
-![](horas.png){height=8cm}
+![](horas.png){height=10cm}
 
 **9.** También hicimos dos gráficos circulares para ver los 10 usuarios que publicaron más twits, primero con bots y luego excluyendo a estos.
 
@@ -218,9 +218,9 @@ if not os.path.isfile("./UsersBots.png"):
 
 ## Resultado:
 
-![](UsersBots.png){height=8cm}
+![](UsersBots.png){height=10cm}
 
-![](UsersSinBots.png){height=8cm}
+![](UsersSinBots.png){height=10cm}
 
 **10.** Finalmente sacamos los bigramas y trigramas que se repitan un minimo un minimo de 50 veces para ver cuales son las palabras que mas se repiten
 
