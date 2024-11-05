@@ -57,3 +57,57 @@ uv run analyze.py
 Una vez ejecutado deberían aparecer en la carpeta tres ficheros en formato csv (usuarios.csv, posts.csv, comentarios.csv) con la información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
 ## P2 investigación en conjuntos de datos extraídos de [Twitter/X](https://x.com/)
+
+### Información
+
+Es un código en python cuya función es extraer de los twits relacionados con el juego cyberpunk información que nosotros consideremos relevante. Esto lo hace mediante
+diferentes gráficos (polaridad, circulares, ...).
+
+Como ya he mencionado toda la información extraída se guarda en diferentes gráficos y estos a su vez tienen formato png.
+
+Todo lo analizado lo hemos ido concluyendo en el archivo informe.pdf
+
+### Cómo instalar
+
+Es necesario contar con un entorno de ejecución de Python.
+
+Descargar y almacenar en una carpeta los archivos: **main.py** de la carpeta practica_2, **cyberpunk.csv** que es el archivo a analizar.
+
+Abrir el terminal direccionada a esa carpeta y ejecutar el comando:
+
+Para empezar hay que descargarse uv:
+
+~~~
+pip install --user --break-system-packages uv
+~~~
+
+Para descargarse las librerías:
+
+~~~
+uv add pandas matplotlib nltk textblob
+~~~
+
+### Cómo ejecutar
+
+Una vez instalados ya se puede ejecutar el programa.
+
+Ejecutar el programa en uv:
+
+~~~
+uv run main.py
+~~~
+
+### Ver los resultados
+
+Para visualizar los resultados nosotros los hemos abierto en **vscode**, pero también se pueden visualizar desde el terminal ejecutando primero:
+
+~~~
+sudo apt-get install eog
+~~~
+
+Y finalmente para abrir el png se ejecuta:
+
+~~~
+eog <nombre del archivo>
+~~~
+
