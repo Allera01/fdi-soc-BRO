@@ -1,10 +1,10 @@
 ---
-title: Ejemplo de informe
+title: Informe practica 2
 author:
-    - Alvaro <allera01@ucm.es>
-    - Mario <margal15@ucm.es>
-    - Mario <mcarri17@ucm.es>
-    - Diego <dielinar@ucm.es>
+    - Álvaro Llera <allera01@ucm.es>
+    - Mario Gallego<margal15@ucm.es>
+    - Mario Carrilero <mcarri17@ucm.es>
+    - Diego Linares <dielinar@ucm.es>
 
 documentclass: scrreport
 papersize: a4

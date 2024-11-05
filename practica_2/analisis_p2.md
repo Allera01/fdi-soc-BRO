@@ -1,6 +1,7 @@
+
 # ANÁLISIS
 
-**1.** Analizamos cyberpunk, ya que de eso van los twits, y sacamos un gráfico de polaridad (mostrado como un .png), para relacionar la longitud de los twits con su sentimientos, ya sean positivos o negativos. LLegamos a la conclusión, sorprendentemente, de que había opiniones muy variadas, ya que el gráfico se muestra practicamente neutro.
+**1.** Analizamos cyberpunk, ya que de eso van los twits, y sacamos un gráfico de polaridad (mostrado como un .png), para relacionar la longitud de los twits con su sentimientos, ya sean positivos o negativos. Llegamos a la conclusión, sorprendentemente, de que había opiniones muy variadas, ya que el gráfico se muestra practicamente neutro.
 
 ## Código:
 
