@@ -1,25 +1,49 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-B = nx.Graph()
+
+B = nx.DiGraph()
 
 with open ("bitcoin.edgelist", 'r') as f:
     aristasB = [tuple(map(int, line.strip().split())) for line in f]
 
 B.add_edges_from(aristasB)
 
-nx.draw(B, node_size = 10)
-plt.savefig('grafobitcoin.png')
+#print(B.number_of_nodes())
+#print(B.number_of_edges())
 
-C = nx.Graph()
+grados = dict(B.degree())
+
+distribucion_grados = {}
+promedio = sum(grados.values()) / len(grados)
+count = 0
+for grado in grados.values():
+    if grado > promedio:
+        count +=1
+    if grado in distribucion_grados:
+        distribucion_grados[grado] += 1
+    else :
+        distribucion_grados[grado] = 1
+        
+print(count)
+max_value = max(distribucion_grados.keys())
+plt.figure(figsize=(8,6))
+#cambiar el ejex (keys) a valores log
+plt.bar(distribucion_grados.keys(), distribucion_grados.values(), color = 'red')
+# Personalización del gráfico
+plt.xlabel("grados")
+plt.xlim([0, max_value])
+plt.ylabel("cantidad")
+plt.title("distribucion de grados de los nodos")
+plt.savefig("distribucion.png")
+#print(max_value)
+#print(grados)
+'''C = nx.Graph()
 
 with open ("congress.edgelist", 'r') as f:
     aristasC = [tuple(map(int, line.strip().split())) for line in f]
 
 C.add_edges_from(aristasC)
-
-nx.draw(C, node_size = 10)
-plt.savefig('grafocongress.png')
 
 F = nx.Graph()
 
@@ -28,15 +52,10 @@ with open ("facebook.edgelist", 'r') as f:
 
 F.add_edges_from(aristasF)
 
-nx.draw(F, node_size = 10)
-plt.savefig('grafofacebook.png')
-
 L = nx.Graph()
 
 with open ("lastfm.edgelist", 'r') as f:
     aristasL = [tuple(map(int, line.strip().split())) for line in f]
 
-L.add_edges_from(aristasL)
+L.add_edges_from(aristasL)'''
 
-nx.draw(L, node_size = 10)
-plt.savefig('grafolastfm.png')
