@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 #esto es una prueba
+#prueba2
 
 B = nx.DiGraph()
 
