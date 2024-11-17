@@ -130,3 +130,13 @@ Para instalar Click, puedes usar pip:
 ~~~
 pip install click
 ~~~
+
+Una vez instalado, ya podemos manejar parámetros y argumentos en la línea de comandos.
+
+Para mostrar las propiedades básicas de una red social, que viene descrita por su lista de aristas, deberemos pasar como argumento el fichero en que se detalla dicha información.
+### Ejemplo de uso:
+~~~
+uv run main.py facebook.edgelist
+~~~
+
+De esta manera, estaremos accediendo a la información básica de la red social Facebook.
