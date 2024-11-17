@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import click
 
-@click.command()
-@click.argument('file', type=click.File('r'))
 
+@click.command()
+@click.argument("file", type=click.File("r"))
 def analyze_network(file):
     """Calcula propiedades básicas de la red."""
     # Leer el archivo de red (usando el archivo ya abierto)
@@ -22,7 +22,7 @@ def analyze_network(file):
     grados = dict(G.degree())
 
     # Promedio de grados
-    promedio_grado = sum(grados.values()) / len(grados) 
+    promedio_grado = sum(grados.values()) / len(grados)
 
     # Separar entre hubs y no hubs
     hubs = {nodo: grado for nodo, grado in grados.items() if grado > promedio_grado}
@@ -36,16 +36,23 @@ def analyze_network(file):
             distribucion_hubs[grado] = distribucion_hubs.get(grado, 0) + 1
         else:
             distribucion_no_hubs[grado] = distribucion_no_hubs.get(grado, 0) + 1
-        
+
     # Visualizar la distribución de grados con identificación de hubs
     plt.figure(figsize=(8, 6))
-    plt.bar(distribucion_no_hubs.keys(), distribucion_no_hubs.values(), color='red', label='No Hubs')
-    plt.bar(distribucion_hubs.keys(), distribucion_hubs.values(), color='blue', label='Hubs')
+    plt.bar(
+        distribucion_no_hubs.keys(),
+        distribucion_no_hubs.values(),
+        color="red",
+        label="No Hubs",
+    )
+    plt.bar(
+        distribucion_hubs.keys(), distribucion_hubs.values(), color="blue", label="Hubs"
+    )
     plt.xlabel("Grados")
     plt.ylabel("Cantidad")
     plt.title("Distribución de grados de los nodos (Hubs resaltados)")
     plt.legend()
-    #Extraer el nombre base del archivo (sin extensión)
+    # Extraer el nombre base del archivo (sin extensión)
     red_social = os.path.splitext(os.path.basename(file.name))[0]
     plt.savefig(f"distribucion_{red_social}_hubs.png")
 
@@ -54,23 +61,42 @@ def analyze_network(file):
     coef_clustering = nx.clustering(G)
 
     # Identificar los coeficientes de clustering para hubs y no hubs
-    clustering_hubs = {nodo: coef for nodo, coef in coef_clustering.items() if nodo in hubs}
-    clustering_no_hubs = {nodo: coef for nodo, coef in coef_clustering.items() if nodo in no_hubs}
+    clustering_hubs = {
+        nodo: coef for nodo, coef in coef_clustering.items() if nodo in hubs
+    }
+    clustering_no_hubs = {
+        nodo: coef for nodo, coef in coef_clustering.items() if nodo in no_hubs
+    }
 
     clustering_bins_hubs = agrupar_clustering(clustering_hubs)
     clustering_bins_no_hubs = agrupar_clustering(clustering_no_hubs)
 
     # Visualizar la distribución de coeficientes de clustering con identificación de hubs
     plt.figure(figsize=(8, 6))
-    plt.bar(clustering_bins_no_hubs.keys(), clustering_bins_no_hubs.values(), color='red', width=0.05, label='No Hubs')
-    plt.bar(clustering_bins_hubs.keys(), clustering_bins_hubs.values(), color='blue', width=0.05, label='Hubs')
+    plt.bar(
+        clustering_bins_no_hubs.keys(),
+        clustering_bins_no_hubs.values(),
+        color="red",
+        width=0.05,
+        label="No Hubs",
+    )
+    plt.bar(
+        clustering_bins_hubs.keys(),
+        clustering_bins_hubs.values(),
+        color="blue",
+        width=0.05,
+        label="Hubs",
+    )
     plt.xlabel("Coeficiente de Clustering")
     plt.ylabel("Cantidad de Nodos")
     plt.title("Distribución del Coeficiente de Clustering (Hubs resaltados)")
     plt.legend()
     plt.savefig(f"clustering_{red_social}_hubs.png")
 
+
 """Agrupar los coeficientes de clustering en intervalos"""
+
+
 def agrupar_clustering(coeficientes):
     bins = {}
     for coef in coeficientes.values():
@@ -78,5 +104,6 @@ def agrupar_clustering(coeficientes):
         bins[bin] = bins.get(bin, 0) + 1
     return bins
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     analyze_network()
