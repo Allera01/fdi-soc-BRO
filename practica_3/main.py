@@ -16,7 +16,7 @@ def analyze_network(file):
     num_edges = G.number_of_edges()
 
     click.echo(f"Número de nodos: {num_nodes}")
-    click.echo(f"Número de enlaces: {num_edges}")
+    click.echo(f"Número de aristas: {num_edges}")
 
     """Calcular y mostrar la distribución de grados de los nodos"""
     grados = dict(G.degree())
@@ -46,8 +46,8 @@ def analyze_network(file):
     plt.title("Distribución de grados de los nodos (Hubs resaltados)")
     plt.legend()
     #Extraer el nombre base del archivo (sin extensión)
-    red_social = os.path.splitext(os.path.basename(file))[0]
-    plt.savefig("distribucion_{red_social}_hubs.png")
+    red_social = os.path.splitext(os.path.basename(file.name))[0]
+    plt.savefig(f"distribucion_{red_social}_hubs.png")
 
     """Calcular y mostrar la distribución de coeficientes de clústering"""
     # Cálculo del coeficiente de clustering
@@ -68,7 +68,7 @@ def analyze_network(file):
     plt.ylabel("Cantidad de Nodos")
     plt.title("Distribución del Coeficiente de Clustering (Hubs resaltados)")
     plt.legend()
-    plt.savefig("clustering_{red_social}_hubs.png")
+    plt.savefig(f"clustering_{red_social}_hubs.png")
 
 """Agrupar los coeficientes de clustering en intervalos"""
 def agrupar_clustering(coeficientes):
