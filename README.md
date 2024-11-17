@@ -116,7 +116,7 @@ Para instalar Black, puedes usar pip:
 pip install black
 ~~~
 
-#### Uso de Black:
+#### Uso de Black
 Puedes ejecutar Black en un archivo específico o en un directorio completo.
 ##### Para formatear un archivo:
 ~~~
@@ -127,7 +127,7 @@ black main.py
 black .
 ~~~
 
-## Ver los resultados:
+## Ver los resultados
 Para mostrar las propiedades básicas de una red social, que viene descrita por su lista de aristas, deberemos pasar como argumento el fichero en que se detalla dicha información.
 ~~~
 uv run main.py facebook.edgelist
