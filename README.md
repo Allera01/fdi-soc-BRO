@@ -111,3 +111,22 @@ Y finalmente para abrir el png se ejecuta:
 eog <nombre del archivo>
 ~~~
 
+## P3 Cálculos sobre redes libres de escala
+
+### Información
+
+Es un código python cuyo objetivo es calcular distintas propiedades y estadísticas de redes sociales. Además, se elabora un pequeño informe comparando las redes y determinando si son libres de escala.
+Optativamente, se calcularán medidas de conectividad basadas en caminos a través de estimaciones usando muestreo u otras técnicas imaginativas.
+
+### Cómo instalar
+
+// Parte de instalación de uv y librerías
+
+#### Click
+
+Click es una biblioteca para Python que permite crear interfaces de línea de comandos de forma sencilla y eficiente. Proporciona decoradores que facilitan la creación de comandos, opciones y argumentos, haciendo que el código sea más legible y estructurado.
+
+Para instalar Click, puedes usar pip:
+~~~
+pip install click
+~~~
