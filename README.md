@@ -1,6 +1,6 @@
 # ANÁLISIS DE REDES SOCIALES
 
-## Estudiantes:
+## Estudiantes
 - Mario Carrilero Sánchez
 - Mario Gallego Hernández
 - Diego Linares Espíldora
@@ -9,43 +9,35 @@
 # P1 Información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
 ## Información
-
 Es un programa en Python que realiza el web scraping del subreddit r/spain para crear un conjunto de datos que contenga información sobre esta red social.
 
-La información que vamos a obtener es la de la página principal de este subreddit: los posts, sus comentarios y los usuarios que han creado esos posts.
+La información que obtenemos es la de la página principal de este subreddit: los posts, sus comentarios y los usuarios que han creado esos posts.
 
-La información de los posts que vamos a guardar es: el título, la fecha, la descripción textual (si la hay) y el autor.
+La información de los posts que guardamos es: el título, la fecha, la descripción textual (si la hay) y el autor.
 
-La información de los comentarios que vamos a guardar es: el texto, la fecha, el post al que responde y el autor.
+La información de los comentarios que guardamos es: el texto, la fecha, el post al que responde y el autor.
 
 La información de los usuarios que vamos a guardar es: el nombre, el karma, los posts creados y los comentarios hechos.
 
 ## Cómo instalar
-
 Es necesario contar con un entorno de ejecución de Python.
 
 Descargar y almacenar en una carpeta los archivos: **main.py**, **configuracion_p1.toml** y **analyze.py**. 
 
-Abrir el terminal direccionada a esa carpeta y ejecutar el comando:
+Abrir el terminal direccionada a esa carpeta.
 
-Para empezar hay que descargarse uv:
-
+Es necesario instalar uv:
 ~~~
 pip install --user --break-system-packages uv
 ~~~
 
 Para descargarse las librerías:
-
 ~~~
 uv add bs4 bachoff requests pathlib networkx
 ~~~
 
 ## Cómo ejecutar
-
-Una vez instalados ya se puede ejecutar el programa.
-
-Ejecutar el programa en uv:
-
+Una vez instalados ya se puede ejecutar el programa:
 ~~~
 uv run main.py
 ~~~
@@ -53,68 +45,55 @@ uv run main.py
 uv run analyze.py
 ~~~
 
+Una vez ejecutado, aparecen en la carpeta tres ficheros en formato csv (usuarios.csv, posts.csv, comentarios.csv) con la información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
-Una vez ejecutado deberían aparecer en la carpeta tres ficheros en formato csv (usuarios.csv, posts.csv, comentarios.csv) con la información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
 # P2 Investigación en conjuntos de datos extraídos de [Twitter/X](https://x.com/)
 
 ## Información
+Es un código en Python cuya función es extraer de los twits relacionados con el juego Cyberpunk información que consideramos relevante, mediante diferentes gráficos (polaridad, circulares, ...) en formato png.
 
-Es un código en python cuya función es extraer de los twits relacionados con el juego cyberpunk información que nosotros consideremos relevante. Esto lo hace mediante
-diferentes gráficos (polaridad, circulares, ...).
-
-Como ya he mencionado toda la información extraída se guarda en diferentes gráficos y estos a su vez tienen formato png.
-
-Todo lo analizado lo hemos ido concluyendo en el archivo informe.pdf
+Todo lo analizado ha sido concluido en el archivo informe.pdf
 
 ## Cómo instalar
-
 Es necesario contar con un entorno de ejecución de Python.
 
 Descargar y almacenar en una carpeta los archivos: **main.py** de la carpeta practica_2, **cyberpunk.csv** que es el archivo a analizar.
 
-Abrir el terminal direccionada a esa carpeta y ejecutar el comando:
+Abrir el terminal direccionada a esa carpeta.
 
-Para empezar hay que descargarse uv:
-
+Es necesario instalar uv:
 ~~~
 pip install --user --break-system-packages uv
 ~~~
 
 Para descargarse las librerías:
-
 ~~~
 uv add pandas matplotlib nltk textblob
 ~~~
 
 ## Cómo ejecutar
-
-Una vez instalados ya se puede ejecutar el programa.
-
-Ejecutar el programa en uv:
-
+Una vez instalados ya se puede ejecutar el programa:
 ~~~
 uv run main.py
 ~~~
 
 ## Ver los resultados
-
-Para visualizar los resultados nosotros los hemos abierto en **vscode**, pero también se pueden visualizar desde el terminal ejecutando primero:
-
+Para visualizar los resultados desde el terminal:
 ~~~
 sudo apt-get install eog
 ~~~
 
-Y finalmente para abrir el png se ejecuta:
-
+Y, finalmente, para abrir el png:
 ~~~
 eog <nombre del archivo>
 ~~~
 
+
 # P3 Cálculos sobre redes libres de escala
 
 ## Información
-Es un código python cuyo objetivo es calcular distintas propiedades y estadísticas de redes sociales. Además, se elabora un pequeño informe comparando las redes y determinando si son libres de escala.
+Es un código Python cuyo objetivo es calcular distintas propiedades y estadísticas de redes sociales. Además, se elabora un pequeño informe comparando las redes y determinando si son libres de escala.
 Optativamente, se calcularán medidas de conectividad basadas en caminos a través de estimaciones usando muestreo u otras técnicas imaginativas.
 
 ## Cómo instalar
@@ -137,7 +116,7 @@ Para instalar Black, puedes usar pip:
 pip install black
 ~~~
 
-#### Uso de Black:
+#### Uso de Black
 Puedes ejecutar Black en un archivo específico o en un directorio completo.
 ##### Para formatear un archivo:
 ~~~
@@ -148,7 +127,7 @@ black main.py
 black .
 ~~~
 
-## Ver los resultados:
+## Ver los resultados
 Para mostrar las propiedades básicas de una red social, que viene descrita por su lista de aristas, deberemos pasar como argumento el fichero en que se detalla dicha información.
 ~~~
 uv run main.py facebook.edgelist
