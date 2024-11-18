@@ -4,12 +4,24 @@ import os
 import click
 from string import Template
 
-
 @click.command()  # Define el comando principal
 @click.argument(
     "file", type=click.File("r")
-)  # Define argumentos que el usuario debe pasar (en este caso, el archivo de lista de aristas)
-def analyze_network(file):
+)  
+@click.option(
+    "-m", "--mostrar", is_flag = True, help = "Muestra una visualización de la red destacando los hubs."
+) 
+@click.option(
+    "-dist", "--distancia", is_flag = True, help = "Muestra la distancia media entre dos nodos del grafo."
+)
+@click.option(
+    "-diam", "--diametro", is_flag = True, help = "Calcular el diámetro de la red, es decir, la longitud del máximo camino más corto entre pares de nodos cualesquiera."
+)
+@click.option(
+    "-dh", "--distanciahubs", is_flag = True, help = "Calcular la distribución de distancias desde los nodos a cada uno de los hubs, lo que da una idea de la “centralidad” de estos"
+)
+# Define argumentos que el usuario debe pasar (en este caso, el archivo de lista de aristas)
+def analyze_network(file, mostrar, distancia, diametro, distanciahubs):
     """Analiza las propiedades básicas de la red usando funciones auxiliares."""
     # Leer el archivo de red (lista de aristas)
     G = nx.read_edgelist(file)
@@ -18,11 +30,23 @@ def analyze_network(file):
     red_social = os.path.splitext(os.path.basename(file.name))[0]
 
     # Cálculo de propiedades del grafo
-    calcular_nodos_y_aristas(G)
+    num_nodes, num_edges = calcular_nodos_y_aristas(G)
     calcular_distribucion_grados(G, red_social)
     calcular_coeficiente_clustering(G, red_social)
     calcular_distribucion_conjunta(G, red_social)
-    generar_informe_markdown(red_social, file)
+    generar_informe_markdown(red_social, file, num_nodes, num_edges)
+    
+    if mostrar:
+        visualizar_red(G, red_social)
+
+    if distancia:
+        calcular_distancia_media(G, red_social)
+    
+    if diametro:
+        calcular_diametro(G)
+
+    if distanciahubs:
+        calcular_distancia_a_hubs(G, red_social)
 
 def calcular_nodos_y_aristas(G):
     """Calcula y muestra el número de nodos y aristas del grafo."""
@@ -30,7 +54,7 @@ def calcular_nodos_y_aristas(G):
     num_edges = G.number_of_edges()
     click.echo(f"Número de nodos: {num_nodes}")
     click.echo(f"Número de aristas: {num_edges}")
-
+    return num_nodes, num_edges
 
 def calcular_distribucion_grados(G, red_social):
     """Calcula y visualiza la distribución de grados de los nodos."""
@@ -67,7 +91,6 @@ def calcular_distribucion_grados(G, red_social):
     plt.legend()
     plt.savefig(f"distribucion_{red_social}_hubs.png")
     plt.close()
-
 
 def calcular_coeficiente_clustering(G, red_social):
     """Calcula y visualiza la distribución del coeficiente de clustering."""
@@ -112,7 +135,6 @@ def calcular_coeficiente_clustering(G, red_social):
     plt.legend()
     plt.savefig(f"clustering_{red_social}_hubs.png")
     plt.close()
-
 
 def agrupar_clustering(coeficientes):
     """Agrupa los coeficientes de clustering en intervalos de 0.1."""
@@ -178,15 +200,15 @@ def calcular_distribucion_conjunta(G, red_social):
     plt.savefig(f"distribucion_conjunta_{red_social}.png")
     plt.close()
 
-def generar_informe_markdown(red_social, archivo):
+def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
     """Genera un informe en Markdown con los resultados y gráficos obtenidos del análisis de la red."""
     
     # Cargar los resultados de los cálculos realizados (esto debe estar basado en las salidas generadas por las funciones)
     # Por ejemplo, los valores de número de nodos y aristas, distribución de grados, coeficiente de clustering, etc.
     
     # Suponiendo que estos valores se obtienen durante el proceso de análisis
-    num_nodes = 100  # Número de nodos
-    num_edges = 200  # Número de aristas
+    num_nodes = numero_nodes  # Número de nodos
+    num_edges = numero_edges  # Número de aristas
     distribucion_grados_path = f"distribucion_{red_social}_hubs.png"
     coef_clustering_path = f"clustering_{red_social}_hubs.png"
     distribucion_conjunta_path = f"distribucion_conjunta_{red_social}.png"
@@ -245,7 +267,105 @@ A partir de los análisis anteriores, podemos extraer varias conclusiones:
     
     print(f"Informe generado exitosamente: {output_filename}")
 
+def visualizar_red(G, red_social):
+    """Genera una visualización de la red destacando los hubs."""
+    # Calcular los grados de los nodos
+    grados = dict(G.degree())
+    promedio_grado = sum(grados.values()) / len(grados)
 
+    # Identificar hubs y no hubs
+    hubs = {nodo: grado for nodo, grado in grados.items() if grado > promedio_grado}
+    no_hubs = {nodo: grado for nodo, grado in grados.items() if grado <= promedio_grado}
+
+    # Asignar tamaños y colores a los nodos
+    tamanos = [
+        grados[nodo] * 50 if nodo in hubs else grados[nodo] * 10
+        for nodo in G.nodes()
+    ]
+    colores = ["blue" if nodo in hubs else "red" for nodo in G.nodes()]
+
+    # Dibujar la red
+    plt.figure(figsize=(10, 8))
+    pos = nx.spring_layout(G, seed=42)  # Layout de la red
+    nx.draw(
+        G,
+        pos,
+        with_labels=False,
+        node_size=tamanos,
+        node_color=colores,
+        edge_color="gray",
+        alpha=0.7,
+    )
+    plt.title("Visualización de la Red con Hubs Destacados")
+    plt.savefig(f"visualizacion_{red_social}_hubs.png")
+    plt.close()
+
+    click.echo(f"Visualización de la red guardada como: visualizacion_{red_social}_hubs.png")
+
+def calcular_distancia_media(G, red_social):
+    """Calcula la distancia media entre pares de nodos."""
+    # Comprobamos si el grafo es conexo
+    if nx.is_connected(G):
+        # Si es conexo, calculamos la distancia media de los nodos
+        distancia_media = nx.average_shortest_path_length(G)
+        click.echo(f"La distancia media entre pares de nodos es: {distancia_media}")
+    else:
+        # Si no es conexo, calculamos la distancia media para cada componente conexo
+        componentes_conexos = list(nx.connected_components(G))
+        distancias_componentes = []
+        
+        for componente in componentes_conexos:
+            subgrafo = G.subgraph(componente)
+            try:
+                distancias_componentes.append(nx.average_shortest_path_length(subgrafo))
+            except nx.NetworkXError:
+                # Si el subgrafo no tiene al menos dos nodos, no se puede calcular la distancia media
+                continue
+        
+        if distancias_componentes:
+            distancia_media_promedio = sum(distancias_componentes) / len(distancias_componentes)
+            click.echo(f"La distancia media entre pares de nodos en los componentes conexos es: {distancia_media_promedio}")
+        else:
+            click.echo("No se pudo calcular la distancia media debido a componentes desconectados demasiado pequeños.")
+
+    # Guardamos el valor en un archivo de texto para el informe
+    with open(f"distancia_media_{red_social}.txt", "w") as f:
+        f.write(f"Distancia media entre pares de nodos: {distancia_media}\n")
+
+def calcular_diametro(G):
+    """Calcula y muestra el diámetro de la red."""
+    diametro = nx.diameter(G)
+    click.echo(f"El diámetro de la red es: {diametro}")
+
+def calcular_distancia_a_hubs(G, red_social):
+    """Calcula la distribución de distancias desde los nodos a los hubs."""
+    # Identificar los hubs
+    grados = dict(G.degree())
+    promedio_grado = sum(grados.values()) / len(grados)
+    hubs = {nodo for nodo, grado in grados.items() if grado > promedio_grado}
+    
+    # Calcular las distancias más cortas desde cada nodo a los hubs
+    distancias_a_hubs = {}
+    for nodo in G.nodes():
+        # Usamos el algoritmo de Dijkstra para encontrar la distancia más corta al nodo hub más cercano
+        dist_min = min(nx.single_source_dijkstra_path_length(G, nodo).get(hub, float('inf')) for hub in hubs)
+        distancias_a_hubs[nodo] = dist_min
+    
+    # Generar la distribución de distancias
+    distribucion_distancias = {}
+    for distancia in distancias_a_hubs.values():
+        distribucion_distancias[distancia] = distribucion_distancias.get(distancia, 0) + 1
+    
+    # Visualización de la distribución de distancias
+    plt.figure(figsize=(8, 6))
+    plt.bar(distribucion_distancias.keys(), distribucion_distancias.values(), color="green")
+    plt.xlabel("Distancia al hub más cercano")
+    plt.ylabel("Cantidad de Nodos")
+    plt.title(f"Distribución de Distancias a los Hubs en la Red {red_social}")
+    plt.savefig(f"distribucion_distancias_{red_social}_hubs.png")
+    plt.close()
+
+    click.echo(f"Distribución de distancias calculada y guardada como 'distribucion_distancias_{red_social}_hubs.png'")
 
 if __name__ == "__main__":
     analyze_network()

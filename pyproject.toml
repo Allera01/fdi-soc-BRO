@@ -15,5 +15,6 @@ dependencies = [
     "nltk>=3.9.1",
     "pandas>=2.2.3",
     "requests>=2.32.3",
+    "scipy>=1.14.1",
     "textblob>=0.18.0.post0",
 ]
