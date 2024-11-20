@@ -1,1 +1,0 @@
-Distancia media entre pares de nodos: 2.0638862980235397
