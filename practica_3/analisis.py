@@ -211,7 +211,7 @@ def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
         
         # Rellenar la plantilla con los datos
         informe_markdown = markdown_template.substitute(
-            archivo=archivo,
+            archivo=archivo.name,
             red_social=red_social,
             num_nodes=num_nodes,
             num_edges=num_edges,
