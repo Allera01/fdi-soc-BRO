@@ -5,24 +5,25 @@ import click
 from string import Template
 import analisis
 
-@click.command()  # Define el comando principal
+
+@click.command(help="Este programa analiza propiedades de una red de grafos usando un archivo de lista de aristas.\n")  # Define el comando principal
 @click.argument(
     "file", type=click.File("r")
 )  
 @click.option(
-    "-m", "--mostrar", is_flag = True, help = "Muestra una visualización de la red destacando los hubs."
+    "-m", "--mostrar", is_flag = True, help = "Muestra una visualización de la red destacando los hubs.\n"
 ) 
 @click.option(
-    "-dist", "--distancia", is_flag = True, help = "Muestra la distancia media entre dos nodos del grafo."
+    "-dist", "--distancia", is_flag = True, help = "Muestra la distancia media entre dos nodos del grafo.\n"
 )
 @click.option(
-    "-diam", "--diametro", is_flag = True, help = "Calcular el diámetro de la red, es decir, la longitud del máximo camino más corto entre pares de nodos cualesquiera."
+    "-diam", "--diametro", is_flag = True, help = "Calcular el diámetro de la red, es decir, la longitud del máximo camino más corto entre pares de nodos cualesquiera.\n"
 )
 @click.option(
-    "-dh", "--distanciahubs", is_flag = True, help = "Calcular la distribución de distancias desde los nodos a cada uno de los hubs, lo que da una idea de la “centralidad” de estos"
+    "-dh", "--distanciahubs", is_flag = True, help = "Calcular la distribución de distancias desde los nodos a cada uno de los hubs, lo que da una idea de la “centralidad” de estos.\n"
 )
 @click.option(
-    "-a", "--all", is_flag = True, help = "Se ejecutan todas las funciones opcionales"
+    "-a", "--all", is_flag = True, help = "Se ejecutan todas las funciones opcionales.\n"
 )
 # Define argumentos que el usuario debe pasar (en este caso, el archivo de lista de aristas)
 def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
