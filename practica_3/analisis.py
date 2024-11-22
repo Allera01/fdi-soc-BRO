@@ -50,7 +50,7 @@ def calcular_distribucion_grados(G, red_social):
         plt.savefig(f"distribucion_{red_social}_hubs.png")
         plt.close()
 
-def calcular_coeficiente_clustering(G, red_social):
+'''def calcular_coeficiente_clustering(G, red_social):
     """Calcula y visualiza la distribución del coeficiente de clustering."""
     if not os.path.isfile(f"clustering_{red_social}_hubs.png"):
         coef_clustering = nx.clustering(G)
@@ -93,7 +93,81 @@ def calcular_coeficiente_clustering(G, red_social):
         plt.title("Distribución del Coeficiente de Clustering (Hubs resaltados)")
         plt.legend()
         plt.savefig(f"clustering_{red_social}_hubs.png")
+        plt.close()'''
+
+
+
+def calcular_coeficiente_clustering(G, red_social):
+    """Calcula manualmente y visualiza la distribución del coeficiente de clustering."""
+    if not os.path.isfile(f"clustering_{red_social}_hubs.png"):
+        # Calcular coeficientes de clustering manualmente
+        coef_clustering = {}
+        for nodo in G:
+            vecinos = list(G[nodo])  # Obtener vecinos del nodo
+            grado = len(vecinos)
+            
+            # Si el grado es menor que 2, el coeficiente de clustering es 0
+            if grado < 2:
+                coef_clustering[nodo] = 0.0
+                continue
+            
+            # Contar triángulos
+            triángulos = 0
+            for i, vecino1 in enumerate(vecinos):
+                for vecino2 in vecinos[i+1:]:
+                    if vecino2 in G[vecino1]:  # Si hay arista entre vecino1 y vecino2
+                        triángulos += 1
+            
+            # Calcular el coeficiente de clustering
+            coef_clustering[nodo] = (2 * triángulos) / (grado * (grado - 1))
+        
+        # Separar nodos en hubs y no hubs
+        grados = {nodo: len(G[nodo]) for nodo in G}
+        promedio_grado = sum(grados.values()) / len(grados)
+        hubs = {nodo for nodo, grado in grados.items() if grado > promedio_grado}
+        no_hubs = {nodo for nodo in G if nodo not in hubs}
+        
+        clustering_hubs = {
+            nodo: coef for nodo, coef in coef_clustering.items() if nodo in hubs
+        }
+        clustering_no_hubs = {
+            nodo: coef for nodo, coef in coef_clustering.items() if nodo in no_hubs
+        }
+        
+        # Agrupar coeficientes de clustering en intervalos
+        def agrupar_clustering(clustering, bin_size=0.1):
+            bins = {}
+            for coef in clustering.values():
+                bin_intervalo = round(coef // bin_size * bin_size, 2)  # Redondear al bin más cercano
+                bins[bin_intervalo] = bins.get(bin_intervalo, 0) + 1
+            return bins
+        
+        clustering_bins_hubs = agrupar_clustering(clustering_hubs)
+        clustering_bins_no_hubs = agrupar_clustering(clustering_no_hubs)
+        
+        # Visualización
+        plt.figure(figsize=(8, 6))
+        plt.bar(
+            clustering_bins_no_hubs.keys(),
+            clustering_bins_no_hubs.values(),
+            color="red",
+            width=0.05,
+            label="No Hubs",
+        )
+        plt.bar(
+            clustering_bins_hubs.keys(),
+            clustering_bins_hubs.values(),
+            color="blue",
+            width=0.05,
+            label="Hubs",
+        )
+        plt.xlabel("Coeficiente de Clustering")
+        plt.ylabel("Cantidad de Nodos")
+        plt.title("Distribución del Coeficiente de Clustering (Hubs resaltados)")
+        plt.legend()
+        plt.savefig(f"clustering_{red_social}_hubs.png")
         plt.close()
+
 
 def agrupar_clustering(coeficientes):
     """Agrupa los coeficientes de clustering en intervalos de 0.1."""
@@ -228,28 +302,37 @@ def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
         print(f"Informe generado exitosamente: {output_filename}")
 
 def visualizar_red(G, red_social):
-    """Genera una visualización de la red destacando los hubs."""
+    """Genera una visualización de la red destacando los 300 nodos con más aristas (grados)."""
     if not os.path.isfile(f"visualizacion_{red_social}_hubs.png"):
         # Calcular los grados de los nodos
         grados = dict(G.degree())
-        promedio_grado = sum(grados.values()) / len(grados)
-
-        # Identificar hubs y no hubs
-        hubs = {nodo: grado for nodo, grado in grados.items() if grado > promedio_grado}
-        no_hubs = {nodo: grado for nodo, grado in grados.items() if grado <= promedio_grado}
+        
+        # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
+        nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+        
+        # Crear un subgrafo con los 300 nodos seleccionados
+        subgrafo = G.subgraph(nodos_top)
+        
+        # Calcular grados en el subgrafo
+        grados_subgrafo = dict(subgrafo.degree())
+        promedio_grado = sum(grados_subgrafo.values()) / len(grados_subgrafo)
+        
+        # Identificar hubs y no hubs en el subgrafo
+        hubs = {nodo: grado for nodo, grado in grados_subgrafo.items() if grado > promedio_grado}
+        no_hubs = {nodo: grado for nodo, grado in grados_subgrafo.items() if grado <= promedio_grado}
 
         # Asignar tamaños y colores a los nodos
         tamanos = [
-            grados[nodo] * 50 if nodo in hubs else grados[nodo] * 10
-            for nodo in G.nodes()
+            grados_subgrafo[nodo] if nodo in hubs else grados_subgrafo[nodo]
+            for nodo in subgrafo.nodes()
         ]
-        colores = ["blue" if nodo in hubs else "red" for nodo in G.nodes()]
+        colores = ["blue" if nodo in hubs else "red" for nodo in subgrafo.nodes()]
 
         # Dibujar la red
         plt.figure(figsize=(10, 8))
-        pos = nx.spring_layout(G, seed=42)  # Layout de la red
+        pos = nx.spring_layout(subgrafo, seed=42)  # Layout de la red
         nx.draw(
-            G,
+            subgrafo,
             pos,
             with_labels=False,
             node_size=tamanos,
@@ -264,19 +347,29 @@ def visualizar_red(G, red_social):
         click.echo(f"Visualización de la red guardada como: visualizacion_{red_social}_hubs.png")
 
 def calcular_distancia_media(G, red_social):
+
+    # Calcular los grados de los nodos
+    grados = dict(G.degree())
+        
+    # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
+    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+        
+    # Crear un subgrafo con los 300 nodos seleccionados
+    sub = G.subgraph(nodos_top)
+
     """Calcula la distancia media entre pares de nodos."""
     # Comprobamos si el grafo es conexo
-    if nx.is_connected(G):
+    if nx.is_connected(sub):
         # Si es conexo, calculamos la distancia media de los nodos
-        distancia_media = nx.average_shortest_path_length(G)
-        click.echo(f"La distancia media entre pares de nodos es: {distancia_media}")
+        distancia_media = nx.average_shortest_path_length(sub)
+        click.echo(f"La distancia media entre pares de nodos es: {distancia_media :.2f} aristas y el grafo es conexo")
     else:
         # Si no es conexo, calculamos la distancia media para cada componente conexo
-        componentes_conexos = list(nx.connected_components(G))
+        componentes_conexos = list(nx.connected_components(sub))
         distancias_componentes = []
         
         for componente in componentes_conexos:
-            subgrafo = G.subgraph(componente)
+            subgrafo = sub.subgraph(componente)
             try:
                 distancias_componentes.append(nx.average_shortest_path_length(subgrafo))
             except nx.NetworkXError:
@@ -285,7 +378,7 @@ def calcular_distancia_media(G, red_social):
         
         if distancias_componentes:
             distancia_media_promedio = sum(distancias_componentes) / len(distancias_componentes)
-            click.echo(f"La distancia media entre pares de nodos en los componentes conexos es: {distancia_media_promedio}")
+            click.echo(f"La distancia media entre pares de nodos en los componentes conexos es: {distancia_media_promedio:.2f} aristas y el grafo es no conexo")
         else:
             click.echo("No se pudo calcular la distancia media debido a componentes desconectados demasiado pequeños.")
 
