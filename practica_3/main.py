@@ -41,6 +41,17 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
     analisis.visualizar_distribucion_clustering(G, coef_clust, red_social)
     analisis.calcular_distribucion_conjunta(G, red_social)
     analisis.generar_informe_markdown(red_social, file, num_nodes, num_edges)
+
+    analisis.generar_informe_markdown(
+        red_social=red_social,
+        archivo=file,
+        numero_nodes=num_nodes,
+        numero_edges=num_edges,
+        mostrar=mostrar,
+        distancia=distancia,
+        diametro=diametro,
+        distancia_hubs=distanciahubs
+    )
     
     if mostrar or all:
         analisis.visualizar_red(G, red_social)
@@ -54,5 +65,10 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
     if distanciahubs or all:
         analisis.calcular_distancia_a_hubs(G, red_social)
 
+def analizar_red(file, mostrar, distancia, diametro, distanciahubs, all):
+    """Comando para analizar una red y generar un informe en Markdown."""
+    # Llamar a la función principal que realiza el análisis y genera el informe
+    my_main(file, mostrar, distancia, diametro, distanciahubs, all)
+
 if __name__ == "__main__":
-    my_main()
+    analizar_red()
