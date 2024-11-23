@@ -37,7 +37,8 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
     # Cálculo de propiedades del grafo
     num_nodes, num_edges = analisis.calcular_nodos_y_aristas(G)
     analisis.calcular_distribucion_grados(G, red_social)
-    analisis.calcular_coeficiente_clustering(G, red_social)
+    coef_clust = analisis.calcular_coeficiente_clustering(G)
+    analisis.visualizar_distribucion_clustering(G, coef_clust, red_social)
     analisis.calcular_distribucion_conjunta(G, red_social)
     analisis.generar_informe_markdown(red_social, file, num_nodes, num_edges)
     
@@ -45,7 +46,7 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
         analisis.visualizar_red(G, red_social)
 
     if distancia or all:
-        analisis.calcular_distancia_media(G, red_social)
+        analisis.calcular_distancia_media(G)
     
     if diametro or all:
         analisis.calcular_diametro(G)

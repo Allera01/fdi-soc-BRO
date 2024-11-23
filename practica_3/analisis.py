@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import click
 from string import Template
 import os
+import random
+from collections import deque
 
 
 def calcular_nodos_y_aristas(G):
@@ -53,8 +55,7 @@ def calcular_distribucion_grados(G, red_social):
 '''def calcular_coeficiente_clustering(G, red_social):
     """Calcula y visualiza la distribución del coeficiente de clustering."""
     if not os.path.isfile(f"clustering_{red_social}_hubs.png"):
-        coef_clustering = nx.clustering(G)
-
+        coef_clustering = calcular_coeficiente_clustering(G)
         # Separar los coeficientes de clustering para hubs y no hubs
         grados = dict(G.degree())
         promedio_grado = sum(grados.values()) / len(grados)
@@ -95,45 +96,58 @@ def calcular_distribucion_grados(G, red_social):
         plt.savefig(f"clustering_{red_social}_hubs.png")
         plt.close()'''
 
+def calcular_coeficiente_clustering(G):
+    
+    '''Calcula manualmente el coeficiente de clustering para cada nodo en el grafo.'''
 
+    coef_clustering = {}
+    for nodo in G:
+        vecinos = list(G[nodo])  # Obtener vecinos del nodo
+        grado = len(vecinos)
 
-def calcular_coeficiente_clustering(G, red_social):
-    """Calcula manualmente y visualiza la distribución del coeficiente de clustering."""
+        # Si el grado es menor que 2, el coeficiente de clustering es 0
+        if grado < 2:
+            coef_clustering[nodo] = 0.0
+            continue
+
+        # Contar triángulos
+        triángulos = 0
+        for i, vecino1 in enumerate(vecinos):
+            for vecino2 in vecinos[i + 1:]:
+                if vecino2 in G[vecino1]:  # Si hay arista entre vecino1 y vecino2
+                    triángulos += 1
+
+        # Calcular el coeficiente de clustering
+        coef_clustering[nodo] = (2 * triángulos) / (grado * (grado - 1))
+
+    return coef_clustering
+
+def agrupar_clustering(coeficientes):
+    """Agrupa los coeficientes de clustering en intervalos de 0.1."""
+    bins = {}
+    for coef in coeficientes.values():
+        bin = round(coef, 1)
+        bins[bin] = bins.get(bin, 0) + 1
+    return bins
+
+def visualizar_distribucion_clustering(G, coef_clustering, red_social):
+
+    '''Visualiza y guarda la distribución del coeficiente de clustering.'''
+
     if not os.path.isfile(f"clustering_{red_social}_hubs.png"):
-        # Calcular coeficientes de clustering manualmente
-        coef_clustering = {}
-        for nodo in G:
-            vecinos = list(G[nodo])  # Obtener vecinos del nodo
-            grado = len(vecinos)
-            
-            # Si el grado es menor que 2, el coeficiente de clustering es 0
-            if grado < 2:
-                coef_clustering[nodo] = 0.0
-                continue
-            
-            # Contar triángulos
-            triángulos = 0
-            for i, vecino1 in enumerate(vecinos):
-                for vecino2 in vecinos[i+1:]:
-                    if vecino2 in G[vecino1]:  # Si hay arista entre vecino1 y vecino2
-                        triángulos += 1
-            
-            # Calcular el coeficiente de clustering
-            coef_clustering[nodo] = (2 * triángulos) / (grado * (grado - 1))
-        
         # Separar nodos en hubs y no hubs
         grados = {nodo: len(G[nodo]) for nodo in G}
         promedio_grado = sum(grados.values()) / len(grados)
         hubs = {nodo for nodo, grado in grados.items() if grado > promedio_grado}
         no_hubs = {nodo for nodo in G if nodo not in hubs}
-        
+
         clustering_hubs = {
             nodo: coef for nodo, coef in coef_clustering.items() if nodo in hubs
         }
         clustering_no_hubs = {
             nodo: coef for nodo, coef in coef_clustering.items() if nodo in no_hubs
         }
-        
+
         # Agrupar coeficientes de clustering en intervalos
         def agrupar_clustering(clustering, bin_size=0.1):
             bins = {}
@@ -141,10 +155,10 @@ def calcular_coeficiente_clustering(G, red_social):
                 bin_intervalo = round(coef // bin_size * bin_size, 2)  # Redondear al bin más cercano
                 bins[bin_intervalo] = bins.get(bin_intervalo, 0) + 1
             return bins
-        
+
         clustering_bins_hubs = agrupar_clustering(clustering_hubs)
         clustering_bins_no_hubs = agrupar_clustering(clustering_no_hubs)
-        
+
         # Visualización
         plt.figure(figsize=(8, 6))
         plt.bar(
@@ -168,20 +182,11 @@ def calcular_coeficiente_clustering(G, red_social):
         plt.savefig(f"clustering_{red_social}_hubs.png")
         plt.close()
 
-
-def agrupar_clustering(coeficientes):
-    """Agrupa los coeficientes de clustering en intervalos de 0.1."""
-    bins = {}
-    for coef in coeficientes.values():
-        bin = round(coef, 1)
-        bins[bin] = bins.get(bin, 0) + 1
-    return bins
-
 def calcular_distribucion_conjunta(G, red_social):
     """Genera la distribución conjunta de grados y coeficientes de clustering."""
     if not os.path.isfile(f"distribucion_conjunta_{red_social}.png"):
         grados = dict(G.degree())
-        coef_clustering = nx.clustering(G)
+        coef_clustering = calcular_coeficiente_clustering(G)
 
         # Separar en hubs y no hubs
         promedio_grado = sum(grados.values()) / len(grados)
@@ -346,58 +351,111 @@ def visualizar_red(G, red_social):
 
         click.echo(f"Visualización de la red guardada como: visualizacion_{red_social}_hubs.png")
 
-def calcular_distancia_media(G, red_social):
+def calcular_distancia_media(G):
+    """Calcula la media de las distancias entre pares aleatorios de nodos en el grafo."""
+    nodos = list(G.nodes())  # Obtener los nodos como una lista
+    num_nodos = len(nodos)
 
-    # Calcular los grados de los nodos
-    grados = dict(G.degree())
-        
-    # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
-    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
-        
-    # Crear un subgrafo con los 300 nodos seleccionados
-    sub = G.subgraph(nodos_top)
-
-    """Calcula la distancia media entre pares de nodos."""
-    # Comprobamos si el grafo es conexo
-    if nx.is_connected(sub):
-        # Si es conexo, calculamos la distancia media de los nodos
-        distancia_media = nx.average_shortest_path_length(sub)
-        click.echo(f"La distancia media entre pares de nodos es: {distancia_media :.2f} aristas y el grafo es conexo")
+    # Determinar el número de pares
+    num_pares = 2000 
+    if num_nodos >= 2000:
+        num_pares = 2000 
+    
     else:
-        # Si no es conexo, calculamos la distancia media para cada componente conexo
-        componentes_conexos = list(nx.connected_components(sub))
-        distancias_componentes = []
-        
-        for componente in componentes_conexos:
-            subgrafo = sub.subgraph(componente)
+        num_pares = num_nodos * (num_nodos - 1) // 2
+
+    distancias = []
+
+    if num_pares == 2000:
+        # Seleccionar 2000 pares aleatorios si el grafo tiene suficientes nodos
+        for _ in range(num_pares):
+            nodo1, nodo2 = random.sample(nodos, 2)
             try:
-                distancias_componentes.append(nx.average_shortest_path_length(subgrafo))
-            except nx.NetworkXError:
-                # Si el subgrafo no tiene al menos dos nodos, no se puede calcular la distancia media
+                distancia = nx.shortest_path_length(G, source=nodo1, target=nodo2)
+                distancias.append(distancia)
+            except nx.NetworkXNoPath:
+                # Ignorar los pares no conectados
                 continue
-        
-        if distancias_componentes:
-            distancia_media_promedio = sum(distancias_componentes) / len(distancias_componentes)
-            click.echo(f"La distancia media entre pares de nodos en los componentes conexos es: {distancia_media_promedio:.2f} aristas y el grafo es no conexo")
-        else:
-            click.echo("No se pudo calcular la distancia media debido a componentes desconectados demasiado pequeños.")
+    else:
+        # Calcular todas las distancias si el número de pares es menor a 2000
+        for i, nodo1 in enumerate(nodos):
+            for nodo2 in nodos[i + 1:]:
+                try:
+                    distancia = nx.shortest_path_length(G, source=nodo1, target=nodo2)
+                    distancias.append(distancia)
+                except nx.NetworkXNoPath:
+                    # Ignorar los pares no conectados
+                    continue
+
+    if not distancias:
+        return float('inf')  # Todos los nodos están desconectados
+
+    solucion = sum(distancias) / len(distancias)
+
+    click.echo(f"La distancia media es: {solucion}")
+
+def bfs_distancia(grafo, origen):
+    """Calcula la distancia más corta desde el nodo origen a todos los demás nodos utilizando BFS."""
+    distancias = {nodo: float('inf') for nodo in grafo}
+    distancias[origen] = 0
+    cola = deque([origen])
+
+    while cola:
+        nodo = cola.popleft()
+        for vecino in grafo[nodo]:
+            if distancias[vecino] == float('inf'):  # Si no se ha visitado
+                distancias[vecino] = distancias[nodo] + 1
+                cola.append(vecino)
+    
+    return distancias
 
 def calcular_diametro(G):
-    """Calcula y muestra el diámetro de la red."""
-    diametro = nx.diameter(G)
-    click.echo(f"El diámetro de la red es: {diametro}")
+    """Calcula y muestra el diámetro del grafo, que es la distancia más larga entre dos nodos cualesquiera, utilizando un muestreo si el grafo tiene más de 2000 nodos."""
+    nodos = list(G.nodes())  # Obtener los nodos como una lista
+    num_nodos = len(nodos)
+    
+    # Seleccionar un subconjunto de nodos si el grafo tiene más de 2000 nodos
+    if num_nodos >= 2000:
+        nodos_muestra = random.sample(nodos, 2000)  # Seleccionar 2000 nodos aleatorios
+    else:
+        nodos_muestra = nodos  # Usar todos los nodos si hay menos de 2000
+    
+    max_distancia = 0
+    
+    # Para cada nodo en el subconjunto, calculamos las distancias más cortas a todos los demás nodos
+    for nodo in nodos_muestra:
+        distancias = bfs_distancia(G, nodo)
+        
+        # Encontramos la distancia máxima desde este nodo
+        distancia_maxima = max(distancia for distancia in distancias.values() if distancia != float('inf'))
+        
+        # Actualizamos el diámetro si encontramos una mayor distancia
+        if distancia_maxima > max_distancia:
+            max_distancia = distancia_maxima
+    
+    print(f"El diámetro de la red es: {max_distancia:.2f}")
+
 
 def calcular_distancia_a_hubs(G, red_social):
-    """Calcula la distribución de distancias desde los nodos a los hubs."""
+    """Calcula la distribución de distancias desde los nodos a los hubs, considerando una muestra si el grafo tiene más de 2000 nodos."""
     if not os.path.isfile(f"distribucion_distancias_{red_social}_hubs.png"):
-        # Identificar los hubs
-        grados = dict(G.degree())
+        
+        # Obtener todos los nodos
+        nodos = list(G.nodes())
+        num_nodos = len(nodos)
+        
+        # Seleccionar nodos aleatorios si el grafo tiene 2000 o más nodos
+        if num_nodos >= 2000:
+            nodos = random.sample(nodos, 2000)
+        
+        # Identificar los hubs solo entre los nodos seleccionados
+        grados = dict(G.degree(nodos))  # Calcula el grado solo de los nodos seleccionados
         promedio_grado = sum(grados.values()) / len(grados)
         hubs = {nodo for nodo, grado in grados.items() if grado > promedio_grado}
         
-        # Calcular las distancias más cortas desde cada nodo a los hubs
+        # Calcular las distancias más cortas desde cada nodo seleccionado a los hubs
         distancias_a_hubs = {}
-        for nodo in G.nodes():
+        for nodo in nodos:
             # Usamos el algoritmo de Dijkstra para encontrar la distancia más corta al nodo hub más cercano
             dist_min = min(nx.single_source_dijkstra_path_length(G, nodo).get(hub, float('inf')) for hub in hubs)
             distancias_a_hubs[nodo] = dist_min
@@ -407,13 +465,8 @@ def calcular_distancia_a_hubs(G, red_social):
         for distancia in distancias_a_hubs.values():
             distribucion_distancias[distancia] = distribucion_distancias.get(distancia, 0) + 1
         
-        # Visualización de la distribución de distancias
-        plt.figure(figsize=(8, 6))
-        plt.bar(distribucion_distancias.keys(), distribucion_distancias.values(), color="green")
-        plt.xlabel("Distancia al hub más cercano")
-        plt.ylabel("Cantidad de Nodos")
-        plt.title(f"Distribución de Distancias a los Hubs en la Red {red_social}")
-        plt.savefig(f"distribucion_distancias_{red_social}_hubs.png")
-        plt.close()
-
-        click.echo(f"Distribución de distancias calculada y guardada como 'distribucion_distancias_{red_social}_hubs.png'")
+        # Mostrar la distribución de distancias en la consola
+        for distancia, cantidad in distribucion_distancias.items():
+            print(f"Distancia: {distancia}, Cantidad de Nodos: {cantidad}")
+        
+        click.echo(f"Distribución de distancias calculada y mostrada para la red {red_social}.")
