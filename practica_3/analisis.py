@@ -280,23 +280,88 @@ def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
 
     ![Distribución Conjunta](./${distribucion_conjunta_path})
 
+    ${seccion_mostrar}
+    ${seccion_distancia}
+    ${seccion_diametro}
+    ${seccion_distancia_hubs}
+
     ## Conclusiones
     A partir de los análisis anteriores, podemos extraer varias conclusiones:
 
     - La red tiene ${num_nodes} nodos y ${num_edges} aristas.
-    - La distribución de grados muestra una clara diferencia entre los nodos hubs y los nodos no hubs, lo que indica la existencia de una estructura de red jerárquica.
-    - La distribución del coeficiente de clustering indica que los hubs tienden a estar más conectados entre sí, formando comunidades más cohesionadas.
+    ${conclusiones_extra
     """)
+
+        # Secciones condicionales según las opciones de la terminal
+        seccion_mostrar = ""
+        seccion_distancia = ""
+        seccion_diametro = ""
+        seccion_distancia_hubs = ""
+        conclusiones_extra = ""
+
+        # Si la opción --mostrar está activada
+        if mostrar:
+            seccion_mostrar = """
+### Visualización de la Red Social
+Esta visualización destaca los hubs (nodos con mayor grado) de la red.
+
+![Red Social con Hubs](./visualizacion_{red_social}_hubs.png"))
+"""
+# Si la opción --distancia está activada
+        if distancia:
+            seccion_distancia = f"""
+### Distancia Media entre Nodos
+La distancia media entre los nodos seleccionados es de **{distancia_media:.2f}**.
+
+"""
         
+        # Si la opción --diametro está activada
+        if diametro:
+            seccion_diametro = f"""
+### Diámetro de la Red
+El diámetro de la red es **{diametro_red:.2f}**, lo que indica la distancia máxima entre dos nodos cualesquiera en la red.
+"""
+        
+        # Si la opción --distanciahubs está activada
+        if distancia_hubs:
+            # Mostrar la distribución de distancias
+            distribucion_hubs_str = "\n".join([f"Distancia: {distancia}, Cantidad de Nodos: {cantidad}" 
+                                              for distancia, cantidad in distancias_hubs.items()])
+            seccion_distancia_hubs = f"""
+### Distribución de Distancias a los Hubs
+Este gráfico muestra las distancias desde cada nodo a los hubs, proporcionando información sobre la centralidad de los nodos en la red.
+
+Distribución de distancias a los hubs:
+{distribucion_hubs_str}
+
+![Distancia a los Hubs](./distancia_a_hubs.png)
+"""
+        
+        # Conclusiones adicionales basadas en las opciones seleccionadas
+        if mostrar:
+            conclusiones_extra += "- Se visualizan los hubs de la red, lo que ayuda a entender su estructura centralizada.\n"
+        if distancia:
+            conclusiones_extra += f"- La distancia media entre nodos es de **{distancia_media:.2f}**.\n"
+        if diametro:
+            conclusiones_extra += f"- El diámetro de la red es **{diametro_red:.2f}**, indicando una red de gran alcance.\n"
+        if distancia_hubs:
+            conclusiones_extra += "- La distribución de distancias a los hubs muestra cómo los nodos más cercanos a los hubs son más centrales.\n"
+
+
         # Rellenar la plantilla con los datos
         informe_markdown = markdown_template.substitute(
             archivo=archivo.name,
             red_social=red_social,
             num_nodes=num_nodes,
             num_edges=num_edges,
+            seccion_mostrar=seccion_mostrar,
+            seccion_distancia=seccion_distancia,
+            seccion_diametro=seccion_diametro,
+            seccion_distancia_hubs=seccion_distancia_hubs,
             distribucion_grados_path=distribucion_grados_path,
             coef_clustering_path=coef_clustering_path,
-            distribucion_conjunta_path=distribucion_conjunta_path
+            distribucion_conjunta_path=distribucion_conjunta_path,
+            conclusiones_extra=conclusiones_extra
         )
         
         # Guardar el informe en un archivo Markdown
