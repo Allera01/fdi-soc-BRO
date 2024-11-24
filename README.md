@@ -97,40 +97,31 @@ Es un código Python cuyo objetivo es calcular distintas propiedades y estadíst
 Optativamente, se calcularán medidas de conectividad basadas en caminos a través de estimaciones usando muestreo u otras técnicas imaginativas.
 
 ## Cómo instalar
-// Parte de instalación de uv y librerías
+Es necesario contar con un entorno de ejecución de Python.
 
-### Click
-Click es una biblioteca para Python que permite crear interfaces de línea de comandos de forma sencilla y eficiente. Proporciona decoradores que facilitan la creación de comandos, opciones y argumentos, haciendo que el código sea más legible y estructurado.
+Descargar y almacenar en una carpeta los archivos: **main.py** de la carpeta practica_3 y los ficheros **lastfm.edgelist**, **facebook.edgelist**, **bitcoin.edgelist**, **congress.edgelist** que son los que vamos a analizar.
 
-Para instalar Click, puedes usar pip:
+Abrir el terminal direccionada a esa carpeta.
+
+Es necesario instalar uv:
 ~~~
-pip install click
-~~~
-Una vez instalado, ya podemos manejar parámetros y argumentos en la línea de comandos.
-
-### Black
-Black es un formateador de código Python. Es una herramienta que permite formatear automáticamente tu código para que siga convenciones de estilo, lo que hace que el código sea más legible y consistente sin necesidad de ajustar el formato manualmente.
-
-Para instalar Black, puedes usar pip:
-~~~
-pip install black
+pip install --user --break-system-packages uv
 ~~~
 
-#### Uso de Black
-Puedes ejecutar Black en un archivo específico o en un directorio completo.
-##### Para formatear un archivo:
+Para descargarse las librerías:
 ~~~
-black main.py
-~~~
-##### Para formatear todos los archivos Python en un directorio:
-~~~
-black .
+uv add networkx matplotlib click
 ~~~
 
-## Ver los resultados
+## Cómo ejecutar
 Para mostrar las propiedades básicas de una red social, que viene descrita por su lista de aristas, deberemos pasar como argumento el fichero en que se detalla dicha información.
 ~~~
 uv run main.py facebook.edgelist
 ~~~
 
 De esta manera, estaremos accediendo a la información básica de la red social Facebook.
+
+Para mostar qué fincionalidades avanzadas tenemos disponibles ejecute el comando:
+~~~
+uv run main.py --help
+~~~
