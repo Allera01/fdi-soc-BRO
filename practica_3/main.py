@@ -50,18 +50,19 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
     if diametro or all:
         diametro_red = analisis.calcular_diametro(G)
     
-    distancias_hubs = None
+    distancias_hubs = False
     if distanciahubs or all:
         distancias_hubs = analisis.calcular_distancia_a_hubs(G, red_social)
 
+    show = False
+    if mostrar or all:
+        show = analisis.visualizar_red(G, red_social)
+
     analisis.generar_informe_markdown(
         red_social, file, num_nodes, num_edges, 
-        mostrar, distancia, diametro, distanciahubs, 
-        distancia_media, diametro_red, distancias_hubs
+        show, distancia_media, diametro_red, distancias_hubs
     )
     
-    if mostrar or all:
-        analisis.visualizar_red(G, red_social)
 
 if __name__ == "__main__":
     my_main()

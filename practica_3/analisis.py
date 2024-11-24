@@ -239,13 +239,14 @@ def calcular_distribucion_conjunta(G, red_social):
         plt.savefig(f"distribucion_conjunta_{red_social}.png")
         plt.close()
 
-def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
+def generar_informe_markdown(red_social, file, numero_nodes, numero_edges, 
+        m, distancia_media, diametro_red, distancias_hubs):
     """Genera un informe en Markdown con los resultados y gráficos obtenidos del análisis de la red."""
+    
     if not os.path.isfile(f"{red_social}_informe.md"):
         # Cargar los resultados de los cálculos realizados (esto debe estar basado en las salidas generadas por las funciones)
         # Por ejemplo, los valores de número de nodos y aristas, distribución de grados, coeficiente de clustering, etc.
         
-        # Suponiendo que estos valores se obtienen durante el proceso de análisis
         num_nodes = numero_nodes  # Número de nodos
         num_edges = numero_edges  # Número de aristas
         distribucion_grados_path = f"distribucion_{red_social}_hubs.png"
@@ -289,7 +290,7 @@ def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
     A partir de los análisis anteriores, podemos extraer varias conclusiones:
 
     - La red tiene ${num_nodes} nodos y ${num_edges} aristas.
-    ${conclusiones_extra
+    ${conclusiones_extra}
     """)
 
         # Secciones condicionales según las opciones de la terminal
@@ -300,15 +301,16 @@ def generar_informe_markdown(red_social, archivo, numero_nodes, numero_edges):
         conclusiones_extra = ""
 
         # Si la opción --mostrar está activada
-        if mostrar:
-            seccion_mostrar = """
+        if m == True:
+            seccion_mostrar = f"""
 ### Visualización de la Red Social
 Esta visualización destaca los hubs (nodos con mayor grado) de la red.
 
-![Red Social con Hubs](./visualizacion_{red_social}_hubs.png"))
+![Red Social con Hubs](./visualizacion_{red_social}_hubs.png)
 """
-# Si la opción --distancia está activada
-        if distancia:
+        
+        # Si la opción --distancia está activada
+        if distancia_media != None:
             seccion_distancia = f"""
 ### Distancia Media entre Nodos
 La distancia media entre los nodos seleccionados es de **{distancia_media:.2f}**.
@@ -316,14 +318,14 @@ La distancia media entre los nodos seleccionados es de **{distancia_media:.2f}**
 """
         
         # Si la opción --diametro está activada
-        if diametro:
+        if diametro_red != None:
             seccion_diametro = f"""
 ### Diámetro de la Red
 El diámetro de la red es **{diametro_red:.2f}**, lo que indica la distancia máxima entre dos nodos cualesquiera en la red.
 """
         
         # Si la opción --distanciahubs está activada
-        if distancia_hubs:
+        if distancias_hubs:
             # Mostrar la distribución de distancias
             distribucion_hubs_str = "\n".join([f"Distancia: {distancia}, Cantidad de Nodos: {cantidad}" 
                                               for distancia, cantidad in distancias_hubs.items()])
@@ -338,19 +340,19 @@ Distribución de distancias a los hubs:
 """
         
         # Conclusiones adicionales basadas en las opciones seleccionadas
-        if mostrar:
+        if m == True:
             conclusiones_extra += "- Se visualizan los hubs de la red, lo que ayuda a entender su estructura centralizada.\n"
-        if distancia:
+        if distancia_media != None:
             conclusiones_extra += f"- La distancia media entre nodos es de **{distancia_media:.2f}**.\n"
-        if diametro:
+        if diametro_red != None:
             conclusiones_extra += f"- El diámetro de la red es **{diametro_red:.2f}**, indicando una red de gran alcance.\n"
-        if distancia_hubs:
+        if distancias_hubs:
             conclusiones_extra += "- La distribución de distancias a los hubs muestra cómo los nodos más cercanos a los hubs son más centrales.\n"
 
 
         # Rellenar la plantilla con los datos
         informe_markdown = markdown_template.substitute(
-            archivo=archivo.name,
+            archivo=file.name,
             red_social=red_social,
             num_nodes=num_nodes,
             num_edges=num_edges,
@@ -415,6 +417,7 @@ def visualizar_red(G, red_social):
         plt.close()
 
         click.echo(f"Visualización de la red guardada como: visualizacion_{red_social}_hubs.png")
+        return True
 
 def calcular_distancia_media(G):
     """Calcula la media de las distancias entre pares aleatorios de nodos en el grafo."""
@@ -458,6 +461,7 @@ def calcular_distancia_media(G):
     solucion = sum(distancias) / len(distancias)
 
     click.echo(f"La distancia media es: {solucion}")
+    return solucion
 
 def bfs_distancia(grafo, origen):
     """Calcula la distancia más corta desde el nodo origen a todos los demás nodos utilizando BFS."""
@@ -499,6 +503,7 @@ def calcular_diametro(G):
             max_distancia = distancia_maxima
     
     print(f"El diámetro de la red es: {max_distancia:.2f}")
+    return max_distancia
 
 
 def calcular_distancia_a_hubs(G, red_social):
@@ -535,3 +540,4 @@ def calcular_distancia_a_hubs(G, red_social):
             print(f"Distancia: {distancia}, Cantidad de Nodos: {cantidad}")
         
         click.echo(f"Distribución de distancias calculada y mostrada para la red {red_social}.")
+        return True
