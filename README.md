@@ -121,7 +121,7 @@ uv run main.py facebook.edgelist
 
 De esta manera, estaremos accediendo a la información básica de la red social Facebook.
 
-Para mostar qué fincionalidades avanzadas tenemos disponibles ejecute el comando:
+Para mostar qué funcionalidades avanzadas hay disponibles, ejecute el comando:
 ~~~
 uv run main.py --help
 ~~~
