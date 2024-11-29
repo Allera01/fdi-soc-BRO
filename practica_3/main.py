@@ -6,24 +6,36 @@ from string import Template
 import analisis
 
 
-@click.command(help="Este programa analiza propiedades de una red de grafos usando un archivo de lista de aristas.\n")  # Define el comando principal
-@click.argument(
-    "file", type=click.File("r")
-)  
+@click.command(
+    help="Este programa analiza propiedades de una red de grafos usando un archivo de lista de aristas.\n"
+)  # Define el comando principal
+@click.argument("file", type=click.File("r"))
 @click.option(
-    "-m", "--mostrar", is_flag = True, help = "Muestra una visualización de la red destacando los hubs.\n"
-) 
-@click.option(
-    "-dist", "--distancia", is_flag = True, help = "Muestra la distancia media entre dos nodos del grafo.\n"
+    "-m",
+    "--mostrar",
+    is_flag=True,
+    help="Muestra una visualización de la red destacando los hubs.\n",
 )
 @click.option(
-    "-diam", "--diametro", is_flag = True, help = "Calcular el diámetro de la red, es decir, la longitud del máximo camino más corto entre pares de nodos cualesquiera.\n"
+    "-dist",
+    "--distancia",
+    is_flag=True,
+    help="Muestra la distancia media entre dos nodos del grafo.\n",
 )
 @click.option(
-    "-dh", "--distanciahubs", is_flag = True, help = "Calcular la distribución de distancias desde los nodos a cada uno de los hubs, lo que da una idea de la “centralidad” de estos.\n"
+    "-diam",
+    "--diametro",
+    is_flag=True,
+    help="Calcular el diámetro de la red, es decir, la longitud del máximo camino más corto entre pares de nodos cualesquiera.\n",
 )
 @click.option(
-    "-a", "--all", is_flag = True, help = "Se ejecutan todas las funciones opcionales.\n"
+    "-dh",
+    "--distanciahubs",
+    is_flag=True,
+    help="Calcular la distribución de distancias desde los nodos a cada uno de los hubs, lo que da una idea de la “centralidad” de estos.\n",
+)
+@click.option(
+    "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
 )
 # Define argumentos que el usuario debe pasar (en este caso, el archivo de lista de aristas)
 def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
@@ -45,11 +57,11 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
     distancia_media = None
     if distancia or all:
         distancia_media = analisis.calcular_distancia_media(G)
-    
+
     diametro_red = None
     if diametro or all:
         diametro_red = analisis.calcular_diametro(G)
-    
+
     distancias_hubs = False
     if distanciahubs or all:
         distancias_hubs = analisis.calcular_distancia_a_hubs(G, red_social)
@@ -59,10 +71,16 @@ def my_main(file, mostrar, distancia, diametro, distanciahubs, all):
         show = analisis.visualizar_red(G, red_social)
 
     analisis.generar_informe_markdown(
-        red_social, file, num_nodes, num_edges, 
-        show, distancia_media, diametro_red, distancias_hubs
+        red_social,
+        file,
+        num_nodes,
+        num_edges,
+        show,
+        distancia_media,
+        diametro_red,
+        distancias_hubs,
     )
-    
+
 
 if __name__ == "__main__":
     my_main()
