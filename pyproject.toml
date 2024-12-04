@@ -14,7 +14,10 @@ dependencies = [
     "networkx>=3.4",
     "nltk>=3.9.1",
     "pandas>=2.2.3",
+    "pyppeteer>=2.0.0",
+    "pytube>=15.0.0",
     "requests>=2.32.3",
     "scipy>=1.14.1",
+    "selenium>=4.27.1",
     "textblob>=0.18.0.post0",
 ]
