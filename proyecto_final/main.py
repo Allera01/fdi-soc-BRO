@@ -13,25 +13,39 @@ async def obtener_comentarios(video_url):
     await page.waitForSelector('ytd-comments')
 
     # Desplazarse hacia abajo para cargar más comentarios (opcional)
-    for _ in range(10):  # Se desplaza 3 veces hacia abajo
+    for _ in range(10):  # Se desplaza hacia abajo
         await page.evaluate('window.scrollBy(0, 1000)')
         await asyncio.sleep(2)
 
     # Extrae los comentarios
     comentarios = await page.evaluate('''() => {
-        let comentarios = [];
-        let commentElements = document.querySelectorAll('ytd-comment-thread-renderer #content-text');
-        commentElements.forEach(comment => {
-            comentarios.push(comment.innerText);
+        let comentarios_data = [];
+        let commentElements = document.querySelectorAll('ytd-comment-thread-renderer');
+
+        commentElements.forEach(commentElement => {
+            const comentario = commentElement.querySelector('#content-text') ? commentElement.querySelector('#content-text').innerText : '';
+            const usuario = commentElement.querySelector('#author-text') ? commentElement.querySelector('#author-text').innerText : '';
+            const likes = commentElement.querySelector('#vote-count-middle') ? commentElement.querySelector('#vote-count-middle').innerText : '0';
+
+            comentarios_data.push({
+                comentario: comentario.trim(),
+                usuario: usuario.trim(),
+                likes: likes.trim(),
+            });
         });
-        return comentarios;
+
+        return comentarios_data;
     }''')
 
     # Cierra el navegador
     await browser.close()
 
-    for i, comentario in enumerate(comentarios[:50]):
-        print(f"{i+1}: {comentario}")
+    for i, data in enumerate(comentarios[:10]):
+        print(f"{i+1}:")
+        print(f"Usuario: {data['usuario']}")
+        print(f"Comentario: {data['comentario']}")
+        print(f"Likes: {data['likes']}")
+        print('-' * 40)
 
 # Ejecuta la función
 video_url = 'https://www.youtube.com/watch?v=QqLGF_ghc8A'
