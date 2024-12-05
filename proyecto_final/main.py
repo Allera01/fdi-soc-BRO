@@ -1,15 +1,57 @@
 import asyncio
 from pyppeteer import launch
 
-async def obtener_comentarios(video_url):
+async def obtener_informacion_video(video_url):
+    """Obtiene información general del video."""
     # Lanza el navegador
-    browser = await launch(args=['--no-sandbox'])  # headless=True para no abrir la ventana del navegador
+    browser = await launch(args=['--no-sandbox'])
     page = await browser.newPage()
     
     # Ve al video de YouTube
     await page.goto(video_url)
     
-    # Espera a que los comentarios se carguen (puede que tengas que ajustar el selector)
+    # Espera a que se cargue el contenido principal del video
+    await page.waitForSelector('h1.title.style-scope.ytd-video-primary-info-renderer', timeout=10000)
+
+    # Simula interacción con la página
+    await page.evaluate('window.scrollBy(0, 500)')
+    await asyncio.sleep(2)  # Tiempo para cargar elementos dinámicos
+    await page.evaluate('window.scrollBy(0, -500)')
+    await asyncio.sleep(2)
+
+    # Extraer información del video
+    info_video = await page.evaluate('''() => {
+        const titulo = document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer') 
+                       ? document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer').innerText : '';
+        const canal = document.querySelector('#text-container yt-formatted-string') 
+                       ? document.querySelector('#text-container yt-formatted-string').innerText : '';
+        const visitas = document.querySelector('.view-count.style-scope.ytd-video-view-count-renderer') 
+                        ? document.querySelector('.view-count.style-scope.ytd-video-view-count-renderer').innerText : '';
+        const likes = document.querySelector('ytd-toggle-button-renderer:nth-child(1) yt-formatted-string#text') 
+                      ? document.querySelector('ytd-toggle-button-renderer:nth-child(1) yt-formatted-string#text').getAttribute('aria-label') 
+                      || document.querySelector('ytd-toggle-button-renderer:nth-child(1) yt-formatted-string#text').innerText : 'No disponible';
+
+        return {
+            titulo: titulo.trim(),
+            canal: canal.trim(),
+            visitas: visitas.trim(),
+            likes: likes.trim()
+        };
+    }''')
+    
+    print("Información general del video:")
+    print(f"Título: {info_video['titulo']}")
+    print(f"Canal: {info_video['canal']}")
+    print(f"Visitas: {info_video['visitas']}")
+    print(f"Likes: {info_video['likes']}")
+    print('-' * 40)
+    
+    # Devuelve el navegador y la página para seguir reutilizándolos
+    return browser, page
+
+async def obtener_comentarios(page):
+    """Obtiene los comentarios de un video abierto en la pestaña dada."""
+    # Espera a que los comentarios se carguen
     await page.waitForSelector('ytd-comments')
 
     # Desplazarse hacia abajo para cargar más comentarios (opcional)
@@ -37,9 +79,7 @@ async def obtener_comentarios(video_url):
         return comentarios_data;
     }''')
 
-    # Cierra el navegador
-    await browser.close()
-
+    print("Comentarios del video:")
     for i, data in enumerate(comentarios[:10]):
         print(f"{i+1}:")
         print(f"Usuario: {data['usuario']}")
@@ -47,9 +87,20 @@ async def obtener_comentarios(video_url):
         print(f"Likes: {data['likes']}")
         print('-' * 40)
 
-# Ejecuta la función
-video_url = 'https://www.youtube.com/watch?v=QqLGF_ghc8A'
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
-comentarios = loop.run_until_complete(obtener_comentarios(video_url))
+async def main(video_url):
+    """Ejecuta ambas tareas de forma secuencial."""
+    # Obtener información general del video
+    browser, page = await obtener_informacion_video(video_url)
 
+    # Obtener comentarios del video
+    await obtener_comentarios(page)
+
+    # Cierra el navegador
+    await browser.close()
+
+# Ejecución del programa
+if __name__ == "__main__":
+    video_url = input("Introduce la URL del video de YouTube: ")
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main(video_url))
