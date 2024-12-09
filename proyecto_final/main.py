@@ -1,7 +1,7 @@
-import asyncio
-from pyppeteer import launch
-
-async def obtener_informacion_video(video_url):
+import click
+from cargar import cargar
+import analisis
+'''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
     # Lanza el navegador
     browser = await launch(args=['--no-sandbox'])
@@ -20,7 +20,7 @@ async def obtener_informacion_video(video_url):
     await asyncio.sleep(2)
 
     # Extraer información del video
-    info_video = await page.evaluate('''() => {
+    info_video = await page.evaluate(''#'() => {
         const titulo = document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer') 
                        ? document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer').innerText : '';
         const canal = document.querySelector('#text-container yt-formatted-string') 
@@ -37,7 +37,7 @@ async def obtener_informacion_video(video_url):
             visitas: visitas.trim(),
             likes: likes.trim()
         };
-    }''')
+    }''#')
     
     print("Información general del video:")
     print(f"Título: {info_video['titulo']}")
@@ -60,7 +60,7 @@ async def obtener_comentarios(page):
         await asyncio.sleep(2)
 
     # Extrae los comentarios
-    comentarios = await page.evaluate('''() => {
+    comentarios = await page.evaluate(''#'() => {
         let comentarios_data = [];
         let commentElements = document.querySelectorAll('ytd-comment-thread-renderer');
 
@@ -77,7 +77,7 @@ async def obtener_comentarios(page):
         });
 
         return comentarios_data;
-    }''')
+    }''#')
 
     print("Comentarios del video:")
     for i, data in enumerate(comentarios[:10]):
@@ -85,22 +85,19 @@ async def obtener_comentarios(page):
         print(f"Usuario: {data['usuario']}")
         print(f"Comentario: {data['comentario']}")
         print(f"Likes: {data['likes']}")
-        print('-' * 40)
+        print('-' * 40)'''
+        
 
-async def main(video_url):
-    """Ejecuta ambas tareas de forma secuencial."""
-    # Obtener información general del video
-    browser, page = await obtener_informacion_video(video_url)
-
-    # Obtener comentarios del video
-    await obtener_comentarios(page)
-
-    # Cierra el navegador
-    await browser.close()
+@click.option(
+    "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
+)
+def my_main():
+    html = cargar()
+    print(html)
+    #el contenido de los comentarios se encuentra en la id paid-comment-chip 
+    #lo podeis buscar en los datasets si se necesita otra forma de encontrarlo
+    #si los sacais hacerlo utilizando Beautiful Soup y en el archivo analisis
 
 # Ejecución del programa
 if __name__ == "__main__":
-    video_url = input("Introduce la URL del video de YouTube: ")
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main(video_url))
+    my_main()
