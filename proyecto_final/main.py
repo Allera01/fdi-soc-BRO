@@ -1,7 +1,7 @@
 import click
 from cargar import cargar
 import analisis
-from extract import extract_comments_from_html
+from extract import extract_comments
 '''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
     # Lanza el navegador
@@ -92,21 +92,10 @@ async def obtener_comentarios(page):
 @click.option(
     "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
 )
-@click.option('--num-comments', default=50, type=int, help="Número de comentarios a extraer (por defecto 50).")
-def extract_comments(video_html, num_comments):
-    """
-    Función principal que invoca extract.py con la ruta del HTML y el número de comentarios.
-    """
-    # Llamamos directamente a la función de extract.py para extraer los comentarios
-    comments = extract_comments_from_html(video_html, num_comments)
-    
-    # Mostramos los comentarios extraídos
-    for idx, comment in enumerate(comments, start=1):
-        print(f"Comentario {idx}: {comment}")
 def my_main():
     html = cargar()
-    extract_comments()
-    print(html)
+    comentarios = extract_comments(html,50)
+    #print(html)
     #el contenido de los comentarios se encuentra en la id paid-comment-chip 
     #lo podeis buscar en los datasets si se necesita otra forma de encontrarlo
     #si los sacais hacerlo utilizando Beautiful Soup y en el archivo analisis
