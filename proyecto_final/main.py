@@ -94,8 +94,7 @@ async def obtener_comentarios(page):
 )
 def my_main():
     html = cargar()
-    comentarios = extract_comments(html,50)
-    print(comentarios)
+    extract_comments(html,50)
     #print(html)
     #hay que pasar estos comentarios a un analisis.py que lo analiza, es posible que haya que aumentar el extract.py para sacar más datos que analizar
 
