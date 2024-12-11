@@ -1,6 +1,7 @@
 import click
 from cargar import cargar
 import analisis
+from extract import extract_comments_from_html
 '''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
     # Lanza el navegador
@@ -96,8 +97,12 @@ def extract_comments(video_html, num_comments):
     """
     Función principal que invoca extract.py con la ruta del HTML y el número de comentarios.
     """
-    # Llamamos al script extract.py con los parámetros necesarios
-    subprocess.run(['python3', 'extract.py', video_html, str(num_comments)], check=True)
+    # Llamamos directamente a la función de extract.py para extraer los comentarios
+    comments = extract_comments_from_html(video_html, num_comments)
+    
+    # Mostramos los comentarios extraídos
+    for idx, comment in enumerate(comments, start=1):
+        print(f"Comentario {idx}: {comment}")
 def my_main():
     html = cargar()
     extract_comments()
