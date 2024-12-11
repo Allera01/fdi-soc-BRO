@@ -95,10 +95,9 @@ async def obtener_comentarios(page):
 def my_main():
     html = cargar()
     comentarios = extract_comments(html,50)
+    print(comentarios)
     #print(html)
-    #el contenido de los comentarios se encuentra en la id paid-comment-chip 
-    #lo podeis buscar en los datasets si se necesita otra forma de encontrarlo
-    #si los sacais hacerlo utilizando Beautiful Soup y en el archivo analisis
+    #hay que pasar estos comentarios a un analisis.py que lo analiza, es posible que haya que aumentar el extract.py para sacar más datos que analizar
 
 # Ejecución del programa
 if __name__ == "__main__":
