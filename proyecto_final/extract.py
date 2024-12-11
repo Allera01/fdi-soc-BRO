@@ -68,7 +68,7 @@ def extract_comments(html_file, num_comments):
     comments = extract_comments_from_html(html_file, num_comments)
     
     # Imprimimos los comentarios de forma ordenada
-    print_comments(comments)
+    #print_comments(comments)
     
     # Retornamos los comentarios extraídos
     return comments
