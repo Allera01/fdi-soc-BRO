@@ -91,8 +91,16 @@ async def obtener_comentarios(page):
 @click.option(
     "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
 )
+@click.option('--num-comments', default=50, type=int, help="Número de comentarios a extraer (por defecto 50).")
+def extract_comments(video_html, num_comments):
+    """
+    Función principal que invoca extract.py con la ruta del HTML y el número de comentarios.
+    """
+    # Llamamos al script extract.py con los parámetros necesarios
+    subprocess.run(['python3', 'extract.py', video_html, str(num_comments)], check=True)
 def my_main():
     html = cargar()
+    extract_comments()
     print(html)
     #el contenido de los comentarios se encuentra en la id paid-comment-chip 
     #lo podeis buscar en los datasets si se necesita otra forma de encontrarlo
