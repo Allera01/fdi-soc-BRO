@@ -4,7 +4,9 @@ from pyppeteer import launch
 
 dir_cache = Path("cache")
 
-async def descargar_html_video(video_url):
+async def descargar_html_video():
+    dir_cache.mkdir(parents=True, exist_ok=True)
+    video_url = input("Introduce la URL del video de YouTube: ")
     
     # Lanza el navegador
     browser = await launch(args=['--no-sandbox'])
@@ -51,8 +53,8 @@ async def descargar_html_video(video_url):
 
 # Ejecución del programa
 if __name__ == "__main__":
-    dir_cache.mkdir(parents=True, exist_ok=True)
-    video_url = input("Introduce la URL del video de YouTube: ")
+    #dir_cache.mkdir(parents=True, exist_ok=True)
+    #video_url = input("Introduce la URL del video de YouTube: ")
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(descargar_html_video(video_url))
+    loop.run_until_complete(descargar_html_video())

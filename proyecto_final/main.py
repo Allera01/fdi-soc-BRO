@@ -1,7 +1,10 @@
+import asyncio
 import click
 from cargar import cargar
 import analisis
 from extract import extract_comments
+import descarga
+
 '''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
     # Lanza el navegador
@@ -88,11 +91,17 @@ async def obtener_comentarios(page):
         print(f"Likes: {data['likes']}")
         print('-' * 40)'''
         
-
+@click.option(
+    "-d", "--descargar", is_flag=True, help="Permite descargar el HTML de un video de YouTube a traves de su URL.\n"
+)
 @click.option(
     "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
 )
-def my_main():
+def my_main():#descargar,all):
+    '''if (descargar):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(descarga.descargar_html_video())'''
     html = cargar()
     comentarios = extract_comments(html,50)
     print(comentarios)
