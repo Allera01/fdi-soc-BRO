@@ -34,12 +34,20 @@ def extract_comments_from_html(html_file, num_comments):
             paid_amount_tag = paid_tag.find('span', {'id': 'comment-chip-price'})
             paid_amount = paid_amount_tag.get_text(strip=True) if paid_amount_tag else None
         
+        # Buscamos el número de likes
+        likes_span = body_div.find_next('span', {'id': 'vote-count-middle'})
+        likes_count = likes_span.get_text(strip=True) if likes_span else "0"
+
+        if not likes_count:
+            likes_count = "0"
+        
         # Almacenamos la información extraída
         comment_data = {
             'author_name': author_name,
             'comment_date': comment_date,
             'comment_text': comment_text,
-            'paid_amount': paid_amount
+            'paid_amount': paid_amount,
+            'likes_count': likes_count 
         }
         comments.append(comment_data)
 
@@ -55,9 +63,10 @@ def print_comments(comments):
         print(f"  Autor: {comment['author_name']}")
         print(f"  Fecha: {comment['comment_date']}")
         print(f"  Comentario: {comment['comment_text']}")
+        print(f"  Numero de likes: {comment['likes_count']}")
         print(f"  Pagado: {'Sí' if comment['paid_amount'] else 'No'}")
         if comment['paid_amount']:
-            print(f"  Monto: {comment['paid_amount']}")
+            print(f"  Pago: {comment['paid_amount']}")
         print("-" * 40)
 
 def extract_comments(html_file, num_comments):
