@@ -1,94 +1,67 @@
+                                                                                                                                                                                                           
+import googleapiclient.discovery 
+import json
 import asyncio
 from pathlib import Path
 from pyppeteer import launch
+import re 
+
 
 dir_cache = Path("cache")
 
-async def descargar_html_video():
-    dir_cache.mkdir(parents=True, exist_ok=True)
-    video_url = input("Introduce la URL del video de YouTube: ")
+# Función para obtener los comentarios de un video
+def obtener_comentarios(youtube, video_id):
+    comentarios = []
+    request = youtube.commentThreads().list(
+        part="snippet, replies",
+        videoId=video_id,
+        textFormat="plainText"
+    )
     
-    full_info = ""
-    # Lanza el navegador
-    browser = await launch(args=['--no-sandbox'])
-    page = await browser.newPage()
+    response = request.execute()
     
-    # Ve al video de YouTube
-    await page.goto(video_url)
-    
-    # Espera a que se cargue el contenido principal del video
-    await page.waitForSelector('h1.title.style-scope.ytd-video-primary-info-renderer', timeout=10000)
+    # Se pueden agregar más lógica para extraer los comentarios de la respuesta si es necesario.
+    return response
 
-    for _ in range(10):  # Desplázate varias veces para asegurar la carga de comentarios
-        await page.evaluate('window.scrollBy(0, 1000)')
-        await asyncio.sleep(2)
-    # Extraer información del video
+def extraer_video_id(url):
+    # Expresión regular para detectar el ID del video en diferentes formatos de URL
+    regex = r"(?:https?://(?:www\.)?youtube\.com(?:/[^/]+)?\?v=|https?://m\.youtube\.com/v/)([a-zA-Z0-9_-]{11})"
+    match = re.search(regex, url)
     
-    '''
-    #https://youtu.be/ZtqbjdZ6iok
-    
-    print("Pulsando botones de 'más respuestas' visibles...")
+    if match:
+        return match.group(1)  # El video ID está en el primer grupo de la expresión regular
+    else:
+        raise ValueError("No se pudo extraer el ID del video de la URL.")
 
-    while True:
-        botones_respuestas = await page.evaluate(''() => {
-            // Seleccionar botones dentro de <ytd-button-renderer> con id="more-replies" y que no tengan el atributo `hidden`
-            const botones = Array.from(
-                document.querySelectorAll('ytd-button-renderer#more-replies:not([hidden]) button.yt-spec-button-shape-next')
-            );
-            
-            // Simular clic en cada botón encontrado
-            botones.forEach(btn => btn.click());
-            
-            // Devolver la cantidad de botones pulsados
-            return botones.length;
-        }'')
-        
-        if botones_respuestas == 0:
-            break  # Salimos del bucle si no hay más botones visibles
-        
-        
-        print(f"Se han pulsado {botones_respuestas} botones para cargar respuestas.")
-        await asyncio.sleep(10)  # Pausa para permitir la carga del contenido
-        
-        full_info = await page.content()
-    '''
-    
-    
-    
-        
-    info_video = await page.evaluate('''() => {
-        const titulo = document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer') 
-                       ? document.querySelector('h1.title.style-scope.ytd-video-primary-info-renderer').innerText : '';
-        const canal = document.querySelector('#text-container yt-formatted-string') 
-                       ? document.querySelector('#text-container yt-formatted-string').innerText : '';
 
-        return {
-            titulo: titulo.trim(),
-            canal: canal.trim(),
-        };
-    }''')
+def sacar_comentarios(video_id):
+    # Configuración de la API
+    api_key = 'AIzaSyAKa2JQhSNHvmzjqa1zr99niVij474s7L8'
     
-    # Crear la ruta donde guardar
-    canal_ajustado = info_video['canal'].lower().replace(" ", "_").replace("/", "_")
+    # Crear el servicio de YouTube
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
 
-    guardar = dir_cache / canal_ajustado
-    guardar.mkdir(parents=True, exist_ok=True)  # Crear directorios del canal si no existen
+    # Nombre del archivo donde se guardarán los comentarios
+    filename = dir_cache / video_id.json
     
-    # Ruta del archivo HTML
-    titulo_ajustado = info_video['titulo'].lower().replace(" ", "_").replace("/", "_")
-
-    archivo_html = guardar / (titulo_ajustado + ".html")
+    # Verificar si el archivo ya existe
+    if filename.exists():
+        print(f"El archivo de comentarios ya existe en {filename}. No se generará de nuevo.")
+        return
     
-    # Guardar el contenido de la página
-    contenido = await page.content()
-    archivo_html.write_text(contenido, encoding="utf-8", errors="ignore")        
-        
-    await browser.close()
+    # Obtener los comentarios del video
+    print(f"Obteniendo comentarios de video {video_url}...")
+    comentarios = obtener_comentarios(youtube, video_id)
 
-# Ejecución del programa
+    # Guardar los comentarios en un archivo JSON
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(comentarios, f, ensure_ascii=False, indent=4)
+    
+    print(f"Comentarios guardados en '{filename}'.")
+
 if __name__ == "__main__":
-    #dir_cache.mkdir(parents=True, exist_ok=True)
-    #video_url = input("Introduce la URL del video de YouTube: ")
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(descargar_html_video())
+    dir_cache.mkdir(parents=True, exist_ok=True)
+    video_url = input("Introduce la URL del video de YouTube: ")    
+    video_id = extraer_video_id(video_url)
+    sacar_comentarios(video_id)
+

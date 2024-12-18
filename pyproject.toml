@@ -8,6 +8,7 @@ dependencies = [
     "backoff>=2.2.1",
     "bs4>=0.0.2",
     "click>=8.1.7",
+    "google-api-python-client>=2.155.0",
     "ipysigma>=0.24.3",
     "jupyter>=1.1.1",
     "matplotlib>=3.9.2",
