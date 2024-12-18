@@ -22,7 +22,8 @@ def listar_videos(canal):
         print(f"La carpeta del canal {canal} no existe en el caché.")
         return []
 
-    videos = sorted(carpeta_canal.glob("*.html"))
+    #videos = sorted(carpeta_canal.glob("*.html"))
+    videos = sorted(carpeta_canal.glob("*.json"))
     if not videos:
         print(f"No se encontraron videos en la carpeta del canal {canal}.")
         return []

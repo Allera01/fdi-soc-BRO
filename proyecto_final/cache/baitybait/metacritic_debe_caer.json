@@ -1,0 +1,810 @@
+{
+    "kind": "youtube#commentThreadListResponse",
+    "etag": "gbIBg_ZAEI0RtCYnfkDVXzje9IE",
+    "nextPageToken": "Z2V0X25ld2VzdF9maXJzdC0tQ2dnSWdBUVZGN2ZST0JJRkNLZ2dHQUFTQlFpSElCZ0FFZ1VJaVNBWUFCSUZDSWdnR0FBU0JRaWRJQmdCSWcwS0N3aVZfdW02QmhEbzNKSTI=",
+    "pageInfo": {
+        "totalResults": 20,
+        "resultsPerPage": 20
+    },
+    "items": [
+        {
+            "kind": "youtube#commentThread",
+            "etag": "swku8XvVtJO464zSDav3YmDzXPk",
+            "id": "UgyCumObZfSY5JGFDYl4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "OI-ZH3VIo4oft8x_SmELF-BmF3E",
+                    "id": "UgyCumObZfSY5JGFDYl4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "¡Disfruta de un 20% DE DESCUENTO + Envío Internacional gratis + 2 Regalos @MANSCAPED con el código promocional BAITY en https://manscaped.com/baity",
+                        "textOriginal": "¡Disfruta de un 20% DE DESCUENTO + Envío Internacional gratis + 2 Regalos @MANSCAPED con el código promocional BAITY en https://manscaped.com/baity",
+                        "authorDisplayName": "@SrBaityBait",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/Hiv60uIBtN_E21fsj3OHRVvCNR-PGROq4a2wRZviX1zEw_O5Yg4lXbPig6HLiri95boJ5aH15g=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@SrBaityBait",
+                        "authorChannelId": {
+                            "value": "UCNnNCBgckxzqIh1Txw5cgSg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 494,
+                        "publishedAt": "2024-11-28T02:15:09Z",
+                        "updatedAt": "2024-11-28T02:15:09Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 38,
+                "isPublic": true
+            },
+            "replies": {
+                "comments": [
+                    {
+                        "kind": "youtube#comment",
+                        "etag": "zWp3B0VvfHeeHqM_KUbaj_rnWEY",
+                        "id": "UgyCumObZfSY5JGFDYl4AaABAg.ABMyjFh66OqABOZJbAGGJi",
+                        "snippet": {
+                            "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                            "videoId": "QqLGF_ghc8A",
+                            "textDisplay": "Feliz dia de acción se Gracias agradecido por este video",
+                            "textOriginal": "Feliz dia de acción se Gracias agradecido por este video",
+                            "parentId": "UgyCumObZfSY5JGFDYl4AaABAg",
+                            "authorDisplayName": "@TheZombie909",
+                            "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kas-Y_84xx-AX8V-Qz42ZaX-W0S-PkaV1cmJWysu97ew=s48-c-k-c0x00ffffff-no-rj",
+                            "authorChannelUrl": "http://www.youtube.com/@TheZombie909",
+                            "authorChannelId": {
+                                "value": "UCsRFIQFIMLo6FxatXbtSzTg"
+                            },
+                            "canRate": true,
+                            "viewerRating": "none",
+                            "likeCount": 9,
+                            "publishedAt": "2024-11-28T17:02:48Z",
+                            "updatedAt": "2024-11-28T17:02:48Z"
+                        }
+                    },
+                    {
+                        "kind": "youtube#comment",
+                        "etag": "DUgccS2L_xNjkeK25ZfLXwNZNOk",
+                        "id": "UgyCumObZfSY5JGFDYl4AaABAg.ABMyjFh66OqABOZiiT_mmN",
+                        "snippet": {
+                            "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                            "videoId": "QqLGF_ghc8A",
+                            "textDisplay": "Si la compro tendre la misma barba que tu?",
+                            "textOriginal": "Si la compro tendre la misma barba que tu?",
+                            "parentId": "UgyCumObZfSY5JGFDYl4AaABAg",
+                            "authorDisplayName": "@jeronimoroldan2677",
+                            "authorProfileImageUrl": "https://yt3.ggpht.com/mmOjzDyZin2BzGowJtyG2koxwV73xHOrKhAaRPQusGmOBUu904KLEQrCetQzspNh1P9NyDLoy0c=s48-c-k-c0x00ffffff-no-rj",
+                            "authorChannelUrl": "http://www.youtube.com/@jeronimoroldan2677",
+                            "authorChannelId": {
+                                "value": "UCu7OeXpFwXvvuHNj0LZdSxQ"
+                            },
+                            "canRate": true,
+                            "viewerRating": "none",
+                            "likeCount": 20,
+                            "publishedAt": "2024-11-28T17:06:22Z",
+                            "updatedAt": "2024-11-28T17:06:22Z"
+                        }
+                    },
+                    {
+                        "kind": "youtube#comment",
+                        "etag": "Q6lkbEgtWCzJYGWsyJGndswvJKM",
+                        "id": "UgyCumObZfSY5JGFDYl4AaABAg.ABMyjFh66OqABO_fVjIRKY",
+                        "snippet": {
+                            "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                            "videoId": "QqLGF_ghc8A",
+                            "textDisplay": "Dame la que tú usas ...",
+                            "textOriginal": "Dame la que tú usas ...",
+                            "parentId": "UgyCumObZfSY5JGFDYl4AaABAg",
+                            "authorDisplayName": "@mateoospinaagudelo7870",
+                            "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k6kRfmNWNKka3cXc1UVGLc4brkx84shJqr0rgT32xqx2IF=s48-c-k-c0x00ffffff-no-rj",
+                            "authorChannelUrl": "http://www.youtube.com/@mateoospinaagudelo7870",
+                            "authorChannelId": {
+                                "value": "UC6cr52k6VHtvxkhwGmERkuQ"
+                            },
+                            "canRate": true,
+                            "viewerRating": "none",
+                            "likeCount": 7,
+                            "publishedAt": "2024-11-28T17:14:40Z",
+                            "updatedAt": "2024-11-28T17:14:40Z"
+                        }
+                    },
+                    {
+                        "kind": "youtube#comment",
+                        "etag": "DWFB0QCsOG_v0nau0T_KYMxMrV8",
+                        "id": "UgyCumObZfSY5JGFDYl4AaABAg.ABMyjFh66OqABOaR0-1O_d",
+                        "snippet": {
+                            "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                            "videoId": "QqLGF_ghc8A",
+                            "textDisplay": "Estoy harto de Manscaped (me salen anuncios todo el rato)",
+                            "textOriginal": "Estoy harto de Manscaped (me salen anuncios todo el rato)",
+                            "parentId": "UgyCumObZfSY5JGFDYl4AaABAg",
+                            "authorDisplayName": "@SoyJ3susL10n",
+                            "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mhsmnYE8s43yKvrOUEuO15ubUhsinTg2sCvnzOqI9_bv10vBFKsBHnJGDP5ESWQFEWmg=s48-c-k-c0x00ffffff-no-rj",
+                            "authorChannelUrl": "http://www.youtube.com/@SoyJ3susL10n",
+                            "authorChannelId": {
+                                "value": "UCdokSJkZUWImUckuLeGtqSA"
+                            },
+                            "canRate": true,
+                            "viewerRating": "none",
+                            "likeCount": 3,
+                            "publishedAt": "2024-11-28T17:21:17Z",
+                            "updatedAt": "2024-11-28T17:21:17Z"
+                        }
+                    },
+                    {
+                        "kind": "youtube#comment",
+                        "etag": "Kxd8_82KFWSC5tVYG9rJTmAx-NA",
+                        "id": "UgyCumObZfSY5JGFDYl4AaABAg.ABMyjFh66OqABOatxJ5HcQ",
+                        "snippet": {
+                            "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                            "videoId": "QqLGF_ghc8A",
+                            "textDisplay": "tienes que provar rain world",
+                            "textOriginal": "tienes que provar rain world",
+                            "parentId": "UgyCumObZfSY5JGFDYl4AaABAg",
+                            "authorDisplayName": "@alv134r36",
+                            "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kli0k3C-RDbTpqOliVbT34Ikn-oTv3_V2RCefRrDn7vl9ySG3kVOKW5vZSl9ROpKUKsg=s48-c-k-c0x00ffffff-no-rj",
+                            "authorChannelUrl": "http://www.youtube.com/@alv134r36",
+                            "authorChannelId": {
+                                "value": "UCrMhj9pFWlBmXe5c8vpAlxA"
+                            },
+                            "canRate": true,
+                            "viewerRating": "none",
+                            "likeCount": 6,
+                            "publishedAt": "2024-11-28T17:25:23Z",
+                            "updatedAt": "2024-11-28T17:25:23Z"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "CoX8LdOCWWw08cYXI0dwj-i5Sns",
+            "id": "Ugw6QrJo2PqoyDVuaSR4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "AszV4tvWUnO2nuoaKz5IDQTkDM4",
+                    "id": "Ugw6QrJo2PqoyDVuaSR4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Joder lo que me he reído......... Metacritic is ",
+                        "textOriginal": "Joder lo que me he reído......... Metacritic is ",
+                        "authorDisplayName": "@kaplan007",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_n6EdQAhbKm8xGrFNSBj4kyTVsXkRjNu0_HxTUJtX2Muw=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@kaplan007",
+                        "authorChannelId": {
+                            "value": "UCcKqwo5KtNJhR73aB5BjQvA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-18T13:25:31Z",
+                        "updatedAt": "2024-12-18T13:25:31Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "QZUqpBgyOyX-0YCSqFVyvdbXyoI",
+            "id": "UgzF1TqfezVXpR-d4RV4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "LF8TdUsYacYSvcWIICNddTsSnxA",
+                    "id": "UgzF1TqfezVXpR-d4RV4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "el chiste es que juegos a 70 napos salgan con fallos de lanzamiento",
+                        "textOriginal": "el chiste es que juegos a 70 napos salgan con fallos de lanzamiento",
+                        "authorDisplayName": "@gabrimc6",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/5C9Z32mQXnpSIZru9-6_Ar6sWGdvbCekO2YODtAJh6WPdzNO1Pv_xvjnHOr9rm5j9scB-xfBnw=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@gabrimc6",
+                        "authorChannelId": {
+                            "value": "UCjJBDyoHEViAk2ks5Zdh2Yw"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-18T10:39:43Z",
+                        "updatedAt": "2024-12-18T10:39:43Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "jG5LKPjsfHelqbjzDj9ZoQaiF6I",
+            "id": "Ugy2-5r9R5AtzIC7hqh4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "z_Nas0N2yqTQzFyUMEkuwQhlJ6s",
+                    "id": "Ugy2-5r9R5AtzIC7hqh4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Yo estoy jugando through the darkness of times y me está encantando. Lo mire en metacritic y tiene un 70.",
+                        "textOriginal": "Yo estoy jugando through the darkness of times y me está encantando. Lo mire en metacritic y tiene un 70.",
+                        "authorDisplayName": "@crotolamo1",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/OXIEAvgkzyDIAhI0MfCF3AR7i8m8AWFsj8wf7_v-xYUCtIYfHx-q2cL_dZDmqSUP_sFqXAGf=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@crotolamo1",
+                        "authorChannelId": {
+                            "value": "UC6dqcmQKPUulTQeqiTKXdhw"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-18T08:15:31Z",
+                        "updatedAt": "2024-12-18T08:15:31Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "mZhAgbI1rnjljuixrzoSd3go8o0",
+            "id": "UgyPloonHgPcJSh7dd94AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "c47K0aXvLfWDBE9yEsgjdwqMrbQ",
+                    "id": "UgyPloonHgPcJSh7dd94AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Señores soy el único que se come los anuncios como si fueran contenido?",
+                        "textOriginal": "Señores soy el único que se come los anuncios como si fueran contenido?",
+                        "authorDisplayName": "@mariosaanchez",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/LHO48G3QHZq5Xpy_DnhVwk3kvEun3V0Y1Iup1VqlMw-DYLHeXU5CU6Nrg0aV7ltFf3u6TMewLcY=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@mariosaanchez",
+                        "authorChannelId": {
+                            "value": "UCryE1QvoFTVYIinfmNmLVPg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-18T08:05:36Z",
+                        "updatedAt": "2024-12-18T08:05:36Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "62__2mTfs_7EcBl9AmtpJngVHsA",
+            "id": "UgwrvD7mCzhiTCsSfoh4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "-FFuIddVgrntX0SwpIdpb2Ebn_U",
+                    "id": "UgwrvD7mCzhiTCsSfoh4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "El criterio que tiene metacritic es el numero de maletines o \"bolsas\" que recive.",
+                        "textOriginal": "El criterio que tiene metacritic es el numero de maletines o \"bolsas\" que recive.",
+                        "authorDisplayName": "@killerbarbies2",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nDlZdbo0c4gIDfpUT6rfCUQQnJ_qiUGrdsK4b1omxpIw=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@killerbarbies2",
+                        "authorChannelId": {
+                            "value": "UCryHQ4vZ4I-PJYRKOcKzhcg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-18T07:03:24Z",
+                        "updatedAt": "2024-12-18T07:03:24Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "7jJwoMNo1Ggb863hEDso4SBDn68",
+            "id": "UgzPrRAm2hyGZyev_PJ4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "Tl91qe8tMlxFLoGcmCJ5I1nhfaM",
+                    "id": "UgzPrRAm2hyGZyev_PJ4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Esa web no sirve de verdad joyitas como Days gone sufrió por esto, recientemente Wukong sufrió por esto",
+                        "textOriginal": "Esa web no sirve de verdad joyitas como Days gone sufrió por esto, recientemente Wukong sufrió por esto",
+                        "authorDisplayName": "@LEONBELMONT1",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mnnqSNDL3y3j3Iyocn7c_dhSAznwlPA6ZYCvVp-9s=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@LEONBELMONT1",
+                        "authorChannelId": {
+                            "value": "UCmI94S_HPuxAgFeMGXD5QmQ"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 1,
+                        "publishedAt": "2024-12-17T12:58:49Z",
+                        "updatedAt": "2024-12-17T12:58:49Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "91GjziatZq-RVmNaeascLkDmGZQ",
+            "id": "UgwhqwMTRClKTIl8Ll54AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "T9JXZ49r1rcuWwCqdMLBbP0uyrU",
+                    "id": "UgwhqwMTRClKTIl8Ll54AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "La fórmula son los maletines. Sus medios, sus normas.",
+                        "textOriginal": "La fórmula son los maletines. Sus medios, sus normas.",
+                        "authorDisplayName": "@kapekape5560",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/3olGISthJu23K9yOV_2r-ZSZcQiWTDAu_1cI8_4s1zz5wUxigAVndc937bsEPKKEB4sLHwGMQg=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@kapekape5560",
+                        "authorChannelId": {
+                            "value": "UCBIVXStLot6FXjnVrZuUmCA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-17T03:26:06Z",
+                        "updatedAt": "2024-12-17T03:26:06Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "LZqST4Vxmcym861Z6rKk3d1zByM",
+            "id": "UgzFQkXuEF-54yScMfh4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "Au5bPAIHVvrP3BbU_X9aUF2xhQ4",
+                    "id": "UgzFQkXuEF-54yScMfh4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "hay juegos buenisimos pero que estan muertos a la falta de gente esos deberian estar recomendados?",
+                        "textOriginal": "hay juegos buenisimos pero que estan muertos a la falta de gente esos deberian estar recomendados?",
+                        "authorDisplayName": "@santiagovillarpando4048",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/7vuj0677dhdAek-SzdMMdhnX9wLdFGDGCbR7RoTbX1j52hBEHy6qiszD4DmCURhvE3kiZh__=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@santiagovillarpando4048",
+                        "authorChannelId": {
+                            "value": "UC3iwd6koOalBYofBFS-NO-g"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-16T21:32:45Z",
+                        "updatedAt": "2024-12-16T21:32:45Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "U8UUOZI4Hm68f7WX7k5ts51nsN8",
+            "id": "UgzBpSpVx2Vexueijq14AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "BUwv7WO0P6eKzMyxIet4r26xRzY",
+                    "id": "UgzBpSpVx2Vexueijq14AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Eso es como cuando la OCU se pone a valorar sillas de auto de bebé y les quita puntos porque la funda no es extraible. Al final saca más puntos una silla menos segura pero más fácil de lavar que una que le puede salvar la vida a tu hijo. Lo, siento necesitaba decirlo XD",
+                        "textOriginal": "Eso es como cuando la OCU se pone a valorar sillas de auto de bebé y les quita puntos porque la funda no es extraible. Al final saca más puntos una silla menos segura pero más fácil de lavar que una que le puede salvar la vida a tu hijo. Lo, siento necesitaba decirlo XD",
+                        "authorDisplayName": "@abuelaconresaca4773",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_mLrjfBLspZYHgDoOmCzeL1VpfAycfWOKueJgePqxOXsRE=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@abuelaconresaca4773",
+                        "authorChannelId": {
+                            "value": "UC8LS2Rj7lI7ft4kzHQ-_8pg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-16T17:07:16Z",
+                        "updatedAt": "2024-12-16T17:07:16Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "i68w8NtxbvAAQ9Pl-cev1pusRT0",
+            "id": "UgxAwBJPCJUyOClxas94AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "sS3UFo4a4Gq_qCyQwbytEqOp8kM",
+                    "id": "UgxAwBJPCJUyOClxas94AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Nunca me había guiado por Metacritic para elegir un juego (tampoco soy el máximo gamer), y gracias a este vídeo no voy a empezar a usarlo :)\n.\n.\n.\n.\n.\n.\nQue te j***n, Metacritic.",
+                        "textOriginal": "Nunca me había guiado por Metacritic para elegir un juego (tampoco soy el máximo gamer), y gracias a este vídeo no voy a empezar a usarlo :)\n.\n.\n.\n.\n.\n.\nQue te j***n, Metacritic.",
+                        "authorDisplayName": "@ajg7810",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nm-s2PdqO2o-QnAuQ6VKPz0S24Pk2jWiPUnZYd8ALjC6Q=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@ajg7810",
+                        "authorChannelId": {
+                            "value": "UCLqIBSZ1V9ANLr43aazFgMA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-15T19:12:43Z",
+                        "updatedAt": "2024-12-15T19:12:43Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "M6sAR-TJrvnT4tkfgvlatBJdAN8",
+            "id": "UgxID5hNhc10HFRKh7Z4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "vX2k_V5KnKoHGygxCcbtopSMAJA",
+                    "id": "UgxID5hNhc10HFRKh7Z4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Mientacritic....",
+                        "textOriginal": "Mientacritic....",
+                        "authorDisplayName": "@ElGaragedelRockFMPop",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lyRigNHgAt8cHCQHka_vdYImoV_MVi6xGWP_dIVjjxDgU=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@ElGaragedelRockFMPop",
+                        "authorChannelId": {
+                            "value": "UCJ2tzfG7du_4jIOFIxBLOSg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-15T03:19:19Z",
+                        "updatedAt": "2024-12-15T03:19:19Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "NZ5PiDzdR65985kcx60YiVp3K5o",
+            "id": "UgxW3F4b4zApkDphS1x4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "sPovdHVvOB0uZNI9H-5iYASjhDA",
+                    "id": "UgxW3F4b4zApkDphS1x4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "La gente sigue usando metacritic para elegir un juego?? usa algo mas que mirar un Gameplay un ratito para elegir?",
+                        "textOriginal": "La gente sigue usando metacritic para elegir un juego?? usa algo mas que mirar un Gameplay un ratito para elegir?",
+                        "authorDisplayName": "@RDAAFONDO",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kpTjJsF4OS0qb6R7nxM9nFttb1F1pU7wJLvMILJuYpmn0=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@RDAAFONDO",
+                        "authorChannelId": {
+                            "value": "UCGSfbrBBm_apvnoTlXd92tw"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-14T17:37:12Z",
+                        "updatedAt": "2024-12-14T17:37:12Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "y-W8wbOCQKDsy6l8DxawtLaNo40",
+            "id": "UgxHzvaVUVwyfYEeZH14AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "eS6k6LlWsYZo4rQ7Kgzj8oypcQc",
+                    "id": "UgxHzvaVUVwyfYEeZH14AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "A mí la verdad que la nota de los medios me chupa el pingo, a lo único que le he prestado atención alguna vez es justamente a las recomendaciones de los usuarios de steam como mucho",
+                        "textOriginal": "A mí la verdad que la nota de los medios me chupa el pingo, a lo único que le he prestado atención alguna vez es justamente a las recomendaciones de los usuarios de steam como mucho",
+                        "authorDisplayName": "@darioappeceix4774",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_m9OqZx4w0httlYJ1qiY7nYkZVIOCyhStesmH3IF4yvoE3c=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@darioappeceix4774",
+                        "authorChannelId": {
+                            "value": "UC-sTar6Lwgdq_8LNWU-ZIrA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-13T17:38:59Z",
+                        "updatedAt": "2024-12-13T17:38:59Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "2GXXXfNWnOa1La6uexfHIP3v-Oc",
+            "id": "UgzSL08myPsT7y8g_4V4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "ivs-2lPnmoJl4eatvpETlXKL8Ac",
+                    "id": "UgzSL08myPsT7y8g_4V4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "NO COMPREIS MANSCAPED!!! Es sólo publicidad y hay alternativas mucho mejores sin tanta publicidad.",
+                        "textOriginal": "NO COMPREIS MANSCAPED!!! Es sólo publicidad y hay alternativas mucho mejores sin tanta publicidad.",
+                        "authorDisplayName": "@davidcastro8696",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_nF7QTekDGGAjTtXyu5gQXQNLVeJXRXLPiwYqq4M3WoPwo=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@davidcastro8696",
+                        "authorChannelId": {
+                            "value": "UClZhBU6aD6B3wbY508n_e-w"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-13T11:31:38Z",
+                        "updatedAt": "2024-12-13T11:31:38Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "YQ-YQ61A0woWXPE5fHo8tAioSfc",
+            "id": "Ugzx2_Ein6IwcxP9LT54AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "NeM6rK7kxDfE3RguhKEjEZVQWSg",
+                    "id": "Ugzx2_Ein6IwcxP9LT54AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Pues habrá que hacer una web nuestra.\nY llamarla ... No sé ... ¿Vacacritic?",
+                        "textOriginal": "Pues habrá que hacer una web nuestra.\nY llamarla ... No sé ... ¿Vacacritic?",
+                        "authorDisplayName": "@Bajamamut",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/qVmFS_ACyl2yAE_cSMzyzP0Fx1ctChsw4NOjt2DPQnsvCdCyquLhoNYfrlSIGu0BiISJ793pYgQ=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@Bajamamut",
+                        "authorChannelId": {
+                            "value": "UCYduqOOcIM4WMY6F-AdCS0w"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-12T19:31:35Z",
+                        "updatedAt": "2024-12-12T19:31:35Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "b1-xZyfYGinMG9R3ivbIWM0GHg0",
+            "id": "UgxqqvvRw-vwDKn_eWt4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "4WJ4QFAHIa6un4ndon1Wsp2oO54",
+                    "id": "UgxqqvvRw-vwDKn_eWt4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Baity, deberías jugar rainworld",
+                        "textOriginal": "Baity, deberías jugar rainworld",
+                        "authorDisplayName": "@PacoLucas-p9y",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/-DJDXyYJBsIv-b7K3wjV6E_qEB691gO-KfLJPHl4S8vm09vGR5eeUE6-O_hsWRlIH_8xvC9fiw=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@PacoLucas-p9y",
+                        "authorChannelId": {
+                            "value": "UCIyn3IJ1_o1KPhLsJyesNtA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-12T17:00:57Z",
+                        "updatedAt": "2024-12-12T17:00:57Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "cA-tbDOIwvqAcNAFTgqrf_90FJU",
+            "id": "UgxEYMWKOQBx3x7QVJF4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "4XBV_UZPbKxFkELx9KHaN38gQik",
+                    "id": "UgxEYMWKOQBx3x7QVJF4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "I = MUY\nN = \nG = RELEVANTE\nING = MUY RELEVANTE",
+                        "textOriginal": "I = MUY\nN = \nG = RELEVANTE\nING = MUY RELEVANTE",
+                        "authorDisplayName": "@Zumito",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_lBjmaomTIH4mgg0OLvLDeO1JLiN5ka0MNNoJeKCSek-Go=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@Zumito",
+                        "authorChannelId": {
+                            "value": "UCrFmyNxNCltB1XV2s3-lmmA"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 1,
+                        "publishedAt": "2024-12-12T14:49:57Z",
+                        "updatedAt": "2024-12-12T14:49:57Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "iKBd4FlqLta3ggQlB_awXIIr8nw",
+            "id": "UgzJER5s8_gUWFtBK0V4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "7562OmZN4fHBnX1z6ddPBfU-CtI",
+                    "id": "UgzJER5s8_gUWFtBK0V4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "Metacritic debería morir de una forma sencilla:\nTodas las plataformas deberían seguir el modelo de Steam: Cada crítica debe ser por juego adquirido o comprado, mostrando cuántas horas jugó la persona.\nQue lo tenga Xbox, Nintendo y Sony ya la matará.\nY las pruebas o los servicios como Gamepass también ayudaría, tu mismo los pruebas antes de comprar, nadie te lo cuenta.",
+                        "textOriginal": "Metacritic debería morir de una forma sencilla:\nTodas las plataformas deberían seguir el modelo de Steam: Cada crítica debe ser por juego adquirido o comprado, mostrando cuántas horas jugó la persona.\nQue lo tenga Xbox, Nintendo y Sony ya la matará.\nY las pruebas o los servicios como Gamepass también ayudaría, tu mismo los pruebas antes de comprar, nadie te lo cuenta.",
+                        "authorDisplayName": "@marchekun",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_kB5x3oIZ8WWJ8pL1iXq8HBNUGHmVhUwHcVjdIsie2gPQ=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@marchekun",
+                        "authorChannelId": {
+                            "value": "UCbMy4XdD_7BywkHFQSj_kJg"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-12T14:05:42Z",
+                        "updatedAt": "2024-12-12T14:05:42Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        },
+        {
+            "kind": "youtube#commentThread",
+            "etag": "YH6doojCt72WMujPJkYxG1o_TXY",
+            "id": "UgwQQtyfQB5wdFjHs1h4AaABAg",
+            "snippet": {
+                "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                "videoId": "QqLGF_ghc8A",
+                "topLevelComment": {
+                    "kind": "youtube#comment",
+                    "etag": "66XAfXf-PxKIgKUEoEJIc728TkA",
+                    "id": "UgwQQtyfQB5wdFjHs1h4AaABAg",
+                    "snippet": {
+                        "channelId": "UCNnNCBgckxzqIh1Txw5cgSg",
+                        "videoId": "QqLGF_ghc8A",
+                        "textDisplay": "En un mes se cumplen dos años de ser miembro 👾",
+                        "textOriginal": "En un mes se cumplen dos años de ser miembro 👾",
+                        "authorDisplayName": "@elyxuwu6714",
+                        "authorProfileImageUrl": "https://yt3.ggpht.com/tW6E6gI9EiNUaEn2oxFz2xB6cgyRxJnGVjG83oXHomzMVslRMqOOCTexx9YNsNJHJPJWZcWrySc=s48-c-k-c0x00ffffff-no-rj",
+                        "authorChannelUrl": "http://www.youtube.com/@elyxuwu6714",
+                        "authorChannelId": {
+                            "value": "UCnQQBu9xSpcNO8hdMQmnw4g"
+                        },
+                        "canRate": true,
+                        "viewerRating": "none",
+                        "likeCount": 0,
+                        "publishedAt": "2024-12-12T06:13:41Z",
+                        "updatedAt": "2024-12-12T06:13:41Z"
+                    }
+                },
+                "canReply": true,
+                "totalReplyCount": 0,
+                "isPublic": true
+            }
+        }
+    ]
+}

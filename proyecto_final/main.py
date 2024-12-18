@@ -103,8 +103,9 @@ def my_main():#descargar,all):
         asyncio.set_event_loop(loop)
         loop.run_until_complete(descarga.descargar_html_video())'''
     html = cargar()
-    comentarios = extract_comments(html,50)
-    print(comentarios)
+    print(html)
+    #comentarios = extract_comments(html,50)
+    #print(comentarios)
     #print(html)
     #hay que pasar estos comentarios a un analisis.py que lo analiza, es posible que haya que aumentar el extract.py para sacar más datos que analizar
 
