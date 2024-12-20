@@ -1,11 +1,7 @@
-                                                                                                                                                                                                           
-import googleapiclient.discovery 
+import googleapiclient.discovery
 import json
-import asyncio
+import re
 from pathlib import Path
-from pyppeteer import launch
-import re 
-
 
 dir_cache = Path("cache")
 
@@ -13,39 +9,28 @@ dir_cache = Path("cache")
 def obtener_comentarios(youtube, video_id):
     comentarios = []
     request = youtube.commentThreads().list(
-        part="snippet, replies",
+        part="snippet,replies",
         videoId=video_id,
-        textFormat="plainText"
+        textFormat="plainText",
+        maxResults=100  # Puedes ajustar el número máximo de comentarios por página
     )
     
-    response = request.execute()
+    while request:
+        response = request.execute()
+        comentarios.append(response)
+        request = youtube.commentThreads().list_next(request, response)
     
-    # Se pueden agregar más lógica para extraer los comentarios de la respuesta si es necesario.
-    return response
+    return comentarios
 
 def extraer_video_id(url):
-    # Expresión regular para detectar el ID del video en diferentes formatos de URL
     regex = r"(?:https?://(?:www\.)?youtube\.com/.*[?&]v=|https?://youtu\.be/|https?://m\.youtube\.com/v/)([a-zA-Z0-9_-]{11})"
     match = re.search(regex, url)
     if match:
-        return match.group(1)  # El video ID está en el primer grupo de la expresión regular
+        return match.group(1)
     else:
         raise ValueError("No se pudo extraer el ID del video de la URL.")
 
-
-
-
 def obtener_detalles_video(youtube, video_id):
-    """
-    Obtiene el nombre del video y el canal que lo creó.
-
-    Args:
-        youtube: Objeto autenticado de la API de YouTube (build de googleapiclient).
-        video_id: ID del video para consultar.
-
-    Returns:
-        Una tupla con el título del video y el nombre del canal.
-    """
     request = youtube.videos().list(
         part="snippet",
         id=video_id
@@ -60,28 +45,21 @@ def obtener_detalles_video(youtube, video_id):
     else:
         raise ValueError("No se pudo obtener los detalles del video.")
 
-
-
-
 def sacar_comentarios(video_id):
-    # Configuración de la API
     api_key = 'AIzaSyAKa2JQhSNHvmzjqa1zr99niVij474s7L8'
     
-    # Crear el servicio de YouTube
     youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
     
-    #sacamos el titulo del video y su creador
+    # Obtener el título y canal del video
     titulo, canal = obtener_detalles_video(youtube, video_id)
     
     # Crear la ruta donde guardar
     canal_ajustado = canal.lower().replace(" ", "_").replace("/", "_")
-
     guardar = dir_cache / canal_ajustado
-    guardar.mkdir(parents=True, exist_ok=True)  # Crear directorios del canal si no existen
+    guardar.mkdir(parents=True, exist_ok=True)
     
-    # Ruta del archivo HTML
+    # Ruta del archivo JSON
     titulo_ajustado = titulo.lower().replace(" ", "_").replace("/", "_")
-
     archivo_json = guardar / (titulo_ajustado + ".json")
     
     # Verificar si el archivo ya existe
@@ -89,10 +67,12 @@ def sacar_comentarios(video_id):
         print(f"El archivo de comentarios ya existe en {archivo_json}. No se generará de nuevo.")
         return
     
-    # Obtener los comentarios del video
-    print(f"Obteniendo comentarios de video {video_url}...")
+    print(f"Obteniendo comentarios de video {video_id}...")
     comentarios = obtener_comentarios(youtube, video_id)
-
+    
+    # Ordenar los comentarios por la cantidad de likes (de mayor a menor)
+    #comentarios_ordenados = sorted(comentarios, key=lambda c: c["likes"], reverse=True)
+    
     # Guardar los comentarios en un archivo JSON
     with open(archivo_json, 'w', encoding='utf-8') as f:
         json.dump(comentarios, f, ensure_ascii=False, indent=4)
@@ -104,4 +84,11 @@ if __name__ == "__main__":
     video_url = input("Introduce la URL del video de YouTube: ")    
     video_id = extraer_video_id(video_url)
     sacar_comentarios(video_id)
+
+
+
+
+
+
+
 

@@ -1,85 +1,54 @@
-from bs4 import BeautifulSoup
+import json
 
-def extract_comments_from_html(html_file, num_comments):
+def extract_comments_from_json(json_string):
     """
-    Extrae los comentarios del archivo HTML de YouTube que contienen la estructura mencionada.
+    Extrae los comentarios que tienen al menos una respuesta del objeto JSON de YouTube.
     """
-    # Usamos BeautifulSoup para analizar el HTML
-    soup = BeautifulSoup(html_file, 'html.parser')
-    
+    # Convertimos el JSON string en un diccionario de Python
+    if isinstance(json_string, str):
+        json_string = json.loads(json_string)
+
     # Lista para almacenar los comentarios extraídos
     comments = []
 
-    # Buscamos todos los divs con id="body" y class="style-scope ytd-comment-view-model"
-    body_divs = soup.find_all('div', {'id': 'body', 'class': 'style-scope ytd-comment-view-model'})
+    # Verificamos si el JSON es una lista y tiene al menos un objeto
+    if isinstance(json_string, list):
+        for json_obj in json_string:
+            # Verificamos si 'items' está presente en cada objeto dentro de la lista
+            if 'items' in json_obj:
+                for item in json_obj['items']:
+                    # Verificamos que el comentario principal esté en 'snippet'
+                    if 'snippet' in item and 'topLevelComment' in item['snippet']:
+                        top_comment = item['snippet']['topLevelComment']['snippet']
+                        comment_info = {
+                            'author': top_comment['authorDisplayName'],
+                            'text': top_comment['textDisplay'],
+                            'published_at': top_comment['publishedAt'],
+                            'like_count': top_comment['likeCount'],
+                            'replies': []  # Lista para las respuestas
+                        }
 
-    # Ahora buscamos los comentarios dentro de esos divs
-    for body_div in body_divs:
-        # Extraemos el autor
-        author_tag = body_div.find('a', {'id': 'author-text'})
-        author_name = author_tag.get_text(strip=True) if author_tag else "Desconocido"
-        
-        # Extraemos la fecha del comentario
-        date_tag = body_div.find('span', {'id': 'published-time-text'})
-        comment_date = date_tag.get_text(strip=True) if date_tag else "Fecha desconocida"
+                        # Verificamos si existen respuestas directamente dentro de 'item'
+                        if 'replies' in item:
+                            replies = item['replies']['comments']
+                            # Si hay respuestas, las agregamos a la lista de respuestas
+                            if replies:  # Verificamos si la lista de respuestas no está vacía
+                                for reply in replies:
+                                    reply_snippet = reply['snippet']
+                                    reply_info = {
+                                        'author': reply_snippet['authorDisplayName'],
+                                        'text': reply_snippet['textDisplay'],
+                                        'published_at': reply_snippet['publishedAt'],
+                                        'like_count': reply_snippet['likeCount']
+                                    }
+                                    comment_info['replies'].append(reply_info)
 
-        # Extraemos el texto del comentario
-        comment_text_tag = body_div.find('yt-attributed-string')
-        comment_text = comment_text_tag.get_text(strip=True) if comment_text_tag else "Comentario vacío"
-        
-        # Extraemos si el comentario es pagado y cuánto
-        paid_amount = None
-        paid_tag = body_div.find('yt-pdg-comment-chip-renderer')
-        if paid_tag:
-            paid_amount_tag = paid_tag.find('span', {'id': 'comment-chip-price'})
-            paid_amount = paid_amount_tag.get_text(strip=True) if paid_amount_tag else None
-        
-        # Buscamos el número de likes
-        likes_span = body_div.find_next('span', {'id': 'vote-count-middle'})
-        likes_count = likes_span.get_text(strip=True) if likes_span else "0"
+                                # Solo agregamos el comentario principal si tiene al menos una respuesta
+                                comments.append(comment_info)
 
-        if not likes_count:
-            likes_count = "0"
-        
-        # Almacenamos la información extraída
-        comment_data = {
-            'author_name': author_name,
-            'comment_date': comment_date,
-            'comment_text': comment_text,
-            'paid_amount': paid_amount,
-            'likes_count': likes_count 
-        }
-        comments.append(comment_data)
+            else:
+                print("Advertencia: 'items' no está presente en uno de los objetos de la lista.")
+    else:
+        print("Advertencia: El JSON no es una lista como se esperaba.")
 
-    # Limitamos la cantidad de comentarios si es necesario
-    return comments[:num_comments]
-
-def print_comments(comments):
-    """
-    Imprime los comentarios de forma ordenada y legible.
-    """
-    for idx, comment in enumerate(comments, 1):
-        print(f"Comentario {idx}:")
-        print(f"  Autor: {comment['author_name']}")
-        print(f"  Fecha: {comment['comment_date']}")
-        print(f"  Comentario: {comment['comment_text']}")
-        print(f"  Numero de likes: {comment['likes_count']}")
-        print(f"  Pagado: {'Sí' if comment['paid_amount'] else 'No'}")
-        if comment['paid_amount']:
-            print(f"  Pago: {comment['paid_amount']}")
-        print("-" * 40)
-
-def extract_comments(html_file, num_comments):
-    """
-    Función principal que invoca extract.py con la ruta del HTML y el número de comentarios.
-    """
-    # Llamamos directamente a la función para extraer los comentarios
-    comments = extract_comments_from_html(html_file, num_comments)
-    
-    # Imprimimos los comentarios de forma ordenada
-    #print_comments(comments)
-    
-    # Retornamos los comentarios extraídos
     return comments
-
-

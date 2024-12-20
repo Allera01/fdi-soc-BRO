@@ -2,7 +2,7 @@ import asyncio
 import click
 from cargar import cargar
 import analisis
-from extract import extract_comments
+from extract import extract_comments_from_json
 import descarga
 
 '''async def obtener_informacion_video(video_url):
@@ -103,7 +103,8 @@ def my_main():#descargar,all):
         asyncio.set_event_loop(loop)
         loop.run_until_complete(descarga.descargar_html_video())'''
     html = cargar()
-    print(html)
+    comentarios = extract_comments_from_json(html)
+    print(comentarios)
     #comentarios = extract_comments(html,50)
     #print(comentarios)
     #print(html)
