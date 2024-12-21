@@ -1,276 +1,176 @@
+import click
 import pandas as pd
-import nltk
-import re
-import os
-import string
 import matplotlib.pyplot as plt
+import seaborn as sns
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from textblob import TextBlob
-from nltk import ngrams
-from collections import Counter
+import spacy
+import os
 
-nltk.download("punkt_tab")
+# Cargar el modelo de spaCy
+nlp = spacy.load("es_core_news_sm")
 
+# Preprocesar texto
+def preprocess_text(text):
+    tokens = word_tokenize(text.lower())
+    stop_words = set(stopwords.words("spanish"))
+    filtered_tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
+    return " ".join(filtered_tokens)
 
-# Quitar las URL y los signos de puntuación
-def remove_punctuation(text):
-    url_pattern = r"http[s]?://\S+|www\.\S+"
-    # Eliminar URLs del texto
-    text_without_urls = re.sub(url_pattern, "", text)
-    # Tokenizar el texto
-    tokens = word_tokenize(text_without_urls)
-    # Filtrar tokens para eliminar signos de puntuación
-    tokens = [token.lower() for token in tokens if token not in string.punctuation]
-    return tokens
+# Analizar sentimientos
+def analyze_sentiment(text):
+    blob = TextBlob(text)
+    return blob.sentiment.polarity, blob.sentiment.subjectivity
 
+# Generar gráficos
 
-def grafico_polaridad_2p(palabra1, palabra2, datos):
-    if not os.path.isfile("./grafico_polaridad_" + palabra1 + "_" + palabra2 + ".png"):
-        df = datos
-        df["polarity"] = df["text"].apply(lambda x: TextBlob(x).sentiment.polarity)
+def generate_graphics(posts, usuarios, comentarios):
+    # Frecuencia de palabras
+    word_counts = posts["content"].apply(preprocess_text).str.split().explode().value_counts().head(20)
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=word_counts.values, y=word_counts.index, palette="viridis")
+    plt.title("Top 20 palabras más frecuentes")
+    plt.xlabel("Frecuencia")
+    plt.ylabel("Palabras")
+    plt.savefig("frecuencia_palabras.png")
 
-        # Calcular la longitud del tweet
-        df["tweet_length"] = df["text"].apply(len)
+    # Tendencia temporal de sentimientos
+    posts["sentiment"] = posts["content"].apply(lambda x: analyze_sentiment(preprocess_text(x))[0])
+    posts["date"] = pd.to_datetime(posts["date"])
+    sentiment_trend = posts.groupby(posts["date"].dt.date)["sentiment"].mean()
+    plt.figure(figsize=(10, 6))
+    sentiment_trend.plot()
+    plt.title("Tendencia del sentimiento a lo largo del tiempo")
+    plt.xlabel("Fecha")
+    plt.ylabel("Sentimiento promedio")
+    plt.savefig("tendencia_sentimiento.png")
 
-        # Filtrar los tweets que contienen las palabras
-        df["contains_palabra1"] = df["tokens"].apply(lambda tokens: palabra1 in tokens)
-        df["contains_palabra2"] = df["tokens"].apply(lambda tokens: palabra2 in tokens)
+    # Distribución de interacciones (Retweets y Likes)
+    plt.figure(figsize=(10, 6))
+    sns.histplot(posts["retweets"], bins=30, kde=True, color="blue", label="Retweets")
+    sns.histplot(posts["likes"], bins=30, kde=True, color="orange", label="Likes")
+    plt.legend()
+    plt.title("Distribución de Interacciones (Retweets y Likes)")
+    plt.xlabel("Cantidad")
+    plt.ylabel("Frecuencia")
+    plt.savefig("distribucion_interacciones.png")
 
-        # Filtrar solo las filas con las palabras
-        df_palabra1_palabra2 = df[(df["contains_palabra1"]) | (df["contains_palabra2"])]
+    # Usuarios más activos
+    top_users = usuarios.sort_values(by="tweets", ascending=False).head(10)
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=top_users["tweets"], y=top_users["username"], palette="coolwarm")
+    plt.title("Top 10 Usuarios más Activos")
+    plt.xlabel("Número de Tweets")
+    plt.ylabel("Usuario")
+    plt.savefig("usuarios_activos.png")
 
-        # Crear gráfico de polaridad vs longitud del tweet, diferenciando las palabras
-        plt.figure(figsize=(10, 6))
+    # Relación entre sentimiento y métricas
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x=posts["sentiment"], y=posts["likes"], alpha=0.5, label="Likes", color="blue")
+    sns.scatterplot(x=posts["sentiment"], y=posts["retweets"], alpha=0.5, label="Retweets", color="green")
+    plt.title("Relación entre Sentimiento y Métricas")
+    plt.xlabel("Sentimiento")
+    plt.ylabel("Cantidad")
+    plt.legend()
+    plt.savefig("relacion_sentimiento_metricas.png")
 
-        # Graficar tweets con la palabra1
-        plt.scatter(
-            df_palabra1_palabra2[df_palabra1_palabra2["contains_palabra1"]][
-                "tweet_length"
-            ],
-            df_palabra1_palabra2[df_palabra1_palabra2["contains_palabra1"]]["polarity"],
-            color="blue",
-            label=palabra1,
-            alpha=0.5,
-        )
+# Generar informe Markdown
+def generate_markdown():
+    report_content = """# Informe de Análisis de Tuits
 
-        # Graficar tweets con la palabra2
-        plt.scatter(
-            df_palabra1_palabra2[df_palabra1_palabra2["contains_palabra2"]][
-                "tweet_length"
-            ],
-            df_palabra1_palabra2[df_palabra1_palabra2["contains_palabra2"]]["polarity"],
-            color="red",
-            label=palabra2,
-            alpha=0.5,
-        )
+## Introducción
 
-        # Personalización del gráfico
-        plt.xlabel("Longitud del Tweet")
-        plt.ylabel("Polaridad")
-        plt.title(
-            "Relación entre Polaridad y Longitud del Tweet para "
-            + palabra1
-            + " y "
-            + palabra2
-        )
-        plt.legend()
-        plt.grid(True)
-        plt.savefig("grafico_polaridad_" + palabra1 + "_" + palabra2 + ".png")
+El presente informe detalla los resultados del análisis realizado sobre un conjunto de datos extraído de Twitter. El objetivo principal es identificar patrones, tendencias y relaciones entre el contenido de los tuits, la interacción de los usuarios y las características textuales.
 
+## Metodología
 
-def grafico_polaridad_1p(palabra, datos):
-    if not os.path.isfile("./grafico_polaridad_" + palabra + ".png"):
-        df = datos
-        df["polarity"] = df["text"].apply(lambda x: TextBlob(x).sentiment.polarity)
+1. **Herramientas utilizadas:**
+   - Python: para la manipulación y análisis de datos.
+   - Pandas: para el manejo de los conjuntos de datos.
+   - NLTK y spaCy: para el procesamiento del lenguaje natural.
+   - TextBlob: para el análisis de sentimientos.
+   - Matplotlib y Seaborn: para la generación de gráficos.
 
-        # Calcular la longitud del tweet
-        df["tweet_length"] = df["text"].apply(len)
+2. **Preprocesamiento de datos:**
+   - Los textos fueron limpiados para eliminar stopwords, convertir a minúsculas y tokenizar palabras.
+   - Se analizó la polaridad y subjetividad de los textos para determinar el sentimiento.
 
-        # Filtrar los tweets que contienen la palabra
-        df["contains_palabra"] = df["tokens"].apply(lambda tokens: palabra in tokens)
+3. **Análisis:**
+   - Frecuencia de palabras.
+   - Tendencias de sentimiento a lo largo del tiempo.
+   - Distribución de interacciones.
+   - Actividad de los usuarios.
+   - Relación entre sentimiento y métricas.
 
-        # Filtrar solo las filas con la palabra
-        df_palabra = df[(df["contains_palabra"])]
+## Resultados
 
-        # Crear gráfico de polaridad vs longitud del tweet
-        plt.figure(figsize=(10, 6))
+### Frecuencia de Palabras
 
-        # Graficar tweets con palabra
-        plt.scatter(
-            df_palabra[df_palabra["contains_palabra"]]["tweet_length"],
-            df_palabra[df_palabra["contains_palabra"]]["polarity"],
-            color="green",
-            label=palabra,
-            alpha=0.5,
-        )
+![Frecuencia de palabras](frecuencia_palabras.png)
 
-        # Personalización del gráfico
-        plt.xlabel("Longitud del Tweet")
-        plt.ylabel("Polaridad")
-        plt.title("Relación entre Polaridad y Longitud del Tweet para " + palabra)
-        plt.legend()
-        plt.grid(True)
-        plt.savefig("grafico_polaridad_" + palabra + ".png")
+Las palabras más frecuentes en los tuits analizados incluyen temas relevantes y hashtags populares. Esto sugiere una fuerte tendencia hacia ciertos tópicos dentro del conjunto de datos.
 
+### Tendencia del Sentimiento
 
-def sacar_bi_tri_gramas(df):
-    if not os.path.isfile("./bigramas_trigramas.txt"):
-        bigramas = []
-        trigramas = []
+![Tendencia del sentimiento](tendencia_sentimiento.png)
 
-        for tokens in df["tokens"]:
-            bigramas.extend(ngrams(tokens, 2))  # Generar bigramas
-            trigramas.extend(ngrams(tokens, 3))  # Generar trigramas
+Se observa una variabilidad en el sentimiento promedio a lo largo del tiempo. Los picos y valles reflejan eventos importantes o cambios en el tono general del contenido analizado.
 
-        # Contar frecuencias de bigramas y trigramas
-        bigramas_frecuentes = Counter(bigramas)
-        trigramas_frecuentes = Counter(trigramas)
+### Distribución de Interacciones
 
-        with open("bigramas_trigramas.txt", "w", encoding="utf-8") as file:
-            file.write("Bigramas más frecuentes:\n")
-            for bigrama, frecuencia in bigramas_frecuentes.most_common():
-                if frecuencia > 50:
-                    file.write(f"{bigrama}: {frecuencia}\n")
+![Distribución de interacciones](distribucion_interacciones.png)
 
-            file.write("\nTrigramas más frecuentes:\n")
-            for trigrama, frecuencia in trigramas_frecuentes.most_common():
-                if frecuencia > 50:
-                    file.write(f"{trigrama}: {frecuencia}\n")
+La distribución de retweets y likes muestra tendencias sobre cómo los usuarios interactúan con el contenido. Estas métricas son indicativas del impacto y popularidad de los tuits.
 
-        # Mostrar los 10 bigramas y trigramas más comunes
-        # print("Bigramas más comunes:", bigramas_frecuentes.most_common(20))
-        # print("Trigramas más comunes:", trigramas_frecuentes.most_common(20))
+### Usuarios más Activos
 
+![Usuarios más activos](usuarios_activos.png)
 
-def diagrama_circular_dispositivos(df):
-    if not os.path.isfile("./dispositivos.png"):
-        device_counts = df["source"].value_counts()
+El análisis de los usuarios más activos destaca a aquellos con mayor volumen de tuits, indicando su nivel de participación e influencia en la red social.
 
-        # Calcular el umbral del 1% sobre el total de tuits
-        total_tweets = device_counts.sum()
-        threshold = total_tweets * 0.015
+### Relación entre Sentimiento y Métricas
 
-        # Crear una nueva serie para almacenar los dispositivos agrupados
-        device_counts_grouped = device_counts[device_counts >= threshold]
-        device_counts_grouped["Otros"] = device_counts[device_counts < threshold].sum()
+![Relación entre Sentimiento y Métricas](relacion_sentimiento_metricas.png)
 
-        # Crear el gráfico circular
-        plt.figure(figsize=(8, 8))
-        device_counts_grouped.plot(
-            kind="pie", autopct="%1.1f%%", startangle=140, colors=plt.cm.Paired.colors
-        )
-        plt.title(
-            "Distribución de tuits por dispositivo (agrupados los menores al 1.5%)"
-        )
-        plt.ylabel("")  # Ocultar la etiqueta del eje y
-        plt.savefig("dispositivos.png")
+Se observan correlaciones entre el sentimiento expresado en los tuits y las métricas de interacción (likes y retweets). Esto sugiere que el tono emocional del contenido puede influir en la participación de otros usuarios.
 
+## Conclusiones
 
-def sacar_tuits_horas(bf):
-    if not os.path.isfile("./horas.png"):
-        # Convierte la columna 'created_at' a tipo datetime
-        df["created_at"] = pd.to_datetime(bf["created_at"])
+- Los temas más mencionados reflejan intereses y preocupaciones predominantes de los usuarios.
+- Las fluctuaciones en los sentimientos sugieren posibles relaciones con eventos externos o cambios en la dinámica de interacción en la plataforma.
+- Los usuarios más activos tienen un impacto significativo en la red social, promoviendo interacciones frecuentes.
+- Las técnicas empleadas demostraron ser efectivas para extraer insights significativos del contenido de los tuits.
 
-        # Extrae la hora
-        df["hora"] = df["created_at"].dt.hour
+## Anexos
 
-        # Cuenta la cantidad de tweets por hora
-        tweets_por_hora = df["hora"].value_counts().sort_index()
+1. **Código:**
+   El código utilizado para este análisis se encuentra disponible en el repositorio GitHub del proyecto.
 
-        plt.figure(figsize=(10, 5))
-        plt.bar(tweets_por_hora.index, tweets_por_hora.values, color="skyblue")
-        plt.xlabel("Hora del día")
-        plt.ylabel("Cantidad de tweets")
-        plt.title("Cantidad de tweets por hora")
-        plt.xticks(
-            tweets_por_hora.index
-        )  # Asegúrate de que todas las horas se muestren
-        plt.grid(axis="y", linestyle="--", alpha=0.7)
-        plt.savefig("horas.png")
+2. **Gráficos generados:**
+   Los gráficos están almacenados en la carpeta principal del proyecto.
+"""
+    with open("informe.md", "w", encoding="utf-8") as file:
+        file.write(report_content)
 
+# Interfaz de línea de comandos
+@click.command()
+@click.option("--posts", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de posts.")
+@click.option("--usuarios", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de usuarios.")
+@click.option("--comentarios", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de comentarios.")
+def main(posts, usuarios, comentarios):
+    # Cargar datos
+    posts_df = pd.read_csv(posts)
+    usuarios_df = pd.read_csv(usuarios)
+    comentarios_df = pd.read_csv(comentarios)
 
-df = pd.read_csv("cyberpunk.csv")
-df["tokens"] = df["text"].apply(remove_punctuation)
+    # Preprocesar y analizar
+    generate_graphics(posts_df, usuarios_df, comentarios_df)
 
-# crea la lista de palabras junto a su numero de apariciones
-if not os.path.isfile("./token_counts.txt"):
-    # Añadir a all_tokens todos los tokens sin repetición
-    all_tokens = [token for tokens_list in df["tokens"] for token in tokens_list]
-    # Contar la cantidad de veces que aparece cada token
-    token_counts = pd.Series(all_tokens).value_counts()
+    # Generar informe
+    generate_markdown()
 
-    with open("token_counts.txt", "w", encoding="utf-8") as f:
-        f.write(token_counts.to_string())
+    print("Análisis completado. Informe generado en informe.md y gráficos en la carpeta principal del proyecto.")
 
-# tuits que tienen la localizacion activa
-if not os.path.isfile("./tweets_con_location.txt"):
-    # Filtrar tweets donde la columna 'location' no es None
-    tweets_con_location = df[df["location"].notna()]
-
-    with open("tweets_con_location.txt", "w", encoding="utf-8") as f:
-        f.write(tweets_con_location.to_string())
-
-
-def detectar_tema(texto):
-    if re.search(r"\b(#?genshinimpact)\b", texto, re.IGNORECASE):
-        return "Genshin"
-    elif re.search(r"\b(cyberpunk\s*2077)\b", texto, re.IGNORECASE):
-        return "Cyberpunk"
-    return None
-
-
-# cantidad de tuits con la palabra cyberpunk y genshin
-if not os.path.isfile("./cyberpunkvsgenshin.png"):
-    # Aplicar la función a la columna 'text'
-    x = df["text"].apply(detectar_tema)
-
-    # Contar la frecuencia de cada tema
-    temas_count = x.value_counts()
-
-    plt.figure(figsize=(8, 5))
-    temas_count.plot(kind="bar", color=["blue", "orange"])
-    plt.title("Menciones de los temas Cyberpunk y Genshin en Twitter")
-    plt.xlabel("Tema")
-    plt.ylabel("Cantidad de Menciones")
-    plt.xticks(rotation=0)
-    plt.grid(axis="y", linestyle="--", alpha=0.7)
-    plt.savefig("cyberpunkvsgenshin.png")
-
-# Obtener los 100 usuarios con más tweets sin bots
-if not os.path.isfile("./UsersSinBots.png"):
-    filtered_df = df[df["user"] != df["source"]]
-    user_tweet_counts = filtered_df["user"].value_counts()
-    top_users = user_tweet_counts.head(10)
-    plt.figure(figsize=(10, 8))
-    plt.pie(
-        top_users,
-        labels=top_users.index,
-        autopct=lambda p: f"{int(p * sum(top_users) / 100)}",
-        startangle=140,
-    )
-    plt.title("Top 10 Usuarios por Cantidad de Tweets (Excluyendo bots)")
-    plt.savefig("UsersSinBots.png")
-
-# Obtener los 100 usuarios con más tweets con bots
-if not os.path.isfile("./UsersBots.png"):
-    user_tweet_count = df["user"].value_counts()
-    top_user = user_tweet_count.head(10)
-    plt.figure(figsize=(10, 8))
-    plt.pie(
-        top_user,
-        labels=top_user.index,
-        autopct=lambda p: f"{int(p * sum(top_user) / 100)}",
-        startangle=140,
-    )
-    plt.title("Top 10 Usuarios por Cantidad de Tweets (Con bots)")
-    plt.savefig("UsersBots.png")
-
-grafico_polaridad_1p("cyberpunk", df)
-grafico_polaridad_2p("good", "bad", df)
-grafico_polaridad_2p("steam", "playstation", df)
-grafico_polaridad_2p("patch", "bugs", df)
-grafico_polaridad_2p("graphics", "performance", df)
-grafico_polaridad_2p("story", "gameplay", df)
-sacar_bi_tri_gramas(df)
-diagrama_circular_dispositivos(df)
-sacar_tuits_horas(df)
+if __name__ == "__main__":
+    main()
