@@ -9,7 +9,7 @@ import spacy
 import os
 
 # Cargar el modelo de spaCy
-nlp = spacy.load("es_core_news_sm")
+nlp = spacy.load("en_core_web_sm")
 
 # Preprocesar texto
 def preprocess_text(text):
