@@ -1,3 +1,7 @@
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+
 import click
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -109,10 +113,10 @@ El presente informe detalla los resultados del análisis realizado sobre un conj
 
 # Interfaz de línea de comandos
 @click.command()
-@click.option("--posts", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de posts.")
-@click.option("--usuarios", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de usuarios.")
+@click.option("--posts", type=click.File("r"), required=True, help="Archivo CSV de posts.")
+@click.option("--usuarios", type=click.File("r"), required=True, help="Archivo CSV de usuarios.")
 def main(posts, usuarios):
-    # Cargar datos
+    # Cargar datos desde los archivos pasados como opción
     posts_df = pd.read_csv(posts)
     usuarios_df = pd.read_csv(usuarios)
 

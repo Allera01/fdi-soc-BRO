@@ -149,9 +149,9 @@ Se observan correlaciones entre el sentimiento expresado en los tuits y las mét
 
 # Interfaz de línea de comandos
 @click.command()
-@click.option("--posts", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de posts.")
-@click.option("--usuarios", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de usuarios.")
-@click.option("--comentarios", type=click.Path(exists=True), required=True, help="Ruta al archivo CSV de comentarios.")
+@click.option("--posts", type=click.File("r"), required=True, help="Archivo CSV de posts.")
+@click.option("--usuarios", type=click.File("r"), required=True, help="Archivo CSV de usuarios.")
+@click.option("--comentarios", type=click.File("r"), required=True, help="Archivo CSV de comentarios.")
 def main(posts, usuarios, comentarios):
     # Cargar datos
     posts_df = pd.read_csv(posts)
