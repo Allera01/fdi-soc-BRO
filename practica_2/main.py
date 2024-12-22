@@ -5,11 +5,7 @@ import seaborn as sns
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from textblob import TextBlob
-import spacy
 import os
-
-# Cargar el modelo de spaCy
-nlp = spacy.load("es_core_web_sm")
 
 # Preprocesar texto
 def preprocess_text(text):
@@ -24,7 +20,6 @@ def analyze_sentiment(text):
     return blob.sentiment.polarity, blob.sentiment.subjectivity
 
 # Generar gráficos
-
 def generate_graphics(posts, usuarios, comentarios):
     # Frecuencia de palabras
     word_counts = posts["content"].apply(preprocess_text).str.split().explode().value_counts().head(20)
@@ -88,8 +83,7 @@ El presente informe detalla los resultados del análisis realizado sobre un conj
 1. **Herramientas utilizadas:**
    - Python: para la manipulación y análisis de datos.
    - Pandas: para el manejo de los conjuntos de datos.
-   - NLTK y spaCy: para el procesamiento del lenguaje natural.
-   - TextBlob: para el análisis de sentimientos.
+   - NLTK y TextBlob: para el procesamiento del lenguaje natural.
    - Matplotlib y Seaborn: para la generación de gráficos.
 
 2. **Preprocesamiento de datos:**
