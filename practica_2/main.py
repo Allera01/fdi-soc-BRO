@@ -1,170 +1,190 @@
-import click
 import pandas as pd
 import matplotlib.pyplot as plt
+from collections import Counter
+import string
 import seaborn as sns
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from textblob import TextBlob
-import os
 
-# Preprocesar texto
-def preprocess_text(text):
-    tokens = word_tokenize(text.lower())
-    stop_words = set(stopwords.words("spanish"))
-    filtered_tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
-    return " ".join(filtered_tokens)
+# Cargar y filtrar datos
+def load_and_filter_data(file_path, retweet_threshold=10, sample_size=1000):
+    data = pd.read_csv(file_path)
+    filtered_data = data[data['retweet_count'] >= retweet_threshold]
+    sampled_data = (
+        filtered_data.sample(n=sample_size, random_state=42)
+        if len(filtered_data) > sample_size
+        else filtered_data
+    )
+    return sampled_data
 
-# Analizar sentimientos
-def analyze_sentiment(text):
-    blob = TextBlob(text)
-    return blob.sentiment.polarity, blob.sentiment.subjectivity
+# Procesar texto
+def preprocess_text(text, stopwords):
+    tokens = text.lower().split()  # Dividir texto en palabras
+    tokens = [word.strip(string.punctuation) for word in tokens]  # Quitar puntuación
+    tokens = [word for word in tokens if word.isalnum() and word not in stopwords]  # Filtrar
+    return tokens
 
-# Generar gráficos
-def generate_graphics(posts, usuarios, comentarios):
-    # Frecuencia de palabras
-    word_counts = posts["content"].apply(preprocess_text).str.split().explode().value_counts().head(20)
+# Análisis de términos frecuentes
+def analyze_frequent_terms(data, text_column, stopwords, top_n=10):
+    data['tokens'] = data[text_column].apply(lambda x: preprocess_text(x, stopwords))
+    all_tokens = [token for tokens in data['tokens'] for token in tokens]
+    term_counts = Counter(all_tokens).most_common(top_n)
+    return term_counts
+
+# Guardar gráfico como PNG
+def save_plot_as_png(filename):
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.close()
+
+# Graficar términos frecuentes
+def plot_frequent_terms(term_counts):
+    terms, counts = zip(*term_counts)
     plt.figure(figsize=(10, 6))
-    sns.barplot(x=word_counts.values, y=word_counts.index, palette="viridis")
-    plt.title("Top 20 palabras más frecuentes")
-    plt.xlabel("Frecuencia")
-    plt.ylabel("Palabras")
-    plt.savefig("frecuencia_palabras.png")
+    plt.bar(terms, counts, color='skyblue')
+    plt.title('Términos más frecuentes en los tuits', fontsize=14)
+    plt.xlabel('Términos', fontsize=12)
+    plt.ylabel('Frecuencia', fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    save_plot_as_png("frequent_terms.png")
 
-    # Tendencia temporal de sentimientos
-    posts["sentiment"] = posts["content"].apply(lambda x: analyze_sentiment(preprocess_text(x))[0])
-    posts["date"] = pd.to_datetime(posts["date"])
-    sentiment_trend = posts.groupby(posts["date"].dt.date)["sentiment"].mean()
+# Relación entre retweets y longitud del texto
+def analyze_retweets_vs_length(data):
+    data['text_length'] = data['text'].apply(len)
     plt.figure(figsize=(10, 6))
-    sentiment_trend.plot()
-    plt.title("Tendencia del sentimiento a lo largo del tiempo")
-    plt.xlabel("Fecha")
-    plt.ylabel("Sentimiento promedio")
-    plt.savefig("tendencia_sentimiento.png")
+    sns.scatterplot(x='text_length', y='retweet_count', data=data, alpha=0.6)
+    plt.title('Relación entre longitud del texto y retweets', fontsize=14)
+    plt.xlabel('Longitud del texto', fontsize=12)
+    plt.ylabel('Cantidad de retweets', fontsize=12)
+    save_plot_as_png("retweets_vs_length.png")
 
-    # Distribución de interacciones (Retweets y Likes)
+# Análisis temporal de tuits
+def analyze_tweets_over_time(data):
+    data['created_at'] = pd.to_datetime(data['created_at'])
+    data.set_index('created_at', inplace=True)
+    tweets_over_time = data.resample('D').size()
     plt.figure(figsize=(10, 6))
-    sns.histplot(posts["retweets"], bins=30, kde=True, color="blue", label="Retweets")
-    sns.histplot(posts["likes"], bins=30, kde=True, color="orange", label="Likes")
-    plt.legend()
-    plt.title("Distribución de Interacciones (Retweets y Likes)")
-    plt.xlabel("Cantidad")
-    plt.ylabel("Frecuencia")
-    plt.savefig("distribucion_interacciones.png")
+    tweets_over_time.plot(color='orange')
+    plt.title('Cantidad de tuits a lo largo del tiempo', fontsize=14)
+    plt.xlabel('Fecha', fontsize=12)
+    plt.ylabel('Cantidad de tuits', fontsize=12)
+    save_plot_as_png("tweets_over_time.png")
 
-    # Usuarios más activos
-    top_users = usuarios.sort_values(by="tweets", ascending=False).head(10)
+# Relación entre palabras clave y retweets
+def analyze_keywords_vs_retweets(data, keywords):
+    for keyword in keywords:
+        data[keyword] = data['text'].str.contains(keyword, case=False, na=False)
+    keyword_retweets = data.groupby(keywords)['retweet_count'].mean()
+
+    # Usar valores booleanos para etiquetas del eje x
+    keyword_labels = [str(comb) for comb in keyword_retweets.index]
+
+    keyword_retweets.index = keyword_labels
     plt.figure(figsize=(10, 6))
-    sns.barplot(x=top_users["tweets"], y=top_users["username"], palette="coolwarm")
-    plt.title("Top 10 Usuarios más Activos")
-    plt.xlabel("Número de Tweets")
-    plt.ylabel("Usuario")
-    plt.savefig("usuarios_activos.png")
+    keyword_retweets.plot(kind='bar', color='purple')
+    plt.title('Promedio de retweets según palabras clave', fontsize=14)
+    plt.xlabel('Palabras clave (cyberpunk, 2077, game, genshinimpact)', fontsize=12)
+    plt.ylabel('Promedio de retweets', fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    save_plot_as_png("keywords_vs_retweets.png")
 
-    # Relación entre sentimiento y métricas
+# Distribución de retweets
+def analyze_retweet_distribution(data):
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(x=posts["sentiment"], y=posts["likes"], alpha=0.5, label="Likes", color="blue")
-    sns.scatterplot(x=posts["sentiment"], y=posts["retweets"], alpha=0.5, label="Retweets", color="green")
-    plt.title("Relación entre Sentimiento y Métricas")
-    plt.xlabel("Sentimiento")
-    plt.ylabel("Cantidad")
-    plt.legend()
-    plt.savefig("relacion_sentimiento_metricas.png")
+    sns.histplot(data['retweet_count'], bins=30, kde=True, color='green')
+    plt.title('Distribución de retweets', fontsize=14)
+    plt.xlabel('Cantidad de retweets', fontsize=12)
+    plt.ylabel('Frecuencia', fontsize=12)
+    save_plot_as_png("retweet_distribution.png")
 
-# Generar informe Markdown
-def generate_markdown():
-    report_content = """# Informe de Análisis de Tuits
+# Sustituir caracteres Unicode
+UNICODE_REPLACEMENTS = {
+    "原": "\\textbackslash{}u539F",
+    "神": "\\textbackslash{}u795E",
+    # Agregar más caracteres si es necesario
+}
 
-## Introducción
+def replace_unicode(text):
+    for char, replacement in UNICODE_REPLACEMENTS.items():
+        text = text.replace(char, replacement)
+    return text
 
-El presente informe detalla los resultados del análisis realizado sobre un conjunto de datos extraído de Twitter. El objetivo principal es identificar patrones, tendencias y relaciones entre el contenido de los tuits, la interacción de los usuarios y las características textuales.
+# Crear informe en Markdown
+def create_markdown_report(file_path, term_counts, output_path, additional_analyses):
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(f"# Análisis de Tuits\n\n")
+        f.write(f"## Archivo Analizado\n\n")
+        f.write(f"**Ruta del archivo**: {file_path}\n\n")
+        f.write(f"## Procedimiento\n\n")
+        f.write(
+            "1. Cargamos los datos desde el archivo CSV.\n"
+            "2. Filtramos los tuits con al menos 10 retweets para enfocarnos en los de mayor relevancia.\n"
+            "3. Seleccionamos una muestra representativa de hasta 1000 registros.\n"
+            "4. Procesamos el contenido textual eliminando puntuación, convirtiendo a minúsculas y eliminando stopwords.\n"
+            "5. Analizamos los términos más frecuentes para identificar patrones en el contenido.\n"
+            "6. Exploramos las relaciones clave mediante gráficos, como la longitud del texto y los retweets, tendencias temporales, palabras clave y la distribución de retweets.\n"
+        )
 
-## Metodología
+        f.write(f"\n## Términos Más Frecuentes\n\n")
+        f.write("| Término | Frecuencia |\n")
+        f.write("|---------|------------|\n")
+        for term, count in term_counts:
+            term = replace_unicode(term)
+            f.write(f"| {term} | {count} |\n")
 
-1. **Herramientas utilizadas:**
-   - Python: para la manipulación y análisis de datos.
-   - Pandas: para el manejo de los conjuntos de datos.
-   - NLTK y TextBlob: para el procesamiento del lenguaje natural.
-   - Matplotlib y Seaborn: para la generación de gráficos.
+        f.write(f"\n## Análisis Adicionales\n\n")
+        for analysis, image_file in additional_analyses:
+            f.write(f"### {analysis}\n\n")
+            if analysis == "Relación entre longitud del texto y retweets":
+                f.write("Este gráfico muestra cómo la longitud de un tuit afecta a su popularidad, medida en retweets.\n")
+            elif analysis == "Cantidad de tuits a lo largo del tiempo":
+                f.write("Este gráfico refleja la distribución temporal de los tuits, destacando picos de actividad.\n")
+            elif analysis == "Promedio de retweets según palabras clave":
+                f.write("Aquí se comparan las palabras clave más relevantes según su influencia en los retweets.\n")
+            elif analysis == "Distribución de retweets":
+                f.write("Este gráfico ilustra cómo están distribuidos los retweets en el conjunto de datos.\n")
+            f.write(f"\n![{analysis}]({image_file})\n\n")
 
-2. **Preprocesamiento de datos:**
-   - Los textos fueron limpiados para eliminar stopwords, convertir a minúsculas y tokenizar palabras.
-   - Se analizó la polaridad y subjetividad de los textos para determinar el sentimiento.
-
-3. **Análisis:**
-   - Frecuencia de palabras.
-   - Tendencias de sentimiento a lo largo del tiempo.
-   - Distribución de interacciones.
-   - Actividad de los usuarios.
-   - Relación entre sentimiento y métricas.
-
-## Resultados
-
-### Frecuencia de Palabras
-
-![Frecuencia de palabras](frecuencia_palabras.png)
-
-Las palabras más frecuentes en los tuits analizados incluyen temas relevantes y hashtags populares. Esto sugiere una fuerte tendencia hacia ciertos tópicos dentro del conjunto de datos.
-
-### Tendencia del Sentimiento
-
-![Tendencia del sentimiento](tendencia_sentimiento.png)
-
-Se observa una variabilidad en el sentimiento promedio a lo largo del tiempo. Los picos y valles reflejan eventos importantes o cambios en el tono general del contenido analizado.
-
-### Distribución de Interacciones
-
-![Distribución de interacciones](distribucion_interacciones.png)
-
-La distribución de retweets y likes muestra tendencias sobre cómo los usuarios interactúan con el contenido. Estas métricas son indicativas del impacto y popularidad de los tuits.
-
-### Usuarios más Activos
-
-![Usuarios más activos](usuarios_activos.png)
-
-El análisis de los usuarios más activos destaca a aquellos con mayor volumen de tuits, indicando su nivel de participación e influencia en la red social.
-
-### Relación entre Sentimiento y Métricas
-
-![Relación entre Sentimiento y Métricas](relacion_sentimiento_metricas.png)
-
-Se observan correlaciones entre el sentimiento expresado en los tuits y las métricas de interacción (likes y retweets). Esto sugiere que el tono emocional del contenido puede influir en la participación de otros usuarios.
-
-## Conclusiones
-
-- Los temas más mencionados reflejan intereses y preocupaciones predominantes de los usuarios.
-- Las fluctuaciones en los sentimientos sugieren posibles relaciones con eventos externos o cambios en la dinámica de interacción en la plataforma.
-- Los usuarios más activos tienen un impacto significativo en la red social, promoviendo interacciones frecuentes.
-- Las técnicas empleadas demostraron ser efectivas para extraer insights significativos del contenido de los tuits.
-
-## Anexos
-
-1. **Código:**
-   El código utilizado para este análisis se encuentra disponible en el repositorio GitHub del proyecto.
-
-2. **Gráficos generados:**
-   Los gráficos están almacenados en la carpeta principal del proyecto.
-"""
-    with open("informe.md", "w", encoding="utf-8") as file:
-        file.write(report_content)
-
-# Interfaz de línea de comandos
-@click.command()
-@click.option("--posts", type=click.File("r"), required=True, help="Archivo CSV de posts.")
-@click.option("--usuarios", type=click.File("r"), required=True, help="Archivo CSV de usuarios.")
-@click.option("--comentarios", type=click.File("r"), required=True, help="Archivo CSV de comentarios.")
-def main(posts, usuarios, comentarios):
-    # Cargar datos
-    posts_df = pd.read_csv(posts)
-    usuarios_df = pd.read_csv(usuarios)
-    comentarios_df = pd.read_csv(comentarios)
-
-    # Preprocesar y analizar
-    generate_graphics(posts_df, usuarios_df, comentarios_df)
-
-    # Generar informe
-    generate_markdown()
-
-    print("Análisis completado. Informe generado en informe.md y gráficos en la carpeta principal del proyecto.")
-
+# Ejecutar análisis
 if __name__ == "__main__":
-    main()
+    # Ruta del archivo CSV
+    file_path = "cyberpunk.csv"
+    output_markdown = "analisis_tuits.md"
+
+    # Stopwords predefinidas
+    stopwords = {
+        "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+        "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they",
+        "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
+        "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having",
+        "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until",
+        "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during",
+        "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over",
+        "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all",
+        "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only",
+        "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"
+    }
+
+    # Cargar y procesar datos
+    data = load_and_filter_data(file_path)
+
+    # Analizar términos frecuentes
+    term_counts = analyze_frequent_terms(data, 'text', stopwords)
+
+    # Graficar términos frecuentes
+    plot_frequent_terms(term_counts)
+
+    # Analizar relaciones adicionales
+    analyze_retweets_vs_length(data)
+    analyze_tweets_over_time(data)
+    analyze_keywords_vs_retweets(data, ['cyberpunk', '2077', 'game', 'genshinimpact'])
+    analyze_retweet_distribution(data)
+
+    # Generar informe en Markdown
+    additional_analyses = [
+        ("Relación entre longitud del texto y retweets", "retweets_vs_length.png"),
+        ("Cantidad de tuits a lo largo del tiempo", "tweets_over_time.png"),
+        ("Promedio de retweets según palabras clave", "keywords_vs_retweets.png"),
+        ("Distribución de retweets", "retweet_distribution.png"),
+    ]
+    create_markdown_report(file_path, term_counts, output_markdown, additional_analyses)
+
+    print(f"Informe generado: {output_markdown}")
