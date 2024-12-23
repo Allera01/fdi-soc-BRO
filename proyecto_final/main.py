@@ -1,9 +1,10 @@
 import asyncio
 import click
 from cargar import cargar
-import analisis
+from analisis import generar_graficos
 from extract import extract_comments_from_json
 import descarga
+from pathlib import Path
 
 '''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
@@ -91,23 +92,39 @@ async def obtener_comentarios(page):
         print(f"Likes: {data['likes']}")
         print('-' * 40)'''
         
+@click.command()
 @click.option(
-    "-d", "--descargar", is_flag=True, help="Permite descargar el HTML de un video de YouTube a traves de su URL.\n"
+    "-d", "--descargar", is_flag=True, help= "Permite descargar el HTML de un video de YouTube a traves de su URL.\n"
 )
 @click.option(
-    "-a", "--all", is_flag=True, help="Se ejecutan todas las funciones opcionales.\n"
+    "-a", "--all", is_flag=True, help= "Se ejecutan todas las funciones opcionales.\n"
 )
-def my_main():#descargar,all):
+@click.option(
+    "-g", "--graficos", is_flag=True, help= "Genera graficos de un JSON en concreto.\n"
+)
+
+def my_main(graficos, descargar, all):
     '''if (descargar):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(descarga.descargar_html_video())'''
-    html = cargar()
-    comentarios = extract_comments_from_json(html)
-    print(comentarios)
-    #comentarios = extract_comments(html,50)
-    #print(comentarios)
-    #print(html)
+    if graficos:
+        nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
+
+        nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
+
+        archivo_json = Path(f"cache/{nombre_yt}/{nombre_json}.json")
+        
+        if archivo_json.exists():
+            generar_graficos(archivo_json)
+        else:
+            print(f"El archivo {archivo_json} no existe. Por favor verifica el nombre.")
+
+    else:
+        # Flujo normal del programa
+        html = cargar()
+        comentarios = extract_comments_from_json(html)
+        print(comentarios)
     #hay que pasar estos comentarios a un analisis.py que lo analiza, es posible que haya que aumentar el extract.py para sacar más datos que analizar
 
 # Ejecución del programa
