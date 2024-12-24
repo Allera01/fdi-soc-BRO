@@ -5,6 +5,7 @@ from analisis import generar_graficos
 from extract import extract_comments_from_json
 import descarga
 from pathlib import Path
+from grafo import generar_grafo_desde_json
 
 '''async def obtener_informacion_video(video_url):
     """Obtiene información general del video."""
@@ -102,8 +103,14 @@ async def obtener_comentarios(page):
 @click.option(
     "-g", "--graficos", is_flag=True, help= "Genera graficos de un JSON en concreto.\n"
 )
+@click.option(
+    "-gs", "--grafosent", is_flag=True, help= "Genera un grafo que relaciona los sentimientos del autor\n"
+)
+@click.option(
+    "-ga", "--grafoact", is_flag=True, help= "Genera un grafo que relaciona la actividad de los autores\n"
+)
 
-def my_main(graficos, descargar, all):
+def my_main(graficos, grafosent, grafoact, descargar, all):
     '''if (descargar):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -119,6 +126,25 @@ def my_main(graficos, descargar, all):
             generar_graficos(archivo_json)
         else:
             print(f"El archivo {archivo_json} no existe. Por favor verifica el nombre.")
+
+    if(grafosent):
+
+        #nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
+
+        #nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
+
+        archivo_json = Path(f"cache/baitybait/el_odio_en_internet.json")
+        
+        generar_grafo_desde_json(archivo_json, 'sentimiento_autor')
+
+    if(grafoact):
+        #nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
+
+        #nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
+
+        archivo_json = Path(f"cache/baitybait/el_odio_en_internet.json")
+        
+        generar_grafo_desde_json(archivo_json, 'actividad_autor')
 
     else:
         # Flujo normal del programa
