@@ -3,11 +3,11 @@ import json
 import matplotlib.pyplot as plt
 from textblob import TextBlob
 
-def cargar_datos_json(ruta_json):
-    """Carga los datos del archivo JSON especificado."""
-    with open(ruta_json, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    return data
+# def cargar_datos_json(ruta_json):
+#     """Carga los datos del archivo JSON especificado."""
+#     with open(ruta_json, 'r', encoding='utf-8') as f:
+#         data = json.load(f)
+#     return data
 
 def analizar_polaridad(texto):
     """Devuelve la polaridad de un texto usando TextBlob."""
@@ -80,7 +80,7 @@ def graficar_grafo(G, ruta_guardado=None):
     plt.show()
 
 # Función para grafo de actividad del autor
-def grafo_actividad_autor(data):
+def grafo_actividad_autor(data):    
     """Crea un grafo que conecta autores principales con autores que responden."""
     G = nx.DiGraph()
 
@@ -142,9 +142,10 @@ def grafo_sentimiento_autor(data):
 # Función principal para generar el grafo desde JSON
 def generar_grafo_desde_json(nombre_json, tipo_grafo):
     """Carga datos de un JSON, genera el tipo de grafo seleccionado y lo grafica."""
-    ruta_json = f"{nombre_json}"
-    datos = cargar_datos_json(ruta_json)
-
+    # ruta_json = f"{nombre_json}"
+    # datos = cargar_datos_json(ruta_json)
+    datos = json.loads(nombre_json)
+    
     if tipo_grafo == 'actividad_autor':
         grafo_actividad_autor(datos)
     elif tipo_grafo == 'sentimiento_autor':

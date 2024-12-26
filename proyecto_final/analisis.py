@@ -17,15 +17,15 @@ def generar_graficos(archivo_json):
     """
     Genera gráficos basados en los comentarios extraídos de un archivo JSON de YouTube.
     """
-    try:
-        with open(archivo_json, 'r', encoding='utf-8') as file:
-            comments_data = json.load(file)
-    except FileNotFoundError:
-        print(f"El archivo {archivo_json}.json no se encuentra.")
-        return
+    # try:
+    #     with open(archivo_json, 'r', encoding='utf-8') as file:
+    #         comments_data = json.load(file)
+    # except FileNotFoundError:
+    #     print(f"El archivo {archivo_json}.json no se encuentra.")
+    #     return
 
     # Extraer los comentarios
-    comments = extract_comments_from_json(comments_data)
+    comments = extract_comments_from_json(archivo_json)
 
     if not comments:
         print("No se encontraron comentarios con datos de likes.")

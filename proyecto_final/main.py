@@ -115,42 +115,21 @@ def my_main(graficos, grafosent, grafoact, descargar, all):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(descarga.descargar_html_video())'''
+    archivo_json = cargar()
     if graficos:
-        nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
-
-        nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
-
-        archivo_json = Path(f"cache/{nombre_yt}/{nombre_json}.json")
-        
-        if archivo_json.exists():
-            generar_graficos(archivo_json)
-        else:
-            print(f"El archivo {archivo_json} no existe. Por favor verifica el nombre.")
+        generar_graficos(archivo_json)
 
     if(grafosent):
-
-        #nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
-
-        #nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
-
-        archivo_json = Path(f"cache/baitybait/el_odio_en_internet.json")
-        
         generar_grafo_desde_json(archivo_json, 'sentimiento_autor')
 
     if(grafoact):
-        #nombre_yt = input("Introduce el nombre del youtuber del que quieras saber: ").strip()
-
-        #nombre_json = input("Introduce el nombre del archivo JSON (sin .json): ").strip()
-
-        archivo_json = Path(f"cache/baitybait/el_odio_en_internet.json")
-        
         generar_grafo_desde_json(archivo_json, 'actividad_autor')
 
-    else:
+    #else:
         # Flujo normal del programa
-        html = cargar()
-        comentarios = extract_comments_from_json(html)
-        print(comentarios)
+        # html = cargar()
+        # comentarios = extract_comments_from_json(html)
+        # print(comentarios)
     #hay que pasar estos comentarios a un analisis.py que lo analiza, es posible que haya que aumentar el extract.py para sacar más datos que analizar
 
 # Ejecución del programa
