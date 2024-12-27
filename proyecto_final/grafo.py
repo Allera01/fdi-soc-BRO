@@ -80,7 +80,7 @@ def graficar_grafo(G, nombre,ruta_guardado=None):
     }
 
     # Graficar el grafo
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(30, 30))
     nx.draw(
         G, pos, with_labels=True, labels=labels, node_color=colors,
         node_size=node_sizes, font_size=8, font_color='black',
@@ -127,54 +127,59 @@ def grafo_actividad_autor(data):
     """Crea un grafo que conecta autores principales con autores que responden."""
     G = nx.DiGraph()
 
-    comentarios = data[0]['items']
+    for i in range(0,5):
+        comentarios = data[i]['items']
+        for comentario in comentarios:
+            if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
+                top_comment = comentario['snippet']['topLevelComment']['snippet']
+                top_comment_author = top_comment['authorDisplayName']
+                
+                if not G.has_node(top_comment_author):
+                    G.add_node(top_comment_author, type='author')
 
-    for comentario in comentarios:
-        if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
-            top_comment = comentario['snippet']['topLevelComment']['snippet']
-            top_comment_author = top_comment['authorDisplayName']
+                if 'replies' in comentario:
+                    for reply in comentario['replies']['comments']:
+                        reply_author = reply['snippet']['authorDisplayName']
 
-            G.add_node(top_comment_author, type='author')
+                        if not G.has_node(reply_author):
+                            G.add_node(reply_author, type='author')
 
-            if 'replies' in comentario:
-                for reply in comentario['replies']['comments']:
-                    reply_author = reply['snippet']['authorDisplayName']
-
-                    G.add_node(reply_author, type='author')
-                    G.add_edge(top_comment_author, reply_author)
-
-    graficar_grafo(G, "actividad del autor")
+                        if not G.has_edge(top_comment_author, reply_author):
+                            G.add_edge(top_comment_author, reply_author)
+        
+    graficar_grafo(G, "actividad_del_autor")
 
 # Función para grafo de sentimiento agregado por autor
 def grafo_sentimiento_autor(data):
     """Crea un grafo donde las aristas tienen pesos basados en el sentimiento promedio."""
     G = nx.DiGraph()
 
-    comentarios = data[0]['items']
+    for i in range(0,5):
+        comentarios = data[i]['items']
 
-    for comentario in comentarios:
-        if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
-            top_comment = comentario['snippet']['topLevelComment']['snippet']
-            top_comment_author = top_comment['authorDisplayName']
+        for comentario in comentarios:
+            if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
+                top_comment = comentario['snippet']['topLevelComment']['snippet']
+                top_comment_author = top_comment['authorDisplayName']
 
-            G.add_node(top_comment_author, type='author')
+                G.add_node(top_comment_author, type='author')
 
-            if 'replies' in comentario:
-                for reply in comentario['replies']['comments']:
-                    reply_snippet = reply['snippet']
-                    reply_author = reply_snippet['authorDisplayName']
-                    reply_polarity = analizar_polaridad(reply_snippet['textDisplay'])
+                if 'replies' in comentario:
+                    for reply in comentario['replies']['comments']:
+                        reply_snippet = reply['snippet']
+                        reply_author = reply_snippet['authorDisplayName']
+                        reply_polarity = analizar_polaridad(reply_snippet['textDisplay'])
 
-                    G.add_node(reply_author, type='author')
+                        G.add_node(reply_author, type='author')
 
-                    if G.has_edge(top_comment_author, reply_author):
-                        G[top_comment_author][reply_author]['weight'] += reply_polarity
-                        G[top_comment_author][reply_author]['count'] += 1
-                    else:
-                        G.add_edge(
-                            top_comment_author, reply_author,
-                            weight=reply_polarity, count=1
-                        )
+                        if G.has_edge(top_comment_author, reply_author):
+                            G[top_comment_author][reply_author]['weight'] += reply_polarity
+                            G[top_comment_author][reply_author]['count'] += 1
+                        else:
+                            G.add_edge(
+                                top_comment_author, reply_author,
+                                weight=reply_polarity, count=1
+                            )
 
     # Ajustar los pesos finales como el promedio de polaridades
     for u, v, data in G.edges(data=True):
