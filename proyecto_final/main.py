@@ -104,13 +104,10 @@ async def obtener_comentarios(page):
     "-g", "--graficos", is_flag=True, help= "Genera graficos de un JSON en concreto.\n"
 )
 @click.option(
-    "-gs", "--grafosent", is_flag=True, help= "Genera un grafo que relaciona los sentimientos del autor\n"
-)
-@click.option(
-    "-ga", "--grafoact", is_flag=True, help= "Genera un grafo que relaciona la actividad de los autores\n"
+    "-ga", "--grafo", is_flag=True, help= "Genera un grafo que relaciona la actividad de los autores\n"
 )
 
-def my_main(graficos, grafosent, grafoact, descargar, all):
+def my_main(graficos, grafo, descargar, all):
     '''if (descargar):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -119,10 +116,7 @@ def my_main(graficos, grafosent, grafoact, descargar, all):
     if graficos:
         generar_graficos(archivo_json)
 
-    if(grafosent):
-        generar_grafo_desde_json(archivo_json, 'sentimiento_autor')
-
-    if(grafoact):
+    if(grafo):
         generar_grafo_desde_json(archivo_json, 'actividad_autor')
 
     #else:

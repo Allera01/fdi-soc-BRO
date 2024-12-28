@@ -2,6 +2,7 @@ import networkx as nx
 import json
 import matplotlib.pyplot as plt
 from textblob import TextBlob
+import os
 
 # def cargar_datos_json(ruta_json):
 #     """Carga los datos del archivo JSON especificado."""
@@ -122,21 +123,42 @@ def graficar_grafo(G, nombre,ruta_guardado=None):
     #     plt.savefig(ruta_guardado, format='png')
     # plt.show()
 
-# Función para grafo de actividad del autor
-def grafo_actividad_autor(data):    
+def guardar_digrafo_edgelist_en_actual(G, nombre_archivo):
+    """
+    Guarda un grafo dirigido (nx.DiGraph) en formato .edgelist en el directorio actual, si no existe ya el archivo.
+    
+    Args:
+        G (nx.DiGraph): El grafo dirigido a guardar.
+        nombre_archivo (str): El nombre del archivo .edgelist donde se guardará.
+    """
+    # Verificar si el archivo ya existe en el directorio actual
+    if os.path.exists(nombre_archivo):
+        print(f"El archivo {nombre_archivo} ya existe en el directorio actual. No se ha creado un nuevo archivo.")
+        return
+    
+    # Guardar el grafo dirigido en el archivo
+    with open(nombre_archivo, 'w') as f:
+        for u, v in G.edges():
+            f.write(f"{u} {v}\n")
+    
+    print(f"Grafo dirigido guardado exitosamente en {nombre_archivo}")
+
+def grafo_actividad_autor(data):
     """Crea un grafo que conecta autores principales con autores que responden."""
     G = nx.DiGraph()
 
-    for i in range(0,5):
+    for i in range(0, 30):
         comentarios = data[i]['items']
         for comentario in comentarios:
             if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
                 top_comment = comentario['snippet']['topLevelComment']['snippet']
                 top_comment_author = top_comment['authorDisplayName']
                 
+                # Añadir nodo para el autor principal
                 if not G.has_node(top_comment_author):
                     G.add_node(top_comment_author, type='author')
 
+                # Añadir nodos y aristas para las respuestas
                 if 'replies' in comentario:
                     for reply in comentario['replies']['comments']:
                         reply_author = reply['snippet']['authorDisplayName']
@@ -146,46 +168,12 @@ def grafo_actividad_autor(data):
 
                         if not G.has_edge(top_comment_author, reply_author):
                             G.add_edge(top_comment_author, reply_author)
-        
+    
+    # Guardar el grafo en un archivo .edgelist
+    guardar_digrafo_edgelist_en_actual(G, "grafo_actividad_autor.edgelist")
+
+    # Graficar el grafo
     graficar_grafo(G, "actividad_del_autor")
-
-# Función para grafo de sentimiento agregado por autor
-def grafo_sentimiento_autor(data):
-    """Crea un grafo donde las aristas tienen pesos basados en el sentimiento promedio."""
-    G = nx.DiGraph()
-
-    for i in range(0,5):
-        comentarios = data[i]['items']
-
-        for comentario in comentarios:
-            if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
-                top_comment = comentario['snippet']['topLevelComment']['snippet']
-                top_comment_author = top_comment['authorDisplayName']
-
-                G.add_node(top_comment_author, type='author')
-
-                if 'replies' in comentario:
-                    for reply in comentario['replies']['comments']:
-                        reply_snippet = reply['snippet']
-                        reply_author = reply_snippet['authorDisplayName']
-                        reply_polarity = analizar_polaridad(reply_snippet['textDisplay'])
-
-                        G.add_node(reply_author, type='author')
-
-                        if G.has_edge(top_comment_author, reply_author):
-                            G[top_comment_author][reply_author]['weight'] += reply_polarity
-                            G[top_comment_author][reply_author]['count'] += 1
-                        else:
-                            G.add_edge(
-                                top_comment_author, reply_author,
-                                weight=reply_polarity, count=1
-                            )
-
-    # Ajustar los pesos finales como el promedio de polaridades
-    for u, v, data in G.edges(data=True):
-        data['weight'] = data['weight'] / data['count']
-
-    graficar_grafo(G, "sentimiento_autor")
 
 # Función principal para generar el grafo desde JSON
 def generar_grafo_desde_json(nombre_json, tipo_grafo):
@@ -195,8 +183,9 @@ def generar_grafo_desde_json(nombre_json, tipo_grafo):
     datos = json.loads(nombre_json)
 
     if tipo_grafo == 'actividad_autor':
-        grafo_actividad_autor(datos)
-    elif tipo_grafo == 'sentimiento_autor':
-        grafo_sentimiento_autor(datos)
+        G = grafo_actividad_autor(datos)
+        if(os.path.exists("actividad_del_autor")):
+            print("El archivo ya existe\n")
+            guardar_digrafo_edgelist_en_actual(G, "actividad_autor.edgelist")
     else:
         raise ValueError("Tipo de grafo no reconocido. Usa 'actividad_autor' o 'sentimiento_autor'.")

@@ -44,7 +44,7 @@ def generar_graficos(archivo_json):
     likes = [comment['like_count'] for comment in comments]
     comentarios = [comment['text'][:40] for comment in comments]  # Limitar el texto de los comentarios a 40 caracteres
 
-    # Crear gráfico de polaridad vs likes
+    #--- Crear gráfico de polaridad vs likes ---
     plt.figure(figsize=(10, 6))
     plt.scatter(polaridades, likes, color='purple', alpha=0.6)
 
@@ -63,8 +63,7 @@ def generar_graficos(archivo_json):
 
     print("Gráfico generado y guardado como 'grafico_polaridad_vs_likes.png'.")
 
-    '''Grafico de sentimientos entre sentimiento del comenatario frente a la cantidad de respuestas'''
-
+    #--- Grafico de sentimientos entre sentimiento del comenatario frente a la cantidad de respuestas ---
     # Inicializar contadores de respuestas para comentarios positivos y negativos
     respuestas_positivas = 0
     respuestas_negativas = 0
@@ -97,7 +96,7 @@ def generar_graficos(archivo_json):
 
     print("Gráfico generado y guardado como 'grafico_respuestas_sentimiento.png'.")
 
-    # ---- Gráfico Likes vs Fecha de Publicación ----
+    #--- Gráfico Likes vs Fecha de Publicación ---
     # Convertir la fecha de publicación a formato datetime
     fechas = [datetime.strptime(comment['published_at'], '%Y-%m-%dT%H:%M:%SZ') for comment in comments]
     
@@ -125,4 +124,40 @@ def generar_graficos(archivo_json):
     plt.savefig('grafico_likes_vs_fecha.png')
     plt.close()
 
-    print("Gráficos generados y guardados como 'grafico_likes_comentarios.png', 'grafico_respuestas_comentarios.png' y 'grafico_likes_vs_fecha.png'.")
+    
+    #--- Gráfico longitud del comentario vs el sentimiento del mismo
+    longitudes = []
+    polaridades = []
+    comments = extract_comments_from_json(archivo_json)
+
+    comentarios = [comment['text'][:40] for comment in comments]  # Considerar solo los primeros 15 comentarios principales
+
+    for comentario in comentarios:
+        if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
+            top_comment = comentario['snippet']['topLevelComment']['snippet']
+            top_comment_text = top_comment['textDisplay']
+            top_comment_polarity = obtener_polaridad(top_comment_text)
+            
+            # Añadir datos del comentario principal
+            longitudes.append(len(top_comment_text))
+            polaridades.append(top_comment_polarity)
+            
+            # Añadir datos de las respuestas si existen
+            if 'replies' in comentario:
+                for reply in comentario['replies']['comments']:
+                    reply_snippet = reply['snippet']
+                    reply_text = reply_snippet['textDisplay']
+                    reply_polarity = obtener_polaridad(reply_text)
+                    
+                    longitudes.append(len(reply_text))
+                    polaridades.append(reply_polarity)
+
+    # Crear el gráfico de dispersión
+    plt.figure(figsize=(10, 6))
+    plt.scatter(longitudes, polaridades, alpha=0.6, edgecolors='k')
+    plt.title("Relación entre la longitud del comentario y el sentimiento")
+    plt.xlabel("Longitud del comentario (número de caracteres)")
+    plt.ylabel("Polaridad del sentimiento")
+    plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Línea horizontal en y=0
+    plt.savefig('grafico_polaridad_x_longitud_comentario.png')
+    plt.close()
