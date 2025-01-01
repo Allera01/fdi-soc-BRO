@@ -55,7 +55,6 @@ def construir_grafo_comentarios(data):
 
 def graficar_grafo(G, nombre,ruta_guardado=None):
     import numpy as np
-    import os
     # Elegir layout
     layouts = {
         'spring': nx.spring_layout,
@@ -94,7 +93,6 @@ def graficar_grafo(G, nombre,ruta_guardado=None):
 
     # Guardar grafo en la ruta especificada
     plt.savefig(ruta_guardado, format=ruta_guardado.split('.')[-1])
-    
     
     
     # """Genera y muestra un grafo, guardándolo si se proporciona una ruta."""
@@ -147,7 +145,7 @@ def grafo_actividad_autor(data):
     """Crea un grafo que conecta autores principales con autores que responden."""
     G = nx.DiGraph()
 
-    for i in range(0, 30):
+    for i in range(len(data)):
         comentarios = data[i]['items']
         for comentario in comentarios:
             if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
