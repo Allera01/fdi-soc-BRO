@@ -21,12 +21,15 @@ import networkx as nx
     "-g", "--graficos", is_flag=True, help= "Genera graficos de un JSON en concreto.\n"
 )
 @click.option(
-    "-ga", "--grafo", is_flag=True, help= "Genera un grafo que relaciona la actividad de los autores\n"
+    "-ga", "--grafo_act", is_flag=True, help= "Genera un grafo que relaciona la actividad de los autores\n"
+)
+@click.option(
+    "-gc", "--grafo_coment", is_flag=True, help= "Genera un grafo que relaciona los comentarios con sus respuestas\n"
 )
 @click.option(
     "-anlg", "--analisisgrafo", is_flag = True, help = "Analiza de distintas formas el grafo de la actividad de los autores\n"
 )
-def my_main(graficos, grafo, analisisgrafo, descargar, all):
+def my_main(graficos, grafo_act, grafo_coment, analisisgrafo, descargar, all):
     '''if (descargar):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -35,8 +38,11 @@ def my_main(graficos, grafo, analisisgrafo, descargar, all):
     if graficos or all:
         generar_graficos(archivo_json)
 
-    if grafo or all:
+    if grafo_act or all:
         generar_grafo_desde_json(archivo_json, 'actividad_autor')
+    
+    if grafo_coment or all:
+        generar_grafo_desde_json(archivo_json, 'comentarios')
 
     if analisisgrafo or all:
          # Leer el archivo de red (lista de aristas)

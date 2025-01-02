@@ -2,6 +2,7 @@ import networkx as nx
 import json
 import matplotlib.pyplot as plt
 from textblob import TextBlob
+import numpy as np
 import os
 
 # def cargar_datos_json(ruta_json):
@@ -19,42 +20,54 @@ def construir_grafo_comentarios(data):
     """Construye un grafo a partir de los comentarios principales y sus respuestas."""
     G = nx.DiGraph()
 
-    comentarios = data[0]['items'][:15]  # Tomar solo los primeros 15 comentarios principales
+    for i in range(len(data)):
+        comentarios = data[i]['items']
+        for comentario in comentarios:
+            if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
+                top_comment = comentario['snippet']['topLevelComment']['snippet']
+                top_comment_id = comentario['id']
+                top_comment_text = top_comment['textDisplay']
+                top_comment_author = top_comment['authorDisplayName']
 
-    for comentario in comentarios:
-        if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
-            top_comment = comentario['snippet']['topLevelComment']['snippet']
-            top_comment_id = comentario['id']
-            top_comment_text = top_comment['textDisplay']
-            top_comment_author = top_comment['authorDisplayName']
+                # Añadir nodo para el comentario principal
+                G.add_node(
+                    top_comment_author,
+                    label=top_comment_text,
+                    type='author'
+                )
 
-            # Añadir nodo para el comentario principal
-            G.add_node(
-                top_comment_author,
-                label=top_comment_text,
-                type='author'
-            )
+                # Añadir nodos para las respuestas si existen
+                if 'replies' in comentario:
+                    for reply in comentario['replies']['comments']:
+                        reply_snippet = reply['snippet']
+                        reply_author = reply_snippet['authorDisplayName']
 
-            # Añadir nodos para las respuestas si existen
-            if 'replies' in comentario:
-                for reply in comentario['replies']['comments']:
-                    reply_snippet = reply['snippet']
-                    reply_author = reply_snippet['authorDisplayName']
-
-                    # Añadir nodo para el autor de la respuesta
-                    G.add_node(
+                        # Añadir nodo para el autor de la respuesta
+                        G.add_node(
                         reply_author,
                         label=reply_snippet['textDisplay'],
                         type='author'
                     )
 
-                    # Añadir arista del autor del comentario principal al autor de la respuesta
-                    G.add_edge(top_comment_author, reply_author)
+                # Añadir arista del autor del comentario principal al autor de la respuesta
+                G.add_edge(top_comment_author, reply_author)
 
-    return G
+    # Calcular los grados de los nodos
+    grados = dict(G.degree())
+
+    # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
+    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+
+    # Crear un subgrafo con los 300 nodos seleccionados
+    subgrafo = G.subgraph(nodos_top)
+    
+    # Guardar el grafo en un archivo .edgelist
+    guardar_digrafo_edgelist_en_actual(G, "grafo_comentarios_autor.edgelist")
+
+    # Graficar el grafo
+    graficar_grafo(subgrafo, "comentarios_del_autor")
 
 def graficar_grafo(G, nombre,ruta_guardado=None):
-    import numpy as np
     # Elegir layout
     layouts = {
         'spring': nx.spring_layout,
@@ -166,12 +179,21 @@ def grafo_actividad_autor(data):
 
                         if not G.has_edge(top_comment_author, reply_author):
                             G.add_edge(top_comment_author, reply_author)
+
+    # Calcular los grados de los nodos
+    grados = dict(G.degree())
+
+    # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
+    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+
+    # Crear un subgrafo con los 300 nodos seleccionados
+    subgrafo = G.subgraph(nodos_top)
     
     # Guardar el grafo en un archivo .edgelist
     guardar_digrafo_edgelist_en_actual(G, "grafo_actividad_autor.edgelist")
 
     # Graficar el grafo
-    graficar_grafo(G, "actividad_del_autor")
+    graficar_grafo(subgrafo, "actividad_del_autor")
 
 # Función principal para generar el grafo desde JSON
 def generar_grafo_desde_json(nombre_json, tipo_grafo):
@@ -185,5 +207,11 @@ def generar_grafo_desde_json(nombre_json, tipo_grafo):
         if(os.path.exists("actividad_del_autor")):
             print("El archivo ya existe\n")
             guardar_digrafo_edgelist_en_actual(G, "actividad_autor.edgelist")
+
+    if tipo_grafo == 'comentarios':
+        G = construir_grafo_comentarios(datos)
+        if(os.path.exists("comentarios_autor")):
+            print("El archivo ya existe\n")
+            guardar_digrafo_edgelist_en_actual(G, "comentarios_autor.edgelist")
     else:
         raise ValueError("Tipo de grafo no reconocido. Usa 'actividad_autor' o 'sentimiento_autor'.")
