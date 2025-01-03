@@ -1,7 +1,7 @@
 import asyncio
 import click
 from cargar import cargar
-from analisis import generar_graficos
+import analisis
 from extract import extract_comments_from_json
 import descarga
 from pathlib import Path
@@ -36,7 +36,9 @@ def my_main(graficos, grafo_act, grafo_coment, analisisgrafo, descargar, all):
         loop.run_until_complete(descarga.descargar_html_video())'''
     archivo_json = cargar()
     if graficos or all:
-        generar_graficos(archivo_json)
+        analisis.generar_graficos(archivo_json)
+        fechas_polaridad = analisis.filtrar_y_analizar_palabra_video(archivo_json)
+        analisis.graficar_evolucion_palabra_video(fechas_polaridad)
 
     if grafo_act or all:
         generar_grafo_desde_json(archivo_json, 'actividad_autor')

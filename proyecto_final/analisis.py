@@ -17,12 +17,6 @@ def generar_graficos(archivo_json):
     """
     Genera gráficos basados en los comentarios extraídos de un archivo JSON de YouTube.
     """
-    # try:
-    #     with open(archivo_json, 'r', encoding='utf-8') as file:
-    #         comments_data = json.load(file)
-    # except FileNotFoundError:
-    #     print(f"El archivo {archivo_json}.json no se encuentra.")
-    #     return
 
     # Extraer los comentarios
     comments = extract_comments_from_json(archivo_json)
@@ -122,42 +116,58 @@ def generar_graficos(archivo_json):
 
     # Guardar el gráfico
     plt.savefig('grafico_likes_vs_fecha.png')
+    print("Gráfico generado y guardado como 'grafico_likes_vs_fecha.png'.")
     plt.close()
 
-    
-    #--- Gráfico longitud del comentario vs el sentimiento del mismo
-    longitudes = []
-    polaridades = []
-    comments = extract_comments_from_json(archivo_json)
 
-    comentarios = [comment['text'][:40] for comment in comments]  # Considerar solo los primeros 15 comentarios principales
+def filtrar_y_analizar_palabra_video(data):
+    """Filtra los comentarios que contienen la palabra 'video' y analiza su polaridad."""
+    fechas_polaridad = []
+    # Extraer los comentarios
+    comentarios = extract_comments_from_json(data)
 
     for comentario in comentarios:
         if 'snippet' in comentario and 'topLevelComment' in comentario['snippet']:
-            top_comment = comentario['snippet']['topLevelComment']['snippet']
-            top_comment_text = top_comment['textDisplay']
-            top_comment_polarity = obtener_polaridad(top_comment_text)
-            
-            # Añadir datos del comentario principal
-            longitudes.append(len(top_comment_text))
-            polaridades.append(top_comment_polarity)
-            
-            # Añadir datos de las respuestas si existen
-            if 'replies' in comentario:
-                for reply in comentario['replies']['comments']:
-                    reply_snippet = reply['snippet']
-                    reply_text = reply_snippet['textDisplay']
-                    reply_polarity = obtener_polaridad(reply_text)
-                    
-                    longitudes.append(len(reply_text))
-                    polaridades.append(reply_polarity)
+            snippet = comentario['snippet']['topLevelComment']['snippet']
+            texto = snippet['textDisplay']
+            fecha = snippet['publishedAt']
+                
+            # Verificar si el texto contiene la palabra 'video'
+            if 'malo' in texto.lower():
+                polaridad = obtener_polaridad(texto)
+                fechas_polaridad.append((fecha, polaridad))
+    
+    return fechas_polaridad
 
-    # Crear el gráfico de dispersión
+def graficar_evolucion_palabra_video(fechas_polaridad):
+    """Genera un gráfico que muestra la evolución de la polaridad de la palabra 'video' en comentarios."""
+    # Convertir fechas a formato datetime
+    fechas_polaridad = [(datetime.fromisoformat(fecha[:-1]), polaridad) for fecha, polaridad in fechas_polaridad]
+    
+    # Ordenar por fecha
+    fechas_polaridad.sort(key=lambda x: x[0])
+    
+    # Agrupar por día y calcular polaridad promedio
+    polaridad_por_dia = {}
+    for fecha, polaridad in fechas_polaridad:
+        dia = fecha.date()
+        if dia not in polaridad_por_dia:
+            polaridad_por_dia[dia] = []
+        polaridad_por_dia[dia].append(polaridad)
+
+    dias = sorted(polaridad_por_dia.keys())
+    polaridades_promedio = [sum(polaridad_por_dia[dia]) / len(polaridad_por_dia[dia]) for dia in dias]
+
+    # Graficar la evolución
     plt.figure(figsize=(10, 6))
-    plt.scatter(longitudes, polaridades, alpha=0.6, edgecolors='k')
-    plt.title("Relación entre la longitud del comentario y el sentimiento")
-    plt.xlabel("Longitud del comentario (número de caracteres)")
-    plt.ylabel("Polaridad del sentimiento")
-    plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Línea horizontal en y=0
-    plt.savefig('grafico_polaridad_x_longitud_comentario.png')
+    plt.plot(dias, polaridades_promedio, marker='o', color='blue', label='Polaridad Promedio')
+    plt.axhline(0, color='red', linestyle='--', label='Neutral')
+    plt.title("Evolución de la polaridad de la palabra 'video' en comentarios")
+    plt.xlabel("Fecha")
+    plt.ylabel("Polaridad Promedio")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('evolucion_palabra_video.png')
+    print("Gráfico generado y guardado como 'evolucion_palabra_video.png'.")
     plt.close()
