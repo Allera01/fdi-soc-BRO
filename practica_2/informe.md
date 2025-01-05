@@ -1,4 +1,6 @@
-# Análisis de Tuits
+# Práctica 2: Análisis de tuits sobre Cyberpunk
+
+**Autores:** Mario Carrilero Sánchez, Mario Gallego Hernández, Diego Linares Espíldora, Álvaro Llera Calderón
 
 ## Archivo Analizado
 
@@ -6,7 +8,7 @@
 
 ## Procedimiento
 
-1. Cargamos los datos desde el archivo CSV.
+1. Cargamos los datos desde uno de los archivos CSV (cyberpunk.csv) proporcionados por el profesor desde el Campus Virtual.
 2. Filtramos los tuits con al menos 10 retweets para enfocarnos en los de mayor relevancia.
 3. Seleccionamos una muestra representativa de hasta 1000 registros.
 4. Procesamos el contenido textual eliminando puntuación, convirtiendo a minúsculas y eliminando stopwords.
@@ -27,6 +29,9 @@
 | farevalee9s | 78 |
 | genshinimpact | 78 |
 | \textbackslash{}u539F\textbackslash{}u795E | 78 |
+
+![Términos más frecuentes en los tuits](frequent_terms.png)
+
 
 ## Análisis Adicionales
 

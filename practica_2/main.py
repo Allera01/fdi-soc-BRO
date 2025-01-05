@@ -1,173 +1,154 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from collections import Counter
-import string
-import seaborn as sns
+from analisis import (
+    load_and_filter_data,
+    analyze_frequent_terms,
+    plot_frequent_terms,
+    analyze_retweets_vs_length,
+    analyze_tweets_over_time,
+    analyze_keywords_vs_retweets,
+    analyze_retweet_distribution,
+    create_markdown_report,
+)
 
-# Cargar y filtrar datos
-def load_and_filter_data(file_path, retweet_threshold=10, sample_size=1000):
-    data = pd.read_csv(file_path)
-    filtered_data = data[data['retweet_count'] >= retweet_threshold]
-    sampled_data = (
-        filtered_data.sample(n=sample_size, random_state=42)
-        if len(filtered_data) > sample_size
-        else filtered_data
-    )
-    return sampled_data
-
-# Procesar texto
-def preprocess_text(text, stopwords):
-    tokens = text.lower().split()  # Dividir texto en palabras
-    tokens = [word.strip(string.punctuation) for word in tokens]  # Quitar puntuación
-    tokens = [word for word in tokens if word.isalnum() and word not in stopwords]  # Filtrar
-    return tokens
-
-# Análisis de términos frecuentes
-def analyze_frequent_terms(data, text_column, stopwords, top_n=10):
-    data['tokens'] = data[text_column].apply(lambda x: preprocess_text(x, stopwords))
-    all_tokens = [token for tokens in data['tokens'] for token in tokens]
-    term_counts = Counter(all_tokens).most_common(top_n)
-    return term_counts
-
-# Guardar gráfico como PNG
-def save_plot_as_png(filename):
-    plt.tight_layout()
-    plt.savefig(filename)
-    plt.close()
-
-# Graficar términos frecuentes
-def plot_frequent_terms(term_counts):
-    terms, counts = zip(*term_counts)
-    plt.figure(figsize=(10, 6))
-    plt.bar(terms, counts, color='skyblue')
-    plt.title('Términos más frecuentes en los tuits', fontsize=14)
-    plt.xlabel('Términos', fontsize=12)
-    plt.ylabel('Frecuencia', fontsize=12)
-    plt.xticks(rotation=45, ha='right', fontsize=10)
-    save_plot_as_png("frequent_terms.png")
-
-# Relación entre retweets y longitud del texto
-def analyze_retweets_vs_length(data):
-    data['text_length'] = data['text'].apply(len)
-    plt.figure(figsize=(10, 6))
-    sns.scatterplot(x='text_length', y='retweet_count', data=data, alpha=0.6)
-    plt.title('Relación entre longitud del texto y retweets', fontsize=14)
-    plt.xlabel('Longitud del texto', fontsize=12)
-    plt.ylabel('Cantidad de retweets', fontsize=12)
-    save_plot_as_png("retweets_vs_length.png")
-
-# Análisis temporal de tuits
-def analyze_tweets_over_time(data):
-    data['created_at'] = pd.to_datetime(data['created_at'])
-    data.set_index('created_at', inplace=True)
-    tweets_over_time = data.resample('D').size()
-    plt.figure(figsize=(10, 6))
-    tweets_over_time.plot(color='orange')
-    plt.title('Cantidad de tuits a lo largo del tiempo', fontsize=14)
-    plt.xlabel('Fecha', fontsize=12)
-    plt.ylabel('Cantidad de tuits', fontsize=12)
-    save_plot_as_png("tweets_over_time.png")
-
-# Relación entre palabras clave y retweets
-def analyze_keywords_vs_retweets(data, keywords):
-    for keyword in keywords:
-        data[keyword] = data['text'].str.contains(keyword, case=False, na=False)
-    keyword_retweets = data.groupby(keywords)['retweet_count'].mean()
-
-    # Usar valores booleanos para etiquetas del eje x
-    keyword_labels = [str(comb) for comb in keyword_retweets.index]
-
-    keyword_retweets.index = keyword_labels
-    plt.figure(figsize=(10, 6))
-    keyword_retweets.plot(kind='bar', color='purple')
-    plt.title('Promedio de retweets según palabras clave', fontsize=14)
-    plt.xlabel('Palabras clave (cyberpunk, 2077, game, genshinimpact)', fontsize=12)
-    plt.ylabel('Promedio de retweets', fontsize=12)
-    plt.xticks(rotation=45, ha='right', fontsize=10)
-    save_plot_as_png("keywords_vs_retweets.png")
-
-# Distribución de retweets
-def analyze_retweet_distribution(data):
-    plt.figure(figsize=(10, 6))
-    sns.histplot(data['retweet_count'], bins=30, kde=True, color='green')
-    plt.title('Distribución de retweets', fontsize=14)
-    plt.xlabel('Cantidad de retweets', fontsize=12)
-    plt.ylabel('Frecuencia', fontsize=12)
-    save_plot_as_png("retweet_distribution.png")
-
-# Sustituir caracteres Unicode
-UNICODE_REPLACEMENTS = {
-    "原": "\\textbackslash{}u539F",
-    "神": "\\textbackslash{}u795E",
-    # Agregar más caracteres si es necesario
-}
-
-def replace_unicode(text):
-    for char, replacement in UNICODE_REPLACEMENTS.items():
-        text = text.replace(char, replacement)
-    return text
-
-# Crear informe en Markdown
-def create_markdown_report(file_path, term_counts, output_path, additional_analyses):
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(f"# Análisis de Tuits\n\n")
-        f.write(f"## Archivo Analizado\n\n")
-        f.write(f"**Ruta del archivo**: {file_path}\n\n")
-        f.write(f"## Procedimiento\n\n")
-        f.write(
-            "1. Cargamos los datos desde el archivo CSV.\n"
-            "2. Filtramos los tuits con al menos 10 retweets para enfocarnos en los de mayor relevancia.\n"
-            "3. Seleccionamos una muestra representativa de hasta 1000 registros.\n"
-            "4. Procesamos el contenido textual eliminando puntuación, convirtiendo a minúsculas y eliminando stopwords.\n"
-            "5. Analizamos los términos más frecuentes para identificar patrones en el contenido.\n"
-            "6. Exploramos las relaciones clave mediante gráficos, como la longitud del texto y los retweets, tendencias temporales, palabras clave y la distribución de retweets.\n"
-        )
-
-        f.write(f"\n## Términos Más Frecuentes\n\n")
-        f.write("| Término | Frecuencia |\n")
-        f.write("|---------|------------|\n")
-        for term, count in term_counts:
-            term = replace_unicode(term)
-            f.write(f"| {term} | {count} |\n")
-
-        f.write(f"\n## Análisis Adicionales\n\n")
-        for analysis, image_file in additional_analyses:
-            f.write(f"### {analysis}\n\n")
-            if analysis == "Relación entre longitud del texto y retweets":
-                f.write("Este gráfico muestra cómo la longitud de un tuit afecta a su popularidad, medida en retweets.\n")
-            elif analysis == "Cantidad de tuits a lo largo del tiempo":
-                f.write("Este gráfico refleja la distribución temporal de los tuits, destacando picos de actividad.\n")
-            elif analysis == "Promedio de retweets según palabras clave":
-                f.write("Aquí se comparan las palabras clave más relevantes según su influencia en los retweets.\n")
-            elif analysis == "Distribución de retweets":
-                f.write("Este gráfico ilustra cómo están distribuidos los retweets en el conjunto de datos.\n")
-            f.write(f"\n![{analysis}]({image_file})\n\n")
-
-# Ejecutar análisis
 if __name__ == "__main__":
     # Ruta del archivo CSV
     file_path = "cyberpunk.csv"
-    output_markdown = "analisis_tuits.md"
+    output_markdown = "informe.md"
 
     # Stopwords predefinidas
     stopwords = {
-        "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
-        "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they",
-        "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
-        "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having",
-        "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until",
-        "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during",
-        "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over",
-        "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all",
-        "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only",
-        "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"
+        "i",
+        "me",
+        "my",
+        "myself",
+        "we",
+        "our",
+        "ours",
+        "ourselves",
+        "you",
+        "your",
+        "yours",
+        "yourself",
+        "he",
+        "him",
+        "his",
+        "himself",
+        "she",
+        "her",
+        "hers",
+        "herself",
+        "it",
+        "its",
+        "itself",
+        "they",
+        "them",
+        "their",
+        "theirs",
+        "themselves",
+        "what",
+        "which",
+        "who",
+        "whom",
+        "this",
+        "that",
+        "these",
+        "those",
+        "am",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "having",
+        "do",
+        "does",
+        "did",
+        "doing",
+        "a",
+        "an",
+        "the",
+        "and",
+        "but",
+        "if",
+        "or",
+        "because",
+        "as",
+        "until",
+        "while",
+        "of",
+        "at",
+        "by",
+        "for",
+        "with",
+        "about",
+        "against",
+        "between",
+        "into",
+        "through",
+        "during",
+        "before",
+        "after",
+        "above",
+        "below",
+        "to",
+        "from",
+        "up",
+        "down",
+        "in",
+        "out",
+        "on",
+        "off",
+        "over",
+        "under",
+        "again",
+        "further",
+        "then",
+        "once",
+        "here",
+        "there",
+        "when",
+        "where",
+        "why",
+        "how",
+        "all",
+        "any",
+        "both",
+        "each",
+        "few",
+        "more",
+        "most",
+        "other",
+        "some",
+        "such",
+        "no",
+        "nor",
+        "not",
+        "only",
+        "own",
+        "same",
+        "so",
+        "than",
+        "too",
+        "very",
+        "s",
+        "t",
+        "can",
+        "will",
+        "just",
+        "don",
+        "should",
+        "now",
     }
 
     # Cargar y procesar datos
     data = load_and_filter_data(file_path)
 
     # Analizar términos frecuentes
-    term_counts = analyze_frequent_terms(data, 'text', stopwords)
+    term_counts = analyze_frequent_terms(data, "text", stopwords)
 
     # Graficar términos frecuentes
     plot_frequent_terms(term_counts)
@@ -175,7 +156,7 @@ if __name__ == "__main__":
     # Analizar relaciones adicionales
     analyze_retweets_vs_length(data)
     analyze_tweets_over_time(data)
-    analyze_keywords_vs_retweets(data, ['cyberpunk', '2077', 'game', 'genshinimpact'])
+    analyze_keywords_vs_retweets(data, ["cyberpunk", "2077", "game", "genshinimpact"])
     analyze_retweet_distribution(data)
 
     # Generar informe en Markdown
