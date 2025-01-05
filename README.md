@@ -48,10 +48,10 @@ uv run analyze.py
 Una vez ejecutado, aparecen en la carpeta tres ficheros en formato csv (usuarios.csv, posts.csv, comentarios.csv) con la información de la página principal de [reddit españa](https://old.reddit.com/r/spain/)
 
 
-# P2 Investigación en conjuntos de datos extraídos de [Twitter/X](https://x.com/)
+# P2 Análisis de tuits sobre Cyberpunk
 
 ## Información
-Es un código en Python cuya función es extraer de los twits relacionados con el juego Cyberpunk información que consideramos relevante, mediante diferentes gráficos (polaridad, circulares, ...) en formato png.
+Es un código en Python cuya función es extraer, de los tuits relacionados con el juego Cyberpunk, información que consideramos relevante, mediante diferentes gráficos en formato png.
 
 Todo lo analizado ha sido concluido en el archivo informe.pdf
 
@@ -69,7 +69,7 @@ pip install --user --break-system-packages uv
 
 Para descargarse las librerías:
 ~~~
-uv add pandas matplotlib nltk textblob
+uv add pandas matplotlib string seaborn Counter
 ~~~
 
 ## Cómo ejecutar
@@ -79,16 +79,16 @@ uv run main.py
 ~~~
 
 ## Ver los resultados
-Para visualizar los resultados desde el terminal:
+Para visualizar los gráficos en formato.png desde el terminal:
 ~~~
 sudo apt-get install eog
-~~~
-
-Y, finalmente, para abrir el png:
-~~~
 eog <nombre del archivo>
 ~~~
 
+Para generar el informe en formato .pdf:
+~~~
+pandoc informe.md -o informe.pdf
+~~~
 
 # P3 Cálculos sobre redes libres de escala
 
