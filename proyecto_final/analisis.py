@@ -32,7 +32,6 @@ def generar_graficos(archivo_json):
     # Obtener datos para el gráfico de respuestas (por ahora no hay respuesta en el JSON proporcionado)
     respuestas = [0 for comment in comments]  # Poner 0 como predeterminado si no hay respuestas en este ejemplo
 
-
     # Obtener polaridad y likes
     polaridades = [obtener_polaridad(comment['text']) for comment in comments]
     likes = [comment['like_count'] for comment in comments]

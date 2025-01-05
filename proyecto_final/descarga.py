@@ -70,15 +70,18 @@ def sacar_comentarios(video_id):
     print(f"Obteniendo comentarios de video {video_id}...")
     comentarios = obtener_comentarios(youtube, video_id)
     
-    # Ordenar los comentarios por la cantidad de likes (de mayor a menor)
-    #comentarios_ordenados = sorted(comentarios, key=lambda c: c["likes"], reverse=True)
-    
     # Guardar los comentarios en un archivo JSON
     with open(archivo_json, 'w', encoding='utf-8') as f:
         json.dump(comentarios, f, ensure_ascii=False, indent=4)
     
     print(f"Comentarios guardados en '{archivo_json}'.")
 
+def descargar():
+    dir_cache.mkdir(parents=True, exist_ok=True)
+    video_url = input("Introduce la URL del video de YouTube: ")    
+    video_id = extraer_video_id(video_url)
+    sacar_comentarios(video_id)
+    
 if __name__ == "__main__":
     dir_cache.mkdir(parents=True, exist_ok=True)
     video_url = input("Introduce la URL del video de YouTube: ")    
