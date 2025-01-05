@@ -1,7 +1,7 @@
 # Informe sobre YouTube y el análisis de comentarios
 ## Autor: Mario Gallego Hernández, Mario Carrilero Sánchez, Diego Linares Espildora y Álvaro Llera Calderón.
 
-![Imagen de la portada](![image](https://github.com/user-attachments/assets/6de9d4d1-9cc8-4f53-8fea-1db0274c9ae8))
+![Imagen de la portada](https://www.ucm.es/data/cont/docs/3-2016-07-21-Marca%20UCM%20logo%20negro.png)
 
 Este informe presenta una introducción sobre la plataforma **YouTube**, el análisis de los comentarios de los usuarios mediante la construcción de un grafo, y cómo extraer datos de esta plataforma utilizando la **API de Google**. A lo largo de este documento se justifica el uso de nodos y aristas para representar los comentarios y sus respuestas, además de un análisis sobre la estructura del código utilizado en el proyecto junto con los resultados obtenidos analizados. 
 
