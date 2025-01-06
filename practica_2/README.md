@@ -23,9 +23,14 @@ uv add pandas matplotlib string seaborn Counter
 ~~~
 
 ## Cómo ejecutar
-Una vez instalados ya se puede ejecutar el programa:
+Una vez instalados ya se puede ejecutar todo el programa:
 ~~~
-uv run main.py
+uv run main.py -a
+~~~
+
+Tambien se pueden ejecutar las funcionalidades por separado, consulatar los comandos con:
+~~~
+uv run main.py --help
 ~~~
 
 ## Ver los resultados
