@@ -23,7 +23,7 @@ A lo largo de este documento se justifica el uso de nodos y aristas como modo de
 
 ---
 
-# Introducción a YouTube
+# 1. Introducción a YouTube
 
 **YouTube** es una de las plataformas más populares a nivel mundial para la visualización y compartición de vídeos. Fundada en 2005 y adquirida por Google en 2006, YouTube ha crecido exponencialmente y actualmente alberga una gran cantidad de contenido generado por usuarios, que comprende desde entretenimiento hasta educación. Los usuarios pueden interactuar con los vídeos mediante comentarios, "me gusta", "no me gusta", y suscripciones a canales.
 
@@ -31,7 +31,7 @@ La interacción de los usuarios, especialmente a través de los comentarios, cre
 
 ---
 
-# Justificación de la representación con nodos y aristas
+# 2. Justificación de la representación con nodos y aristas
 
 En este informe, se utiliza un modelo de **grafo** para representar la interacción de los usuarios en los comentarios de los vídeos de YouTube. Este modelo se justifica de la siguiente manera:
 
@@ -41,7 +41,7 @@ En este informe, se utiliza un modelo de **grafo** para representar la interacci
 
 Este enfoque tiene como objetivo modelar la interacción entre los usuarios y su influencia sobre otros, similar a cómo se construyen las redes sociales.
 
-# Extracción de datos con la API de Youtube
+# 3. Extracción de datos con la API de Youtube
 
 ## Limitaciones del _scraping_
 
@@ -64,7 +64,7 @@ Además en necesaria la siguiente librería de Python:
 
 El resultado del uso de la API, a diferencia del _scraping_, es un **archivo JSON** con todos los comentarios, sus respuestas, los 'me gusta' que tiene cada comentario e información adicional que utilizamos para analizarlos.
 
-# Explicación de la estructura del código
+# 4. Explicación de la estructura del código
 
 Tras explicar cómo se extraen los datos con la API, a continuación se detalla una breve explicación de cada uno de los módulos que utilizamos.
 
