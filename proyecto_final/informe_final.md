@@ -102,34 +102,34 @@ Este script es útil para extraer comentarios que no solo provienen de los usuar
 ## Análisis semántico de los Comentarios de Youtube (analisis.py)
 
 Este código tiene como objetivo analizar los comentarios de un video de YouTube, extrayendo datos sobre la polaridad (sentimiento) de los comentarios, la cantidad de "likes" y la cantidad de respuestas. Además, genera varios gráficos que visualizan estos datos. Recibe los comentarios previamente extraidos en extract.py y los analiza en varias funciones:
--**Obtener polaridad**: Utiliza `TextBlob` para calcular la polaridad de un texto, que varía entre -1 (negativo) y 1 (positivo). Utilizada por el resto de funciones.
--**Generar gráficos**: Genera varios gráficos basados en los comentarios extraídos desde un archivo JSON. Estos gráficos son:
-    -**Polaridad vs Likes**: Un gráfico de dispersión que muestra la relación entre la polaridad de los comentarios y la cantidad de "likes".
-    -**Respuestas en Comentarios Positivos vs Negativos**: Un gráfico de barras que compara la cantidad de respuestas en comentarios positivos y negativos.
-    -**Likes vs Fecha de Publicación**: Un gráfico de líneas que muestra la evolución de los "likes" con respecto a la fecha de publicación de los comentarios.
--**Filtrar y Analizar palabras**: Filtra los comentarios que contienen la palabra "video" y calcula la polaridad de estos comentarios.
--**Graficar la evolución de la palabra**: Genera un gráfico que muestra la evolución de la polaridad de los comentarios que contienen la palabra "video" a lo largo del tiempo.
+- **Obtener polaridad**: Utiliza `TextBlob` para calcular la polaridad de un texto, que varía entre -1 (negativo) y 1 (positivo). Utilizada por el resto de funciones.
+- **Generar gráficos**: Genera varios gráficos basados en los comentarios extraídos desde un archivo JSON. Estos gráficos son:
+    - **Polaridad vs Likes**: Un gráfico de dispersión que muestra la relación entre la polaridad de los comentarios y la cantidad de "likes".
+    - **Respuestas en Comentarios Positivos vs Negativos**: Un gráfico de barras que compara la cantidad de respuestas en comentarios positivos y negativos.
+    - **Likes vs Fecha de Publicación**: Un gráfico de líneas que muestra la evolución de los "likes" con respecto a la fecha de publicación de los comentarios.
+- **Filtrar y Analizar palabras**: Filtra los comentarios que contienen la palabra "video" y calcula la polaridad de estos comentarios.
+- **Graficar la evolución de la palabra**: Genera un gráfico que muestra la evolución de la polaridad de los comentarios que contienen la palabra "video" a lo largo del tiempo.
 
 ## Análisis y Visualización de Grafos (grafo.py)
 
 Este código permite analizar las interacciones entre autores de comentarios y respuestas en un conjunto de datos JSON de YouTube. Crea y visualiza un grafo que conecta a los autores de los comentarios con los autores de las respuestas. Recibe los comentarios previamente extraidos y los analiza en varias funciones:
--**Analiza polaridad**: Utiliza `TextBlob` para calcular la polaridad de un texto, que varía entre -1 (negativo) y 1 (positivo). Utilizada por el resto de funciones.
--**Genera el grafo**: Carga los datos desde un archivo JSON y genera el tipo de grafo especificado.
--**Graficar grafos**: Grafica el grafo generado utilizando la librería `networkx`. Personaliza el layout y los nodos según el tipo de relación (autor o respuesta), y guarda la visualización como un archivo de imagen.
--**Crear un grafo analizando la actividad del autor**: Crea un grafo dirigido que conecta autores de comentarios con autores de respuestas. Los nodos son los autores, y las aristas representan la interacción entre los autores del comentario original y las respuestas.
--**Guardar el grafo dirigido**: Guarda el grafo dirigido en formato `.edgelist` en el directorio actual, si el archivo no existe.
+- **Analiza polaridad**: Utiliza `TextBlob` para calcular la polaridad de un texto, que varía entre -1 (negativo) y 1 (positivo). Utilizada por el resto de funciones.
+- **Genera el grafo**: Carga los datos desde un archivo JSON y genera el tipo de grafo especificado.
+- **Graficar grafos**: Grafica el grafo generado utilizando la librería `networkx`. Personaliza el layout y los nodos según el tipo de relación (autor o respuesta), y guarda la visualización como un archivo de imagen.
+- **Crear un grafo analizando la actividad del autor**: Crea un grafo dirigido que conecta autores de comentarios con autores de respuestas. Los nodos son los autores, y las aristas representan la interacción entre los autores del comentario original y las respuestas.
+- **Guardar el grafo dirigido**: Guarda el grafo dirigido en formato `.edgelist` en el directorio actual, si el archivo no existe.
 
 ## Estudio completo del grafo (analisis_grafos.py)
 
 Este conjunto de funciones en Python está diseñado para el análisis y la visualización de grafos. Utiliza la biblioteca **NetworkX** para la manipulación de grafos y **Matplotlib** para la visualización. Además, implementa métricas y estadísticas relacionadas con Youtube. A continuación, se detallan las principales funciones del código y su propósito. Las funcionalidad principales son:
--**Calcular nodos y aristas de un grafo**: Calcula y muestra el número de nodos y aristas de un grafo. Esta función es útil para obtener una visión general del tamaño del grafo.
--**Calcular la distribución de los grados**: Calcula y visualiza la distribución de los grados de los nodos, guarda un gráfico de barras que muestra la distribución de grados, destacando los "hubs" (nodos con alto grado).
--**Calcular el coeficiente de clustering**: Calcula manualmente el coeficiente de clustering para cada nodo del grafo. El coeficiente de clustering mide la tendencia de los nodos a formar triángulos (conexiones entre los vecinos).
--**Visualizar la distribución de los coeficientes de clustering**: Esta función agrupa los coeficientes de clustering en intervalos y los visualiza en dos grupos: hubs y no hubs.
--**Visualizar la red**: Genera una visualización de la red destacando muchos hubs. Esta función crea una visualización destacando los hubs de la red, lo que puede ser útil para analizar las estructuras principales del grafo.
--**Calcular la distancia media**: Calcula la distancia media entre pares aleatorios de nodos en el grafo. Mide qué tan lejos están, en promedio, los nodos entre sí. Esta métrica puede ser útil para evaluar la "conectividad" global de la red.
--**Calcular el diametro**: Mide la distancia más larga en el grafo, lo que da una idea de la "expansión" del grafo.
--**Calcular la distancia a hub**: Analiza cómo los nodos se encuentran distribuidos en relación con los hubs de la red.
+- **Calcular nodos y aristas de un grafo**: Calcula y muestra el número de nodos y aristas de un grafo. Esta función es útil para obtener una visión general del tamaño del grafo.
+- **Calcular la distribución de los grados**: Calcula y visualiza la distribución de los grados de los nodos, guarda un gráfico de barras que muestra la distribución de grados, destacando los "hubs" (nodos con alto grado).
+- **Calcular el coeficiente de clustering**: Calcula manualmente el coeficiente de clustering para cada nodo del grafo. El coeficiente de clustering mide la tendencia de los nodos a formar triángulos (conexiones entre los vecinos).
+- **Visualizar la distribución de los coeficientes de clustering**: Esta función agrupa los coeficientes de clustering en intervalos y los visualiza en dos grupos: hubs y no hubs.
+- **Visualizar la red**: Genera una visualización de la red destacando muchos hubs. Esta función crea una visualización destacando los hubs de la red, lo que puede ser útil para analizar las estructuras principales del grafo.
+- **Calcular la distancia media**: Calcula la distancia media entre pares aleatorios de nodos en el grafo. Mide qué tan lejos están, en promedio, los nodos entre sí. Esta métrica puede ser útil para evaluar la "conectividad" global de la red.
+- **Calcular el diametro**: Mide la distancia más larga en el grafo, lo que da una idea de la "expansión" del grafo.
+- **Calcular la distancia a hub**: Analiza cómo los nodos se encuentran distribuidos en relación con los hubs de la red.
 
 
 
