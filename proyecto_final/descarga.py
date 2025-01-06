@@ -81,12 +81,6 @@ def descargar():
     video_url = input("Introduce la URL del video de YouTube: ")    
     video_id = extraer_video_id(video_url)
     sacar_comentarios(video_id)
-    
-if __name__ == "__main__":
-    dir_cache.mkdir(parents=True, exist_ok=True)
-    video_url = input("Introduce la URL del video de YouTube: ")    
-    video_id = extraer_video_id(video_url)
-    sacar_comentarios(video_id)
 
 
 
