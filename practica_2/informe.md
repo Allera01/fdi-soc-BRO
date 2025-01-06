@@ -59,3 +59,15 @@ Este gráfico ilustra cómo están distribuidos los retweets en el conjunto de d
 
 ![Distribución de retweets](retweet_distribution.png)
 
+### Dispositivos donde se realizan los tweets
+
+En este grafico analizamos los dispositivos en los que más se twiteó, habiendo un gran reparto entre la propia aplicación de Twiter, iPhone y Android, siendo la que más en la aplicación de twiter, pero sin sacar gran ventaja a las otras dos. Cabe destacar que este análisis los hicimos con un gráfico circular.
+
+![Dispositivos donde se realizan los tweets](dispositivos.png)
+
+### Distribucion de tweets por horas
+
+Este grafico muestra las horas en las que más se han publicado tweets.
+
+![Distribucion de tweets por horas](horas.png)
+

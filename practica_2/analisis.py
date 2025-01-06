@@ -121,6 +121,45 @@ def replace_unicode(text):
     return text
 
 
+def diagrama_circular_dispositivos(df):
+
+    device_counts = df["source"].value_counts()
+
+    # Calcular el umbral del 1% sobre el total de tuits
+    total_tweets = device_counts.sum()
+    threshold = total_tweets * 0.015
+
+    # Crear una nueva serie para almacenar los dispositivos agrupados
+    device_counts_grouped = device_counts[device_counts >= threshold]
+    device_counts_grouped["Otros"] = device_counts[device_counts < threshold].sum()
+
+    # Crear el gráfico circular
+    plt.figure(figsize=(8, 8))
+    device_counts_grouped.plot(
+        kind="pie", autopct="%1.1f%%", startangle=140, colors=plt.cm.Paired.colors
+    )
+    plt.title("Distribución de tuits por dispositivo (agrupados los menores al 1.5%)")
+    plt.ylabel("")  # Ocultar la etiqueta del eje y
+    plt.savefig("dispositivos.png")
+
+
+def sacar_tuits_horas(bf):
+    # Convierte la columna ’created_at’ a tipo datetime
+    bf["created_at"] = pd.to_datetime(bf["created_at"])
+    # Extrae la hora
+    bf["hora"] = bf["created_at"].dt.hour
+    # Cuenta la cantidad de tweets por hora
+    tweets_por_hora = bf["hora"].value_counts().sort_index()
+    plt.figure(figsize=(10, 5))
+    plt.bar(tweets_por_hora.index, tweets_por_hora.values, color="skyblue")
+    plt.xlabel("Hora del día")
+    plt.ylabel("Cantidad de tweets")
+    plt.title("Cantidad de tweets por hora")
+    plt.xticks(tweets_por_hora.index)  # Asegúrate de que todas las horas se muestren
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.savefig("horas.png")
+
+
 # Crear informe en Markdown
 def create_markdown_report(file_path, term_counts, output_path, additional_analyses):
     with open(output_path, "w", encoding="utf-8") as f:
@@ -159,6 +198,10 @@ def create_markdown_report(file_path, term_counts, output_path, additional_analy
                 f.write(
                     "Este gráfico refleja la distribución temporal de los tuits, destacando picos de actividad.\n"
                 )
+            elif analysis == "Distribucion de tweets por horas":
+                f.write(
+                    "Este grafico muestra las horas en las que más se han publicado tweets.\n"
+                )
             elif analysis == "Promedio de retweets según palabras clave":
                 f.write(
                     "Aquí se comparan las palabras clave más relevantes según su influencia en los retweets.\n"
@@ -166,5 +209,9 @@ def create_markdown_report(file_path, term_counts, output_path, additional_analy
             elif analysis == "Distribución de retweets":
                 f.write(
                     "Este gráfico ilustra cómo están distribuidos los retweets en el conjunto de datos.\n"
+                )
+            elif analysis == "Dispositivos donde se realizan los tweets":
+                f.write(
+                    "En este grafico analizamos los dispositivos en los que más se twiteó, habiendo un gran reparto entre la propia aplicación de Twiter, iPhone y Android, siendo la que más en la aplicación de twiter, pero sin sacar gran ventaja a las otras dos. Cabe destacar que este análisis los hicimos con un gráfico circular.\n"
                 )
             f.write(f"\n![{analysis}]({image_file})\n\n")
