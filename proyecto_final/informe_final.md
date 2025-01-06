@@ -1,5 +1,9 @@
 # Informe sobre YouTube y el análisis de comentarios
-## Autor: Mario Gallego Hernández, Mario Carrilero Sánchez, Diego Linares Espildora y Álvaro Llera Calderón.
+## Autores: 
+- Mario Gallego Hernández.
+- Mario Carrilero Sánchez.
+- Diego Linares Espildora.
+- Álvaro Llera Calderón.
 
 ![Imagen de la portada](https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Escudo_de_la_Universidad_Complutense_de_Madrid.svg/1793px-Escudo_de_la_Universidad_Complutense_de_Madrid.svg.png)
 
