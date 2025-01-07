@@ -102,7 +102,7 @@ def grafo_actividad_autor(data):
     grados = dict(G.degree())
 
     # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
-    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+    nodos_top = sorted(grados, key=grados.get, reverse=True)
 
     # Crear un subgrafo con los 300 nodos seleccionados
     subgrafo = G.subgraph(nodos_top)
@@ -111,7 +111,7 @@ def grafo_actividad_autor(data):
     guardar_digrafo_edgelist_en_actual(G, "grafo_actividad_autor.edgelist")
 
     # Graficar el grafo
-    graficar_grafo(subgrafo, "actividad_del_autor")
+    graficar_grafo(G, "actividad_del_autor")
 
 # Función principal para generar el grafo desde JSON
 def generar_grafo_desde_json(nombre_json, tipo_grafo):

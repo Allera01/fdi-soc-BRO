@@ -367,7 +367,7 @@ def visualizar_red(G, red_social):
     grados = dict(G.degree())
 
     # Ordenar nodos por grado en orden descendente y tomar los 300 con mayor grado
-    nodos_top = sorted(grados, key=grados.get, reverse=True)[:1000]
+    nodos_top = sorted(grados, key=grados.get, reverse=True)
 
     # Crear un subgrafo con los 300 nodos seleccionados
     subgrafo = G.subgraph(nodos_top)

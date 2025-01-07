@@ -19,7 +19,7 @@ A lo largo de este documento se justifica el uso de nodos y aristas como modo de
 2. [Justificación de la representación con nodos y aristas](#justificación-de-la-representación-con-nodos-y-aristas)
 3. [Extracción de datos con la API de YouTube](#extracción-de-datos-con-la-api-de-youtube)
 4. [Explicación de la estructura del código](#explicación-de-la-estructura-del-código)
-5. [Análisis de resultados obtenidos junto con breves conclusiones](#analisis-de-los-resultados)
+5. [Flujo de ejecución y Análisis de resultados](#flujo-de-ejecución-y-análisis-de-resultados)
 
 ---
 
@@ -116,28 +116,15 @@ Este script es útil para extraer comentarios que no solo provienen de los usuar
 
 Este script tiene como objetivo analizar los comentarios extraídos de videos de YouTube para obtener información valiosa a partir de los datos disponibles, como el texto de los comentarios, la cantidad de likes y la fecha de publicación. El análisis incluye la identificación de términos frecuentes, distribución de sentimientos, relación entre la longitud del comentario y los likes, cantidad de comentarios a lo largo del tiempo, y el impacto de palabras clave en la cantidad promedio de likes. A continuación, se detallan los gráficos generados por el script y su interpretación.
 
-### **Términos más frecuentes en los comentarios**
-**Archivo generado:** `terminos_frecuentes.png`
+- **Términos más frecuentes en los comentarios**: Archivo generado: `terminos_frecuentes.png`
 Este gráfico muestra los términos más utilizados en los comentarios de YouTube, excluyendo las palabras vacías comunes como preposiciones y artículos. Identificar estos términos permite entender los temas principales o palabras clave que los usuarios mencionan con mayor frecuencia.
-
-### **Distribución de la polaridad**
-**Archivo generado:** `distribucion_polaridad.png`
-
+- **Distribución de la polaridad**: Archivo generado: `distribucion_polaridad.png`
 Este gráfico presenta la distribución de la polaridad de los comentarios, es decir, si los comentarios son más positivos, negativos o neutros. Se utiliza la polaridad obtenida mediante análisis de sentimientos, lo que ayuda a comprender el tono general de las opiniones de los usuarios.
-
-### **Relación entre longitud del comentario y likes**
-**Archivo generado:** `longitud_vs_likes.png`
-
+- **Relación entre longitud del comentario y likes**: Archivo generado: `longitud_vs_likes.png`
 Este gráfico analiza la relación entre la cantidad de caracteres en un comentario y la cantidad de likes que recibe. Esto permite identificar si los comentarios más largos tienden a obtener más interacciones o si los comentarios más breves son preferidos por los usuarios.
-
-### **Cantidad de comentarios a lo largo del tiempo**
-**Archivo generado:** `comentarios_tiempo.png`
-
+- **Cantidad de comentarios a lo largo del tiempo**: Archivo generado: `comentarios_tiempo.png`
 Este gráfico muestra cómo ha variado la cantidad de comentarios a lo largo del tiempo. Puede ayudar a identificar tendencias y patrones temporales, como picos de actividad relacionados con eventos o temas específicos.
-
-### **Promedio de likes según palabras clave**
-**Archivo generado:** `palabras_clave_vs_likes.png`
-
+- **Promedio de likes según palabras clave**: Archivo generado: `palabras_clave_vs_likes.png`
 Este gráfico muestra cómo ciertas palabras clave afectan el promedio de likes que reciben los comentarios. Se identifican palabras clave específicas y se calcula la cantidad promedio de likes de los comentarios que las contienen. Esto ayuda a identificar qué términos pueden estar asociados con mayor interacción por parte de los usuarios.
 
 ## Análisis y visualización de grafos (`grafo.py`)
@@ -163,3 +150,43 @@ A continuación, se detallan las principales funciones del código y su propósi
 - **Calcular la distancia media**: Calcula la distancia media entre pares aleatorios de nodos en el grafo. Mide qué tan lejos están, en promedio, los nodos entre sí. Esta métrica puede ser útil para evaluar la "conectividad" global de la red.
 - **Calcular el diametro**: Mide la distancia más larga en el grafo, lo que da una idea de la "expansión" del grafo.
 - **Calcular la distancia a hub**: Analiza cómo los nodos se encuentran distribuidos en relación con los hubs de la red.
+
+
+# 5.Flujo de ejecución y Análisis de resultados
+
+El flujo de ejecución describe el proceso de interacción con el sistema para obtener los comentarios y respuestas de un vídeo de YouTube, procesarlos y analizarlos. A continuación se describe el flujo de trabajo paso a paso:
+
+### Paso 1: **Inicialización**
+- **Descripción**: El usuario inicia el proceso ejecutando el comando `uv run main.py -d` en la terminal e introduce la URL del video que quiere analizar. Este comando indica que se debe realizar la descarga de los comentarios y respuestas de un vídeo de YouTube.
+- **Acción**: 
+  - Se solicita al usuario que ingrese la URL del vídeo de YouTube.
+  - El programa se conecta a la API de YouTube, obtiene los comentarios y respuestas y los guarda en un archivo JSON en la caché local.
+
+### Paso 2: **Selección del vídeo**
+- **Descripción**: El usuario ejecuta el comando `uv run main.py -a` y debe seleccionar uno de los vídeos descargados previamente desde la caché local.
+- **Acción**: 
+  - El programa lista los vídeos disponibles en la caché.
+  - El usuario selecciona un vídeo de la lista.
+
+### Paso 3: **Extracción de comentarios con respuestas**
+- **Descripción**: El sistema procesa el vídeo seleccionado para extraer los comentarios que tienen al menos una respuesta.
+- **Acción**: 
+  - El programa carga los comentarios del vídeo seleccionado desde el archivo JSON.
+  - Se extraen los comentarios que tienen respuestas, y se almacenan en una nueva estructura de datos.
+
+### Paso 4: **Análisis de comentarios**
+- **Descripción**: El sistema realiza el análisis semántico de los comentarios extraídos, evaluando la polaridad (sentimiento) de los comentarios, la cantidad de "likes" y la cantidad de respuestas.
+- **Acción**: 
+  - Se calculan las métricas de polaridad, "likes" y respuestas.
+  - Se generan gráficos que visualizan la relación entre estos parámetros.
+  - Se analizan palabras clave, como "vídeo", y se visualiza la evolución de la polaridad de los comentarios a lo largo del tiempo.
+
+### Paso 5: **Finalización**
+- **Descripción**: El flujo de trabajo se completa y el análisis de resultados es almacenado.
+- **Acción**: El programa finaliza el proceso y presenta los resultados visualizados, como los gráficos generados durante el análisis de los comentarios.
+
+## Resultados obtenidos de la ejecución:
+Tras finalizar la ejecución del programa podemos observar los siguientes resultados:
+
+Grafo dirigido de un vídeo de una comunidad pequeña en Youtube con una cantidad baja de nodos:
+![Grafo Saiks]()
