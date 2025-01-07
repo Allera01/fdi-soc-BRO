@@ -119,6 +119,63 @@ def analizar_palabras_clave_likes(comentarios, palabras_clave):
     plt.savefig("palabras_clave_vs_likes.png")
     plt.close()
 
+def analizar_palabra_tiempo(comentarios):
+    """
+    Analiza la evolución de los sentimientos de una palabra específica a lo largo del tiempo.
+    
+    Args:
+        comentarios (list): Lista de comentarios con texto y fecha de publicación.
+    """
+    # Solicitar palabra al usuario
+    palabra = input("Introduce la palabra a analizar: ").strip().lower()
+
+    # Filtrar comentarios que contienen la palabra
+    comentarios_filtrados = [
+        comentario for comentario in comentarios
+        if palabra in comentario["text"].lower()
+    ]
+
+    if not comentarios_filtrados:
+        print(f"No se encontraron comentarios que contengan la palabra '{palabra}'.")
+        return
+
+    # Extraer fechas y calcular polaridad
+    datos = []
+    for comentario in comentarios_filtrados:
+        fecha = datetime.strptime(comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ").date()
+        polaridad = TextBlob(comentario["text"]).sentiment.polarity
+        datos.append((fecha, polaridad))
+
+    # Agrupar polaridades por períodos más amplios (semanas o meses)
+    polaridades_por_periodo = {}
+    for fecha, polaridad in datos:
+        periodo = fecha.replace(day=1)  # Agrupar por mes
+        if periodo not in polaridades_por_periodo:
+            polaridades_por_periodo[periodo] = []
+        polaridades_por_periodo[periodo].append(polaridad)
+
+    # Calcular polaridad promedio por periodo
+    periodos = sorted(polaridades_por_periodo.keys())
+    polaridades_promedio = [
+        sum(polaridades_por_periodo[periodo]) / len(polaridades_por_periodo[periodo])
+        for periodo in periodos
+    ]
+
+    # Graficar evolución de la polaridad
+    plt.figure(figsize=(10, 6))
+    plt.plot(periodos, polaridades_promedio, marker="o", linestyle="-", color="blue")
+    plt.title(f"Evolución de sentimientos para la palabra '{palabra}'", fontsize=14)
+    plt.xlabel("Periodo", fontsize=12)
+    plt.ylabel("Polaridad promedio", fontsize=12)
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
+    plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+    plt.xticks(rotation=45, ha="right", fontsize=10)
+    plt.tight_layout()
+    plt.savefig("evolucion_palabra_tiempo.png")
+    plt.close()
+
+    print(f"Gráfico de la evolución de la palabra '{palabra}' generado: 'evolucion_palabra_tiempo.png'.")
+
 def generar_graficos(archivo_json):
     """
     Genera gráficos basados en los comentarios extraídos de un archivo JSON de YouTube.
@@ -175,3 +232,7 @@ def generar_graficos(archivo_json):
     palabras_clave = ["video", "bueno", "malo", "excelente"]
     analizar_palabras_clave_likes(comentarios, palabras_clave)
     print("Gráfico de palabras clave vs likes generado: 'palabras_clave_vs_likes.png'.")
+
+    # --- Análisis de la evolución de una palabra en el tiempo ---
+    analizar_palabra_tiempo(comentarios)
+
