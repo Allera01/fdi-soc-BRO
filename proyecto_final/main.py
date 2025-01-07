@@ -30,8 +30,6 @@ def my_main(graficos, grafo_act, analisisgrafo, descargar, all):
     archivo_json = cargar()
     if graficos or all:
         analisis.generar_graficos(archivo_json)
-        fechas_polaridad = analisis.filtrar_y_analizar_palabra_video(archivo_json)
-        analisis.graficar_evolucion_palabra_video(fechas_polaridad)
 
     if grafo_act or all:
         generar_grafo_desde_json(archivo_json, 'actividad_autor')
