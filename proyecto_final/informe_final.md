@@ -15,11 +15,11 @@ A lo largo de este documento se justifica el uso de nodos y aristas como modo de
 
 # Índice
 
-1. [Introducción a YouTube](#introducción-a-youtube)
-2. [Justificación de la representación con nodos y aristas](#justificación-de-la-representación-con-nodos-y-aristas)
-3. [Extracción de datos con la API de YouTube](#extracción-de-datos-con-la-api-de-youtube)
-4. [Explicación de la estructura del código](#explicación-de-la-estructura-del-código)
-5. [Flujo de ejecución y Análisis de resultados](#flujo-de-ejecución-y-análisis-de-resultados)
+1. [Introducción a YouTube](#1.-introducción-a-youtube)
+2. [Justificación de la representación con nodos y aristas](#2.-justificación-de-la-representación-con-nodos-y-aristas)
+3. [Extracción de datos con la API de YouTube](#3.-extracción-de-datos-con-la-api-de-youtube)
+4. [Explicación de la estructura del código](#4.-explicación-de-la-estructura-del-código)
+5. [Flujo de ejecución y Análisis de resultados](#5.-flujo-de-ejecución-y-análisis-de-resultados)
 
 ---
 
