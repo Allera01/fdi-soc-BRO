@@ -188,5 +188,27 @@ El flujo de ejecución describe el proceso de interacción con el sistema para o
 ## Resultados obtenidos de la ejecución:
 Tras finalizar la ejecución del programa podemos observar los siguientes resultados:
 
-Grafo dirigido de un vídeo de una comunidad pequeña en Youtube con una cantidad baja de nodos:
-![Grafo Saiks]()
+- Grafo dirigido de un vídeo de una comunidad pequeña en Youtube con una cantidad baja de nodos:
+En este grafo se puede observar claramente como hay un subgrafo denso con muchos nodos conectados a un nodo, esto se debe a que este youtuber pequeño suele contestar a la mayor parte de comentarios que recibe y por lo tanto, esta conectado con los demás usuarios que han escrito un comentario.
+![Grafo Saiks](ProyectoFinalAnalisis/actividad_del_autor_saiks.png)
+
+- El siguiente gráfico es sobre la cantidad de comentarios que ha ido recibiendo un vídeo a lo largo del tiempo, en este caso vamos a analizar el vídeo 'Feel This Moment' del cantante Pitbull y Christina Aguilera. Podemos observar que el vídeo fue subido antes del 2014 y que a pesar de recibir bastantes comentarios en todos los años, fue a principios de 2022 cuando más comentarios llegó a recibir.
+![Grafo Pitbull](ProyectoFinalAnalisis/comentarios_tiempo.png)
+
+- Otro de los grafos que podemos observar es el de distribución de los grados que tienen los nodos y el coeficiente de Clustering. El siguiente grafo también es de un vídeo de una comunidad pequeña y podemos observar que la mayoría de grados es mayor que uno e incluso mayor que dos ya que el usuario dueño del canal suele responder a los demás usuarios. Hay un único usuario con un grado superior a diez que es el usuario dueño.
+![Grafo Saiks2](ProyectoFinalAnalisis/distribucion_grafico_actividad_autor_hubs_saiks.png)
+
+
+- La distribución de la polaridad en los comentarios es otro de los aspectos que podemos analizar de un vídeo de Youtube. Saber que opinan sobre el vídeo puede ser necesario para saber si una campaña de marketing ha tenido éxito. En este caso de un vídeo del youtuber famoso "ElRubius" podemos observar que los comentarios son mayoritariamente positivos.
+![Grafo Polaridad](ProyectoFinalAnalisis/distribucion_polaridad.png)
+
+- En este gráfico podemos observar una relación entre la longitud del comentario y la cantidad de likes que recibe. Podemos observar que la gran mayoría de los comentarios escritos son cortos de una longitud no superior a los 500 carácteres salvo algunos que rondan a los 2000 carácteres y un par que se acercan a los 6000. El comentarios más gustado es el realizado por el usuario dueño del vídeo.
+![Grafo Longitud](ProyectoFinalAnalisis/longitud_vs_likes.png)
+
+- Analizar la frecuencia de las palabras en los comentarios también puede ser una tema interesante a analizar, por lo que en el siguiente grafo podemos observar los términos más frecuentes en los comentarios. El vídeo analizado es del youtuber "elrubiusOMG" titulado "MI NUEVA CASA con Will Smith".
+![Grafo Frecuencia](ProyectoFinalAnalisis/terminos_frecuentes?rubius.png)
+
+- Por último pero no por ello menos importante, los grafos con los nodos y las aristas con los nodos más conectados (hubs) con un color diferente al resto. El primero de los dos grafos es un grafo completo poco analizable del vídeo con más comentarios que hemos podido analizar, mientras que el segundo grafo representa un subgrafo de la primera imagen mucho más analizable y fácil de visualizar.
+![Grafo Grande](ProyectoFinalAnalisis/actividad_del_autor.png)
+![Subgrafo](ProyectoFinalAnalisis/visualizacion_grafico_actividad_autor_hubs.png)
+
