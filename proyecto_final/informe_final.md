@@ -206,6 +206,8 @@ En este grafo se puede observar claramente como hay un **subgrafo denso** con mu
 - Otro de los grafos que podemos observar es el de **distribución de los grados que tienen los nodos y el coeficiente de Clustering**. El siguiente grafo también es de un vídeo de una comunidad pequeña y podemos observar que la mayoría de grados es mayor que uno e incluso mayor que dos ya que el usuario dueño del canal suele responder a los demás usuarios. Hay un único usuario con un grado superior a diez que es el usuario dueño.
 ![Grafo Saiks2](ProyectoFinalAnalisis/distribucion_grafico_actividad_autor_hubs_saiks.png)
 
+- El siguiente gráfico es sobre la **evolución de una palabra o tema a lo largo del tiempo**, en este caso es sobre la evolución de Will Smith en el video de elrubiusomg. En este gráfico se puede observar una gran mejoría a cerca de este personaje, ya que al principio de la publicación del video no se ve un gran apoyo debido a la polaridad negativa, sin embargo posteriormente se ve una gran mejoría quedando una polaridad media neutra, apreciándose así un mayor apoyo.
+![Grafo Will Smith](ProyectoFinalAnalisis/evolucion_palabra_tiempo.png)
 
 - La **distribución de la polaridad** en los comentarios es otro de los aspectos que podemos analizar de un vídeo de Youtube. Saber que opinan sobre el vídeo puede ser necesario para saber si una campaña de marketing ha tenido éxito. En este caso de un vídeo del youtuber famoso "ElRubius" podemos observar que los comentarios son mayoritariamente positivos.
 ![Grafo Polaridad](ProyectoFinalAnalisis/distribucion_polaridad.png)
