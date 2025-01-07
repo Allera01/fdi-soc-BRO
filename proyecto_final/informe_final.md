@@ -142,6 +142,11 @@ Este gráfico muestra cómo ha variado la cantidad de comentarios a lo largo del
 
 Este gráfico muestra cómo ciertas palabras clave afectan el promedio de likes que reciben los comentarios. Se identifican palabras clave específicas y se calcula la cantidad promedio de likes de los comentarios que las contienen. Esto ayuda a identificar qué términos pueden estar asociados con mayor interacción por parte de los usuarios.
 
+### **Evolución de una palabra a lo largo de los meses**
+**Archivo generado:** `evolucion_palabra_tiempo.png`
+
+Este gráfico muestra cómo la palabra que tu elijas evoluciona a lo largo de los meses en referencia a la polaridad de los comentarios. Ésto nos permite llegar a ciertas conclusiones como por ejemplo si a lo largo del tiempo cierto concepto importante en el video evoluciona a mejor o a peor, ya sea por cambios de opiniòn o el simple hecho de que ha ido evolucionando a mejor.
+
 ## Análisis y visualización de grafos (`grafo.py`)
 
 Este código permite analizar las interacciones entre autores de comentarios y respuestas en un conjunto de datos JSON de YouTube. Crea y visualiza un grafo que conecta a los autores de los comentarios con los autores de las respuestas. Recibe los comentarios previamente extraídos y los analiza en varias funciones:
