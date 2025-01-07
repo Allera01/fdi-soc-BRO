@@ -117,23 +117,23 @@ Este script es útil para extraer comentarios que no solo provienen de los usuar
 Este script tiene como objetivo analizar los comentarios extraídos de videos de YouTube para obtener información valiosa a partir de los datos disponibles, como el texto de los comentarios, la cantidad de likes y la fecha de publicación. El análisis incluye la identificación de términos frecuentes, distribución de sentimientos, relación entre la longitud del comentario y los likes, cantidad de comentarios a lo largo del tiempo, y el impacto de palabras clave en la cantidad promedio de likes. A continuación, se detallan los gráficos generados por el script y su interpretación.
 
 ### **Términos más frecuentes en los comentarios**
-**Archivo generado:** ´terminos_frecuentes.png´
+**Archivo generado:** `terminos_frecuentes.png`
 Este gráfico muestra los términos más utilizados en los comentarios de YouTube, excluyendo las palabras vacías comunes como preposiciones y artículos. Identificar estos términos permite entender los temas principales o palabras clave que los usuarios mencionan con mayor frecuencia.
 
 ### **Distribución de la polaridad**
-**Archivo generado:** ´distribucion_polaridad.png´
+**Archivo generado:** `distribucion_polaridad.png`
 Este gráfico presenta la distribución de la polaridad de los comentarios, es decir, si los comentarios son más positivos, negativos o neutros. Se utiliza la polaridad obtenida mediante análisis de sentimientos, lo que ayuda a comprender el tono general de las opiniones de los usuarios.
 
 ### **Relación entre longitud del comentario y likes**
-**Archivo generado:** ´longitud_vs_likes.png´
+**Archivo generado:** `longitud_vs_likes.png`
 Este gráfico analiza la relación entre la cantidad de caracteres en un comentario y la cantidad de likes que recibe. Esto permite identificar si los comentarios más largos tienden a obtener más interacciones o si los comentarios más breves son preferidos por los usuarios.
 
 ### **Cantidad de comentarios a lo largo del tiempo**
-**Archivo generado:** ´comentarios_tiempo.png´
+**Archivo generado:** `comentarios_tiempo.png`
 Este gráfico muestra cómo ha variado la cantidad de comentarios a lo largo del tiempo. Puede ayudar a identificar tendencias y patrones temporales, como picos de actividad relacionados con eventos o temas específicos.
 
 ### **Promedio de likes según palabras clave**
-**Archivo generado:** ´palabras_clave_vs_likes.png´
+**Archivo generado:** `palabras_clave_vs_likes.png`
 Este gráfico muestra cómo ciertas palabras clave afectan el promedio de likes que reciben los comentarios. Se identifican palabras clave específicas y se calcula la cantidad promedio de likes de los comentarios que las contienen. Esto ayuda a identificar qué términos pueden estar asociados con mayor interacción por parte de los usuarios.
 
 ## Análisis y visualización de grafos (`grafo.py`)
