@@ -8,120 +8,115 @@ from textblob import TextBlob
 from extract import extract_comments_from_json
 import seaborn as sns
 
-def preprocess_text(text, stopwords):
+def procesar_texto(texto, palabras_vacias):
     """
-    Procesa el texto eliminando puntuación, convirtiendo a minúsculas y filtrando stopwords.
+    Procesa el texto eliminando puntuación, convirtiendo a minúsculas y filtrando palabras vacías.
     """
-    tokens = text.lower().split()
-    tokens = [word.strip(string.punctuation) for word in tokens]
-    tokens = [word for word in tokens if word.isalnum() and word not in stopwords]
+    tokens = texto.lower().split()
+    tokens = [palabra.strip(string.punctuation) for palabra in tokens]
+    tokens = [palabra for palabra in tokens if palabra.isalnum() and palabra not in palabras_vacias]
     return tokens
 
-
-def analyze_frequent_terms(comments, stopwords, top_n=10):
+def analizar_terminos_frecuentes(comentarios, palabras_vacias, top_n=10):
     """
     Analiza los términos más frecuentes en los comentarios.
     """
     tokens = [
         token
-        for comment in comments
-        for token in preprocess_text(comment["text"], stopwords)
+        for comentario in comentarios
+        for token in procesar_texto(comentario["text"], palabras_vacias)
     ]
-    term_counts = Counter(tokens).most_common(top_n)
-    return term_counts
+    conteo_terminos = Counter(tokens).most_common(top_n)
+    return conteo_terminos
 
-
-def plot_frequent_terms(term_counts):
+def graficar_terminos_frecuentes(conteo_terminos):
     """
     Genera un gráfico de los términos más frecuentes.
     """
-    terms, counts = zip(*term_counts)
+    terminos, frecuencias = zip(*conteo_terminos)
     plt.figure(figsize=(10, 6))
-    plt.bar(terms, counts, color="skyblue")
+    plt.bar(terminos, frecuencias, color="skyblue")
     plt.title("Términos más frecuentes en los comentarios", fontsize=14)
     plt.xlabel("Términos", fontsize=12)
     plt.ylabel("Frecuencia", fontsize=12)
     plt.xticks(rotation=45, ha="right", fontsize=10)
     plt.tight_layout()
-    plt.savefig("frequent_terms.png")
+    plt.savefig("terminos_frecuentes.png")
     plt.close()
 
-
-def analyze_sentiment_distribution(comments):
+def analizar_distribucion_sentimientos(comentarios):
     """
     Analiza la distribución de la polaridad de los comentarios.
     """
-    polarities = [TextBlob(comment["text"]).sentiment.polarity for comment in comments]
+    polaridades = [TextBlob(comentario["text"]).sentiment.polarity for comentario in comentarios]
     plt.figure(figsize=(10, 6))
-    sns.histplot(polarities, bins=30, kde=True, color="green")
+    sns.histplot(polaridades, bins=30, kde=True, color="green")
     plt.title("Distribución de la polaridad", fontsize=14)
     plt.xlabel("Polaridad", fontsize=12)
     plt.ylabel("Frecuencia", fontsize=12)
     plt.tight_layout()
-    plt.savefig("sentiment_distribution.png")
+    plt.savefig("distribucion_polaridad.png")
     plt.close()
 
-
-def analyze_likes_vs_length(comments):
+def analizar_likes_vs_longitud(comentarios):
     """
     Analiza la relación entre la longitud de los comentarios y los likes.
     """
-    text_lengths = [len(comment["text"]) for comment in comments]
-    likes = [comment["like_count"] for comment in comments]
+    longitudes_texto = [len(comentario["text"]) for comentario in comentarios]
+    likes = [comentario["like_count"] for comentario in comentarios]
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(x=text_lengths, y=likes, alpha=0.6)
+    sns.scatterplot(x=longitudes_texto, y=likes, alpha=0.6)
     plt.title("Relación entre longitud del comentario y likes", fontsize=14)
     plt.xlabel("Longitud del comentario", fontsize=12)
     plt.ylabel("Likes", fontsize=12)
     plt.tight_layout()
-    plt.savefig("likes_vs_length.png")
+    plt.savefig("longitud_vs_likes.png")
     plt.close()
 
-
-def analyze_comments_over_time(comments):
+def analizar_comentarios_tiempo(comentarios):
     """
     Analiza la cantidad de comentarios a lo largo del tiempo.
     """
-    dates = [datetime.strptime(comment["published_at"], "%Y-%m-%dT%H:%M:%SZ") for comment in comments]
-    sorted_dates = sorted(dates)
-    daily_counts = Counter(date.date() for date in sorted_dates)
-    days, counts = zip(*sorted(daily_counts.items()))
+    fechas = [datetime.strptime(comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ") for comentario in comentarios]
+    fechas_ordenadas = sorted(fechas)
+    conteo_diario = Counter(fecha.date() for fecha in fechas_ordenadas)
+    dias, cantidades = zip(*sorted(conteo_diario.items()))
 
     plt.figure(figsize=(10, 6))
-    plt.plot(days, counts, marker="o", linestyle="-", color="orange")
+    plt.plot(dias, cantidades, marker="o", linestyle="-", color="orange")
     plt.title("Cantidad de comentarios a lo largo del tiempo", fontsize=14)
     plt.xlabel("Fecha", fontsize=12)
     plt.ylabel("Cantidad de comentarios", fontsize=12)
     plt.tight_layout()
-    plt.savefig("comments_over_time.png")
+    plt.savefig("comentarios_tiempo.png")
     plt.close()
 
-def analyze_keywords_vs_likes(comments, keywords):
+def analizar_palabras_clave_likes(comentarios, palabras_clave):
     """
     Analiza la relación entre palabras clave específicas y la cantidad promedio de likes.
     """
-    keyword_likes = {keyword: [] for keyword in keywords}
+    likes_palabras = {palabra: [] for palabra in palabras_clave}
 
-    for comment in comments:
-        text = comment["text"].lower()
-        for keyword in keywords:
-            if keyword in text:
-                keyword_likes[keyword].append(comment["like_count"])
+    for comentario in comentarios:
+        texto = comentario["text"].lower()
+        for palabra in palabras_clave:
+            if palabra in texto:
+                likes_palabras[palabra].append(comentario["like_count"])
 
-    avg_likes = {
-        keyword: (sum(likes) / len(likes)) if likes else 0
-        for keyword, likes in keyword_likes.items()
+    likes_promedio = {
+        palabra: (sum(likes) / len(likes)) if likes else 0
+        for palabra, likes in likes_palabras.items()
     }
 
-    keywords, averages = zip(*avg_likes.items())
+    palabras, promedios = zip(*likes_promedio.items())
     plt.figure(figsize=(10, 6))
-    plt.bar(keywords, averages, color="purple")
+    plt.bar(palabras, promedios, color="purple")
     plt.title("Promedio de likes según palabras clave", fontsize=14)
     plt.xlabel("Palabras clave", fontsize=12)
     plt.ylabel("Promedio de likes", fontsize=12)
     plt.xticks(rotation=45, ha="right", fontsize=10)
     plt.tight_layout()
-    plt.savefig("keywords_vs_likes.png")
+    plt.savefig("palabras_clave_vs_likes.png")
     plt.close()
 
 def generar_graficos(archivo_json):
@@ -129,31 +124,54 @@ def generar_graficos(archivo_json):
     Genera gráficos basados en los comentarios extraídos de un archivo JSON de YouTube.
     """
     # Extraer los comentarios
-    comments = extract_comments_from_json(archivo_json)
+    comentarios = extract_comments_from_json(archivo_json)
 
-    if not comments:
+    if not comentarios:
         print("No se encontraron comentarios con datos de likes.")
         return
 
     # --- Análisis de términos más frecuentes ---
-    stopwords = {"el", "la", "y", "de", "que", "a", "en", "un", "es", "se"}
-    term_counts = analyze_frequent_terms(comments, stopwords)
-    plot_frequent_terms(term_counts)
-    print("Gráfico de términos frecuentes generado: 'frequent_terms.png'.")
+    palabras_vacias = {
+        "el", "la", "los", "las", "un", "unos", "una", "unas",
+        "y", "o", "u", "de", "del", "al", "a",
+        "en", "por", "para", "con", "sin", "sobre", "entre", "hacia",
+        "que", "qué", "como", "cómo", "cuando", "cuándo", "donde", "dónde",
+        "es", "son", "fue", "fueron", "será", "serán", "está", "están", "estaba", "estaban",
+        "se", "lo", "le", "les", "nos", "me", "te", "mi", "tu", "su",
+        "él", "ella", "ellos", "ellas", "esto", "eso", "aquello",
+        "sí", "no", "también", "tan", "tanto", "muy",
+        "pero", "aunque", "porque", "pues",
+        "ya", "aún", "todavía", "más", "menos", "mucho", "poco",
+        "ni", "si", "e", "además", "mientras",
+        "ahora", "entonces", "luego", "después",
+        "antes", "durante", "siempre", "nunca", "casi", "pronto", "tarde",
+        "vez", "veces", "algún", "ningún", "todo", "todos", "toda", "todas",
+        "otro", "otros", "otra", "otras", "cualquier", "cualquiera",
+        "quien", "quienes", "cuyo", "cuya", "cuyos", "cuyas",
+        "algo", "alguien", "nada", "nadie",
+        "qué", "quién", "cómo", "cuándo", "dónde",
+        "hoy", "ayer", "mañana", "aquí", "allí", "allá", "acá",
+        "dos", "tres", "varios", "muchos", "algunos", "pocos",
+        "mi", "mis", "tu", "tus", "su", "sus", "nuestro", "nuestra", "nuestros", "nuestras",
+        "vuestra", "vuestro", "vuestros", "vuestras"
+    }
+    conteo_terminos = analizar_terminos_frecuentes(comentarios, palabras_vacias)
+    graficar_terminos_frecuentes(conteo_terminos)
+    print("Gráfico de términos frecuentes generado: 'terminos_frecuentes.png'.")
 
     # --- Distribución de la polaridad ---
-    analyze_sentiment_distribution(comments)
-    print("Gráfico de distribución de polaridad generado: 'sentiment_distribution.png'.")
+    analizar_distribucion_sentimientos(comentarios)
+    print("Gráfico de distribución de polaridad generado: 'distribucion_polaridad.png'.")
 
     # --- Relación entre longitud del texto y likes ---
-    analyze_likes_vs_length(comments)
-    print("Gráfico de longitud vs likes generado: 'likes_vs_length.png'.")
+    analizar_likes_vs_longitud(comentarios)
+    print("Gráfico de longitud vs likes generado: 'longitud_vs_likes.png'.")
 
     # --- Análisis de comentarios a lo largo del tiempo ---
-    analyze_comments_over_time(comments)
-    print("Gráfico de comentarios a lo largo del tiempo generado: 'comments_over_time.png'.")
+    analizar_comentarios_tiempo(comentarios)
+    print("Gráfico de comentarios a lo largo del tiempo generado: 'comentarios_tiempo.png'.")
 
     # --- Análisis de palabras clave y likes ---
-    keywords = ["video", "bueno", "malo", "excelente"]
-    analyze_keywords_vs_likes(comments, keywords)
-    print("Gráfico de palabras clave vs likes generado: 'keywords_vs_likes.png'.")
+    palabras_clave = ["video", "bueno", "malo", "excelente"]
+    analizar_palabras_clave_likes(comentarios, palabras_clave)
+    print("Gráfico de palabras clave vs likes generado: 'palabras_clave_vs_likes.png'.")
