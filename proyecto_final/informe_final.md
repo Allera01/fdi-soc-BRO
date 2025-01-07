@@ -122,18 +122,22 @@ Este gráfico muestra los términos más utilizados en los comentarios de YouTub
 
 ### **Distribución de la polaridad**
 **Archivo generado:** `distribucion_polaridad.png`
+
 Este gráfico presenta la distribución de la polaridad de los comentarios, es decir, si los comentarios son más positivos, negativos o neutros. Se utiliza la polaridad obtenida mediante análisis de sentimientos, lo que ayuda a comprender el tono general de las opiniones de los usuarios.
 
 ### **Relación entre longitud del comentario y likes**
 **Archivo generado:** `longitud_vs_likes.png`
+
 Este gráfico analiza la relación entre la cantidad de caracteres en un comentario y la cantidad de likes que recibe. Esto permite identificar si los comentarios más largos tienden a obtener más interacciones o si los comentarios más breves son preferidos por los usuarios.
 
 ### **Cantidad de comentarios a lo largo del tiempo**
 **Archivo generado:** `comentarios_tiempo.png`
+
 Este gráfico muestra cómo ha variado la cantidad de comentarios a lo largo del tiempo. Puede ayudar a identificar tendencias y patrones temporales, como picos de actividad relacionados con eventos o temas específicos.
 
 ### **Promedio de likes según palabras clave**
 **Archivo generado:** `palabras_clave_vs_likes.png`
+
 Este gráfico muestra cómo ciertas palabras clave afectan el promedio de likes que reciben los comentarios. Se identifican palabras clave específicas y se calcula la cantidad promedio de likes de los comentarios que las contienen. Esto ayuda a identificar qué términos pueden estar asociados con mayor interacción por parte de los usuarios.
 
 ## Análisis y visualización de grafos (`grafo.py`)
