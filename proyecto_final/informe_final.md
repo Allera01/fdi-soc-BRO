@@ -160,7 +160,7 @@ A continuación, se detallan las principales funciones del código y su propósi
 
 ---
 
-# 5.Flujo de ejecución y Análisis de resultados
+# 5. Flujo de ejecución y Análisis de resultados
 
 El flujo de ejecución describe el proceso de interacción con el sistema para obtener los comentarios y respuestas de un vídeo de YouTube, procesarlos y analizarlos. A continuación se describe el flujo de trabajo paso a paso:
 
