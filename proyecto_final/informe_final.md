@@ -1,4 +1,4 @@
-# Informe sobre YouTube y el análisis de comentarios
+# Informe sobre YouTube
 ## Autores: 
 - Mario Gallego Hernández.
 - Mario Carrilero Sánchez.
