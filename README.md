@@ -125,3 +125,39 @@ Para mostar qué funcionalidades avanzadas hay disponibles, ejecute el comando:
 ~~~
 uv run main.py --help
 ~~~
+
+# Practica Final Analisis de Youtube
+
+## Información
+Es un código Python cuyo objetivo es descargar comentarios de YouTube y con ellos calcular distintas propiedades y estadísticas de la red social. Además, se ha elaborado un informe donde podemos observar las distintas gráficas que somos capaces de sacar y un pequeño análisis de estas. 
+
+## Cómo instalar
+Es necesario contar con un entorno de ejecución de Python.
+
+Descargar y almacenar en una carpeta los archivos que se encuentran en la carpeta de proyectos final, si quieres no hace falta descargarte la caché, junto al archivo **pyproject.toml**.
+
+Abrir el terminal direccionada a esa carpeta.
+
+Es necesario instalar uv:
+~~~
+pip install --user --break-system-packages uv
+~~~
+
+Las librerías se descargarán  una vez ejecutemos el código por primera vez.
+
+## Cómo ejecutar
+Para comenzar con la ejecución es recomendable en un principio descargar los comentarios de un video mediante este comando:
+~~~
+uv run main.py -d
+~~~
+
+Una vez descargado los comentarios ya podremos ejecutar toda nuestra funcionalidad mediante el comando:
+~~~
+uv run main.py -a
+~~~
+
+O si bien quieres ejecutar la funcionalidad por parte, ejecute el comando:
+~~~
+uv run main.py --help
+~~~
+y seleccione el comando designado.
