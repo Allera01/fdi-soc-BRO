@@ -6,6 +6,7 @@ import os
 import random
 from collections import deque
 
+
 def calcular_nodos_y_aristas(G):
     """Calcula y muestra el número de nodos y aristas del grafo."""
     num_nodes = G.number_of_nodes()
@@ -13,6 +14,7 @@ def calcular_nodos_y_aristas(G):
     click.echo(f"Número de nodos: {num_nodes}")
     click.echo(f"Número de aristas: {num_edges}")
     return num_nodes, num_edges
+
 
 def calcular_distribucion_grados(G, red_social):
     """Calcula y visualiza la distribución de grados de los nodos."""
@@ -533,7 +535,7 @@ def calcular_distancia_a_hubs(G, red_social):
             dist_min = min(distancias.get(hub, float(1000)) for hub in hubs)
             if dist_min != 1000:
                 distancias_a_hubs[nodo] = dist_min
-                
+
         # Generar la distribución de distancias
         distribucion_distancias = {}
         for distancia in distancias_a_hubs.values():

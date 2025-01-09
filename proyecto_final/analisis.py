@@ -8,14 +8,20 @@ from textblob import TextBlob
 from extract import extract_comments_from_json
 import seaborn as sns
 
+
 def procesar_texto(texto, palabras_vacias):
     """
     Procesa el texto eliminando puntuación, convirtiendo a minúsculas y filtrando palabras vacías.
     """
     tokens = texto.lower().split()
     tokens = [palabra.strip(string.punctuation) for palabra in tokens]
-    tokens = [palabra for palabra in tokens if palabra.isalnum() and palabra not in palabras_vacias]
+    tokens = [
+        palabra
+        for palabra in tokens
+        if palabra.isalnum() and palabra not in palabras_vacias
+    ]
     return tokens
+
 
 def analizar_terminos_frecuentes(comentarios, palabras_vacias, top_n=10):
     """
@@ -28,6 +34,7 @@ def analizar_terminos_frecuentes(comentarios, palabras_vacias, top_n=10):
     ]
     conteo_terminos = Counter(tokens).most_common(top_n)
     return conteo_terminos
+
 
 def graficar_terminos_frecuentes(conteo_terminos):
     """
@@ -44,11 +51,14 @@ def graficar_terminos_frecuentes(conteo_terminos):
     plt.savefig("terminos_frecuentes.png")
     plt.close()
 
+
 def analizar_distribucion_sentimientos(comentarios):
     """
     Analiza la distribución de la polaridad de los comentarios.
     """
-    polaridades = [TextBlob(comentario["text"]).sentiment.polarity for comentario in comentarios]
+    polaridades = [
+        TextBlob(comentario["text"]).sentiment.polarity for comentario in comentarios
+    ]
     plt.figure(figsize=(10, 6))
     sns.histplot(polaridades, bins=30, kde=True, color="green")
     plt.title("Distribución de la polaridad", fontsize=14)
@@ -57,6 +67,7 @@ def analizar_distribucion_sentimientos(comentarios):
     plt.tight_layout()
     plt.savefig("distribucion_polaridad.png")
     plt.close()
+
 
 def analizar_likes_vs_longitud(comentarios):
     """
@@ -73,11 +84,15 @@ def analizar_likes_vs_longitud(comentarios):
     plt.savefig("longitud_vs_likes.png")
     plt.close()
 
+
 def analizar_comentarios_tiempo(comentarios):
     """
     Analiza la cantidad de comentarios a lo largo del tiempo.
     """
-    fechas = [datetime.strptime(comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ") for comentario in comentarios]
+    fechas = [
+        datetime.strptime(comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ")
+        for comentario in comentarios
+    ]
     fechas_ordenadas = sorted(fechas)
     conteo_diario = Counter(fecha.date() for fecha in fechas_ordenadas)
     dias, cantidades = zip(*sorted(conteo_diario.items()))
@@ -90,6 +105,7 @@ def analizar_comentarios_tiempo(comentarios):
     plt.tight_layout()
     plt.savefig("comentarios_tiempo.png")
     plt.close()
+
 
 def analizar_palabras_clave_likes(comentarios, palabras_clave):
     """
@@ -119,10 +135,11 @@ def analizar_palabras_clave_likes(comentarios, palabras_clave):
     plt.savefig("palabras_clave_vs_likes.png")
     plt.close()
 
+
 def analizar_palabra_tiempo(comentarios):
     """
     Analiza la evolución de los sentimientos de una palabra específica a lo largo del tiempo.
-    
+
     Args:
         comentarios (list): Lista de comentarios con texto y fecha de publicación.
     """
@@ -131,7 +148,8 @@ def analizar_palabra_tiempo(comentarios):
 
     # Filtrar comentarios que contienen la palabra
     comentarios_filtrados = [
-        comentario for comentario in comentarios
+        comentario
+        for comentario in comentarios
         if palabra in comentario["text"].lower()
     ]
 
@@ -142,7 +160,9 @@ def analizar_palabra_tiempo(comentarios):
     # Extraer fechas y calcular polaridad
     datos = []
     for comentario in comentarios_filtrados:
-        fecha = datetime.strptime(comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ").date()
+        fecha = datetime.strptime(
+            comentario["published_at"], "%Y-%m-%dT%H:%M:%SZ"
+        ).date()
         polaridad = TextBlob(comentario["text"]).sentiment.polarity
         datos.append((fecha, polaridad))
 
@@ -154,14 +174,12 @@ def analizar_palabra_tiempo(comentarios):
             polaridades_por_periodo[periodo] = []
         polaridades_por_periodo[periodo].append(polaridad)
 
-    # Calcular polaridad promedio por periodo
     periodos = sorted(polaridades_por_periodo.keys())
     polaridades_promedio = [
         sum(polaridades_por_periodo[periodo]) / len(polaridades_por_periodo[periodo])
         for periodo in periodos
     ]
 
-    # Graficar evolución de la polaridad
     plt.figure(figsize=(10, 6))
     plt.plot(periodos, polaridades_promedio, marker="o", linestyle="-", color="blue")
     plt.title(f"Evolución de sentimientos para la palabra '{palabra}'", fontsize=14)
@@ -174,13 +192,15 @@ def analizar_palabra_tiempo(comentarios):
     plt.savefig("evolucion_palabra_tiempo.png")
     plt.close()
 
-    print(f"Gráfico de la evolución de la palabra '{palabra}' generado: 'evolucion_palabra_tiempo.png'.")
+    print(
+        f"Gráfico de la evolución de la palabra '{palabra}' generado: 'evolucion_palabra_tiempo.png'."
+    )
+
 
 def generar_graficos(archivo_json):
     """
     Genera gráficos basados en los comentarios extraídos de un archivo JSON de YouTube.
     """
-    # Extraer los comentarios
     comentarios = extract_comments_from_json(archivo_json)
 
     if not comentarios:
@@ -189,28 +209,153 @@ def generar_graficos(archivo_json):
 
     # --- Análisis de términos más frecuentes ---
     palabras_vacias = {
-        "el", "la", "los", "las", "un", "unos", "una", "unas",
-        "y", "o", "u", "de", "del", "al", "a",
-        "en", "por", "para", "con", "sin", "sobre", "entre", "hacia",
-        "que", "qué", "como", "cómo", "cuando", "cuándo", "donde", "dónde",
-        "es", "son", "fue", "fueron", "será", "serán", "está", "están", "estaba", "estaban",
-        "se", "lo", "le", "les", "nos", "me", "te", "mi", "tu", "su",
-        "él", "ella", "ellos", "ellas", "esto", "eso", "aquello",
-        "sí", "no", "también", "tan", "tanto", "muy",
-        "pero", "aunque", "porque", "pues",
-        "ya", "aún", "todavía", "más", "menos", "mucho", "poco",
-        "ni", "si", "e", "además", "mientras",
-        "ahora", "entonces", "luego", "después",
-        "antes", "durante", "siempre", "nunca", "casi", "pronto", "tarde",
-        "vez", "veces", "algún", "ningún", "todo", "todos", "toda", "todas",
-        "otro", "otros", "otra", "otras", "cualquier", "cualquiera",
-        "quien", "quienes", "cuyo", "cuya", "cuyos", "cuyas",
-        "algo", "alguien", "nada", "nadie",
-        "qué", "quién", "cómo", "cuándo", "dónde",
-        "hoy", "ayer", "mañana", "aquí", "allí", "allá", "acá",
-        "dos", "tres", "varios", "muchos", "algunos", "pocos",
-        "mi", "mis", "tu", "tus", "su", "sus", "nuestro", "nuestra", "nuestros", "nuestras",
-        "vuestra", "vuestro", "vuestros", "vuestras"
+        "el",
+        "la",
+        "los",
+        "las",
+        "un",
+        "unos",
+        "una",
+        "unas",
+        "y",
+        "o",
+        "u",
+        "de",
+        "del",
+        "al",
+        "a",
+        "en",
+        "por",
+        "para",
+        "con",
+        "sin",
+        "sobre",
+        "entre",
+        "hacia",
+        "que",
+        "qué",
+        "como",
+        "cómo",
+        "cuando",
+        "cuándo",
+        "donde",
+        "dónde",
+        "es",
+        "son",
+        "fue",
+        "fueron",
+        "será",
+        "serán",
+        "está",
+        "están",
+        "estaba",
+        "estaban",
+        "se",
+        "lo",
+        "le",
+        "les",
+        "nos",
+        "me",
+        "te",
+        "mi",
+        "tu",
+        "su",
+        "él",
+        "ella",
+        "ellos",
+        "ellas",
+        "esto",
+        "eso",
+        "aquello",
+        "sí",
+        "no",
+        "también",
+        "tan",
+        "tanto",
+        "muy",
+        "pero",
+        "aunque",
+        "porque",
+        "pues",
+        "ya",
+        "aún",
+        "todavía",
+        "más",
+        "menos",
+        "mucho",
+        "poco",
+        "ni",
+        "si",
+        "e",
+        "además",
+        "mientras",
+        "ahora",
+        "entonces",
+        "luego",
+        "después",
+        "antes",
+        "durante",
+        "siempre",
+        "nunca",
+        "casi",
+        "pronto",
+        "tarde",
+        "vez",
+        "veces",
+        "algún",
+        "ningún",
+        "todo",
+        "todos",
+        "toda",
+        "todas",
+        "otro",
+        "otros",
+        "otra",
+        "otras",
+        "cualquier",
+        "cualquiera",
+        "quien",
+        "quienes",
+        "cuyo",
+        "cuya",
+        "cuyos",
+        "cuyas",
+        "algo",
+        "alguien",
+        "nada",
+        "nadie",
+        "qué",
+        "quién",
+        "cómo",
+        "cuándo",
+        "dónde",
+        "hoy",
+        "ayer",
+        "mañana",
+        "aquí",
+        "allí",
+        "allá",
+        "acá",
+        "dos",
+        "tres",
+        "varios",
+        "muchos",
+        "algunos",
+        "pocos",
+        "mi",
+        "mis",
+        "tu",
+        "tus",
+        "su",
+        "sus",
+        "nuestro",
+        "nuestra",
+        "nuestros",
+        "nuestras",
+        "vuestra",
+        "vuestro",
+        "vuestros",
+        "vuestras",
     }
     conteo_terminos = analizar_terminos_frecuentes(comentarios, palabras_vacias)
     graficar_terminos_frecuentes(conteo_terminos)
@@ -218,7 +363,9 @@ def generar_graficos(archivo_json):
 
     # --- Distribución de la polaridad ---
     analizar_distribucion_sentimientos(comentarios)
-    print("Gráfico de distribución de polaridad generado: 'distribucion_polaridad.png'.")
+    print(
+        "Gráfico de distribución de polaridad generado: 'distribucion_polaridad.png'."
+    )
 
     # --- Relación entre longitud del texto y likes ---
     analizar_likes_vs_longitud(comentarios)
@@ -226,7 +373,9 @@ def generar_graficos(archivo_json):
 
     # --- Análisis de comentarios a lo largo del tiempo ---
     analizar_comentarios_tiempo(comentarios)
-    print("Gráfico de comentarios a lo largo del tiempo generado: 'comentarios_tiempo.png'.")
+    print(
+        "Gráfico de comentarios a lo largo del tiempo generado: 'comentarios_tiempo.png'."
+    )
 
     # --- Análisis de palabras clave y likes ---
     palabras_clave = ["video", "bueno", "malo", "excelente"]
@@ -235,4 +384,3 @@ def generar_graficos(archivo_json):
 
     # --- Análisis de la evolución de una palabra en el tiempo ---
     analizar_palabra_tiempo(comentarios)
-

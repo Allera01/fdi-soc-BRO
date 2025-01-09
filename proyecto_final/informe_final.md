@@ -5,7 +5,7 @@
 - Diego Linares Espildora.
 - Álvaro Llera Calderón.
 
-![Imagen de la portada](https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Escudo_de_la_Universidad_Complutense_de_Madrid.svg/1793px-Escudo_de_la_Universidad_Complutense_de_Madrid.svg.png)
+![Imagen de la portada](ProyectoFinalAnalisis/logoComplutense.png)
 
 Este informe presenta un estudio sobre la plataforma **YouTube**, en el que se incluyen el análisis de los comentarios de los usuarios mediante la construcción de grafos y cómo extraer datos de esta red social utilizando la **API de Google**. 
 

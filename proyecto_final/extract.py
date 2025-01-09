@@ -1,5 +1,6 @@
 import json
 
+
 def extract_comments_from_json(json_string):
     """
     Extrae los comentarios que tienen al menos una respuesta del objeto JSON de YouTube.
@@ -8,46 +9,42 @@ def extract_comments_from_json(json_string):
     if isinstance(json_string, str):
         json_string = json.loads(json_string)
 
-    # Lista para almacenar los comentarios extraídos
     comments = []
 
     # Verificamos si el JSON es una lista y tiene al menos un objeto
     if isinstance(json_string, list):
         for json_obj in json_string:
-            # Verificamos si 'items' está presente en cada objeto dentro de la lista
-            if 'items' in json_obj:
-                for item in json_obj['items']:
-                    # Verificamos que el comentario principal esté en 'snippet'
-                    if 'snippet' in item and 'topLevelComment' in item['snippet']:
-                        top_comment = item['snippet']['topLevelComment']['snippet']
+            if "items" in json_obj:
+                for item in json_obj["items"]:
+                    if "snippet" in item and "topLevelComment" in item["snippet"]:
+                        top_comment = item["snippet"]["topLevelComment"]["snippet"]
                         comment_info = {
-                            'author': top_comment['authorDisplayName'],
-                            'text': top_comment['textDisplay'],
-                            'published_at': top_comment['publishedAt'],
-                            'like_count': top_comment['likeCount'],
-                            'replies': []  # Lista para las respuestas
+                            "author": top_comment["authorDisplayName"],
+                            "text": top_comment["textDisplay"],
+                            "published_at": top_comment["publishedAt"],
+                            "like_count": top_comment["likeCount"],
+                            "replies": [],  # Lista para las respuestas
                         }
 
-                        # Verificamos si existen respuestas directamente dentro de 'item'
-                        if 'replies' in item:
-                            replies = item['replies']['comments']
-                            # Si hay respuestas, las agregamos a la lista de respuestas
-                            if replies:  # Verificamos si la lista de respuestas no está vacía
+                        if "replies" in item:
+                            replies = item["replies"]["comments"]
+                            if replies:
                                 for reply in replies:
-                                    reply_snippet = reply['snippet']
+                                    reply_snippet = reply["snippet"]
                                     reply_info = {
-                                        'author': reply_snippet['authorDisplayName'],
-                                        'text': reply_snippet['textDisplay'],
-                                        'published_at': reply_snippet['publishedAt'],
-                                        'like_count': reply_snippet['likeCount']
+                                        "author": reply_snippet["authorDisplayName"],
+                                        "text": reply_snippet["textDisplay"],
+                                        "published_at": reply_snippet["publishedAt"],
+                                        "like_count": reply_snippet["likeCount"],
                                     }
-                                    comment_info['replies'].append(reply_info)
+                                    comment_info["replies"].append(reply_info)
 
-                                # Solo agregamos el comentario principal si tiene al menos una respuesta
                                 comments.append(comment_info)
 
             else:
-                print("Advertencia: 'items' no está presente en uno de los objetos de la lista.")
+                print(
+                    "Advertencia: 'items' no está presente en uno de los objetos de la lista."
+                )
     else:
         print("Advertencia: El JSON no es una lista como se esperaba.")
 
